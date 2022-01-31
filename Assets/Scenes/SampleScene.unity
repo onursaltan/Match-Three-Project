@@ -425,8 +425,8 @@ MonoBehaviour:
   shapePrefab: {fileID: 4720713198385590470, guid: 043b4479207b8504d8c091a73ec988f2, type: 3}
   rows: 6
   columns: 6
-  paddingHorizontal: 10
-  paddingBottom: 20
+  paddingHorizontal: 8
+  paddingBottom: 0
 --- !u!4 &785137481
 Transform:
   m_ObjectHideFlags: 0
@@ -435,7 +435,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 785137479}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.34, y: -4.6, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

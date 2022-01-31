@@ -20,6 +20,8 @@ public class BoardManager : MonoBehaviour
 
     private GameObject[,] instantiatedShapes;
 
+    private Vector2 offset; 
+
     public static BoardManager Instance
     {
         get
@@ -42,8 +44,10 @@ public class BoardManager : MonoBehaviour
     {
         shapeSpriteRenderer = shapePrefab.GetComponent<SpriteRenderer>();
         SetShapeRect(columns);
-        SetBoardPadding();
-        Vector2 offset = shapeSpriteRenderer.bounds.size;
+        offset = shapeSpriteRenderer.bounds.size;
+        SetBoardPosition();
+
+        //  SetBoardPadding();
         CreateTiles(offset.x, offset.y);
     }
 
@@ -54,15 +58,15 @@ public class BoardManager : MonoBehaviour
         float startX = transform.position.x;
         float startY = transform.position.y;
 
-        for (int i = 0; i < columns; i++)
+        for (int i = 0; i < rows; i++)
         {
-            for (int j = 0; j < rows; j++)
+            for (int j = 0; j < columns; j++)
             {
-                Vector3 instantiatedTransform = new Vector3(startX + (i * xOffset),
-                                                            startY + (yOffset * j),
+                Vector3 instantiatedTransform = new Vector3(startY + (yOffset * j),
+                                                            startX + (i * xOffset),
                                                             0f);
 
-                instantiatedShapes[j, i] = CreateShape(instantiatedTransform);
+                instantiatedShapes[i, j] = CreateShape(instantiatedTransform);
             }
         }
     }
@@ -75,13 +79,19 @@ public class BoardManager : MonoBehaviour
         float shapeRect = shapeSpriteRenderer.sprite.textureRect.width / shapeSpriteRenderer.sprite.pixelsPerUnit * rows;
         shapeRect += paddingHorizontal * 2;
         shapeSpriteRenderer.transform.localScale = new Vector3(width / shapeRect, width / shapeRect);
-        SetBoardPosition(width, shapeRect);
     }
 
-    private void SetBoardPosition(float width, float shapeRect)
+    private void SetBoardPosition()
     {
-        float offSet = width / shapeRect / (1.08f);
-        transform.position = Camera.main.ViewportToWorldPoint(new Vector3(offSet, width / shapeRect / (1.92f), 0));
+        //Debug.Log((rows / 2) * offset.x);
+
+        float _offSetX = rows / 2;
+
+        if (rows % 2 == 0)
+            _offSetX -= 0.5f;
+
+        _offSetX = _offSetX * offset.x * -1;
+        transform.position = new Vector3(_offSetX, _offSetX);
     }
 
     private void SetBoardPadding()
