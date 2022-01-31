@@ -19,8 +19,9 @@ public class BoardManager : MonoBehaviour
     private SpriteRenderer shapeSpriteRenderer;
 
     private GameObject[,] instantiatedShapes;
+    private List<Shape> adjacentShapes;
 
-    private Vector2 offset; 
+    private Vector2 offset;
 
     public static BoardManager Instance
     {
@@ -42,15 +43,20 @@ public class BoardManager : MonoBehaviour
 
     private void Start()
     {
+        adjacentShapes = new List<Shape>();
         shapeSpriteRenderer = shapePrefab.GetComponent<SpriteRenderer>();
         SetShapeRect(columns);
         offset = shapeSpriteRenderer.bounds.size;
         SetBoardPosition();
-
-        //  SetBoardPadding();
+     //   SetBoardPadding();
         CreateTiles(offset.x, offset.y);
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+            PrintAdjacentShapes();
+    }
     public void CreateTiles(float xOffset, float yOffset)
     {
         instantiatedShapes = new GameObject[rows, columns];
@@ -66,7 +72,7 @@ public class BoardManager : MonoBehaviour
                                                             startX + (i * xOffset),
                                                             0f);
 
-                instantiatedShapes[i, j] = CreateShape(instantiatedTransform);
+                instantiatedShapes[i, j] = CreateShape(instantiatedTransform, i, j);
             }
         }
     }
@@ -83,8 +89,6 @@ public class BoardManager : MonoBehaviour
 
     private void SetBoardPosition()
     {
-        //Debug.Log((rows / 2) * offset.x);
-
         float _offSetX = rows / 2;
 
         if (rows % 2 == 0)
@@ -97,13 +101,13 @@ public class BoardManager : MonoBehaviour
     private void SetBoardPadding()
     {
         Vector3 _transform = transform.position;
-        _transform.x += paddingHorizontal / (30 / 2);
+      //  _transform.x += paddingHorizontal / (30 / 2);
         _transform.y += paddingBottom / 10;
 
         transform.position = _transform;
     }
 
-    private GameObject CreateShape(Vector3 instantiateTransform)
+    private GameObject CreateShape(Vector3 instantiateTransform, int x, int y)
     {
         ShapeData randomShape = RandomShape();
         shapeSpriteRenderer.sprite = randomShape.Sprite;
@@ -111,7 +115,7 @@ public class BoardManager : MonoBehaviour
         GameObject instantiatedShape = Instantiate(shapePrefab, instantiateTransform, shapePrefab.transform.rotation);
         Shape _shape = instantiatedShape.AddComponent<Cube>();
         instantiatedShape.transform.SetParent(transform);
-        _shape.SetShapeData(randomShape);
+        _shape.SetShapeData(randomShape, x, y);
 
         return instantiatedShape;
     }
@@ -120,6 +124,53 @@ public class BoardManager : MonoBehaviour
     {
         int randInt = Random.Range(0, shapesData.Length);
         return shapesData[randInt];
+    }
+
+    public GameObject[,] GetShapeMatrix()
+    {
+        return instantiatedShapes;
+    }
+
+    public void AddShapeToAdjacentShapes(Shape shape)
+    {
+        adjacentShapes.Add(shape);
+    }
+
+    public bool IsShapeCheckedBefore(Shape _shape)
+    {
+        foreach (Shape shape in this.adjacentShapes)
+            if (shape == _shape)
+                return true;
+
+        return false;
+    }
+
+    public List<Shape> GetAdjacentShapes()
+    {
+        return adjacentShapes;
+    }
+
+    public void PrintAdjacentShapes()
+    {
+        if (this.adjacentShapes.Count > 1)
+        {
+            foreach (Shape shape in this.adjacentShapes)
+            {
+                shape.gameObject.SetActive(false);
+            }
+        }
+
+        this.adjacentShapes.Clear();
+    }
+
+    public int GetRowCount()
+    {
+        return rows;
+    }
+
+    public int GetColumnCount()
+    {
+        return columns;
     }
 
     public void DestroyInstantiatedShapes()

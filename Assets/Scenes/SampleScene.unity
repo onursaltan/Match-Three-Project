@@ -425,7 +425,7 @@ MonoBehaviour:
   shapePrefab: {fileID: 4720713198385590470, guid: 043b4479207b8504d8c091a73ec988f2, type: 3}
   rows: 6
   columns: 6
-  paddingHorizontal: 8
+  paddingHorizontal: 15
   paddingBottom: 0
 --- !u!4 &785137481
 Transform:
