@@ -423,10 +423,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: e0b6948231aa51549a805f8b98588ff7, type: 2}
   - {fileID: 11400000, guid: 37f6905e12235514ca27d86304398407, type: 2}
   shapePrefab: {fileID: 4720713198385590470, guid: 043b4479207b8504d8c091a73ec988f2, type: 3}
-  rows: 6
-  columns: 6
+  rows: 8
+  columns: 8
   paddingHorizontal: 15
-  paddingBottom: 0
+  paddingBottom: 20
 --- !u!4 &785137481
 Transform:
   m_ObjectHideFlags: 0

@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shapeName: BasicGreen
   color: Green
-  sprite: {fileID: 21300000, guid: 4a9390df805653844bec8688f5886071, type: 3}
+  sprite: {fileID: 21300000, guid: b423ab9b75cbe8b4db545b8c30f6a7a6, type: 3}

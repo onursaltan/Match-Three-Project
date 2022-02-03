@@ -6,70 +6,95 @@ using UnityEngine.EventSystems;
 public abstract class Shape : MonoBehaviour, IPointerDownHandler
 {
     public ShapeData shapeData;
-    public int x;
-    public int y;
-    private bool isChecked = false;
+    public int row;
+    public int col;
+
+    private SpriteRenderer shapeSpriteRenderer;
 
     void Start()
     {
+        shapeSpriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        CheckAdjacentShapes(-1, -1);
+        CheckAdjacentShapes(true);
+        BoardManager.Instance.HandleShiftDown();
     }
 
-    public void SetShapeData(ShapeData _shapeData, int x, int y)
+    public void SetShapeData(ShapeData _shapeData, int row, int col)
     {
-        this.x = x;
-        this.y = y;
+        this.row = row;
+        this.col = col;
         shapeData = _shapeData;
     }
 
-    public void CheckAdjacentShapes(int previousX, int previousY)
+    public void CheckAdjacentShapes(bool isThisClickedShape)
     {
-
-        GameObject[,] shapeMatrix = BoardManager.Instance.GetShapeMatrix();
         int rows = BoardManager.Instance.GetRowCount();
         int columns = BoardManager.Instance.GetColumnCount();
 
-        if (previousX == -1 && previousY == -1)
+        if (isThisClickedShape)
             BoardManager.Instance.AddShapeToAdjacentShapes(this);
 
-
-        if (y + 1 < columns && !BoardManager.Instance.IsShapeCheckedBefore(shapeMatrix[x, y + 1].GetComponent<Shape>()) && previousY != y + 1 && shapeMatrix[x, y + 1].GetComponent<Shape>().shapeData.Color == shapeData.Color )
-        {
-            BoardManager.Instance.AddShapeToAdjacentShapes(shapeMatrix[x, y + 1].GetComponent<Shape>());
-            shapeMatrix[x, y + 1].GetComponent<Shape>().CheckAdjacentShapes(x, y);
-        }
-
-        if (y - 1 >= 0 && !BoardManager.Instance.IsShapeCheckedBefore(shapeMatrix[x, y - 1].GetComponent<Shape>()) && previousY != y - 1 && shapeMatrix[x, y - 1].GetComponent<Shape>().shapeData.Color == shapeData.Color)
-        {
-            BoardManager.Instance.AddShapeToAdjacentShapes(shapeMatrix[x, y - 1].GetComponent<Shape>());
-            shapeMatrix[x, y - 1].GetComponent<Shape>().CheckAdjacentShapes(x, y);
-        }
-
-        if (x + 1 < rows && !BoardManager.Instance.IsShapeCheckedBefore(shapeMatrix[x + 1, y].GetComponent<Shape>()) && previousX != x + 1 && shapeMatrix[x + 1, y].GetComponent<Shape>().shapeData.Color == shapeData.Color)
-        {
-            BoardManager.Instance.AddShapeToAdjacentShapes(shapeMatrix[x + 1, y].GetComponent<Shape>());
-            shapeMatrix[x + 1, y].GetComponent<Shape>().CheckAdjacentShapes(x, y);
-        }
-
-        if (x - 1 >= 0 && !BoardManager.Instance.IsShapeCheckedBefore(shapeMatrix[x - 1, y].GetComponent<Shape>()) && previousX != x - 1 && shapeMatrix[x - 1, y].GetComponent<Shape>().shapeData.Color == shapeData.Color)
-        {
-            BoardManager.Instance.AddShapeToAdjacentShapes(shapeMatrix[x - 1, y].GetComponent<Shape>());
-            shapeMatrix[x - 1, y].GetComponent<Shape>().CheckAdjacentShapes(x, y);
-        }
+        _CheckAdjacentShapes(row, col + 1, columns, false);
+        _CheckAdjacentShapes(row, col - 1, columns, false);
+        _CheckAdjacentShapes(row + 1, col, rows, true);
+        _CheckAdjacentShapes(row - 1, col, rows, true);
     }
 
-    public void SetIsChecked(bool _isChecked)
+    private void _CheckAdjacentShapes(int r, int c, int constraint, bool isRowChanging)
     {
-        this.isChecked = _isChecked;
+        GameObject[,] shapeMatrix = BoardManager.Instance.GetShapeMatrix();
+        int temp;
+
+        if (isRowChanging)
+            temp = r;
+        else
+            temp = c;
+
+        if (temp < constraint && temp >= 0)
+        {
+            if (shapeMatrix[r, c] != null && !BoardManager.Instance.IsShapeCheckedBefore(shapeMatrix[r, c].GetComponent<Shape>()) &&
+                shapeMatrix[r, c].GetComponent<Shape>().shapeData.Color == shapeData.Color)
+            {
+                BoardManager.Instance.AddShapeToAdjacentShapes(shapeMatrix[r, c].GetComponent<Shape>());
+                shapeMatrix[r, c].GetComponent<Shape>().CheckAdjacentShapes(false);
+            }
+        }
     }
 
-    public abstract void ShiftDown();
+    public void ShiftDown()
+    {
+        GameObject[,] shapeMatrix = BoardManager.Instance.GetShapeMatrix();
+        int rowToShift = -1;
+
+        for (int i = row - 1; i >= 0; i--)
+        {
+            if (shapeMatrix[i, col] == null)
+                rowToShift = i;
+        }
+
+
+        if (rowToShift != -1)
+        {
+            shapeMatrix[rowToShift, col] = this.gameObject;
+            shapeMatrix[row, col] = null;
+            _ShiftDown(rowToShift);
+        }
+    }
+
+    private void _ShiftDown(int rowToShift)
+    {
+        Vector2 offset = shapeSpriteRenderer.bounds.size;
+
+        Vector3 posToShift = transform.position;
+        posToShift.y -= offset.y * (row - rowToShift);
+
+        transform.position = posToShift;
+
+        row = rowToShift;
+    }
 
     public abstract void Explode();
-
-
 }

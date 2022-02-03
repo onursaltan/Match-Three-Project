@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shapeName: BasicBlue
   color: Blue
-  sprite: {fileID: 21300000, guid: e0af9cdb1039b6847aac0a033aa5c2ee, type: 3}
+  sprite: {fileID: 21300000, guid: 5bd7f4670cc2c2343a7640cbbfef435e, type: 3}

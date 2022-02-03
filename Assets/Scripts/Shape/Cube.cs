@@ -8,9 +8,4 @@ public class Cube : Shape
     {
         throw new System.NotImplementedException();
     }
-
-    public override void ShiftDown()
-    {
-        throw new System.NotImplementedException();
-    }
 }
