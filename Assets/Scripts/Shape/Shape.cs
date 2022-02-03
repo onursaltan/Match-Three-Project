@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using DG.Tweening;
 
 public abstract class Shape : MonoBehaviour, IPointerDownHandler
 {
@@ -91,9 +92,17 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
         Vector3 posToShift = transform.position;
         posToShift.y -= offset.y * (row - rowToShift);
 
-        transform.position = posToShift;
+        transform.DOMove(posToShift, 0.15f * (row - rowToShift)).SetEase(Ease.InSine).OnComplete(() =>
+        {
+            BounceShape(transform.position.y + 0.05f);
+        });
 
         row = rowToShift;
+    }
+
+    private void BounceShape(float pos)
+    {
+        transform.DOMoveY(pos, 0.1f).SetEase(Ease.OutQuad).SetLoops(2, LoopType.Yoyo);
     }
 
     public abstract void Explode();

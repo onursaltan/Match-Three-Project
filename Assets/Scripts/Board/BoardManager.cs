@@ -21,6 +21,7 @@ public class BoardManager : MonoBehaviour
     private GameObject[,] instantiatedShapes;
     private List<Shape> adjacentShapes;
     private List<int> distinctColumns;
+
     public static BoardManager Instance
     {
         get
