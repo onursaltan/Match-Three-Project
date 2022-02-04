@@ -12,7 +12,7 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
 
     private SpriteRenderer shapeSpriteRenderer;
 
-    void Start()
+    void Awake()
     {
         shapeSpriteRenderer = GetComponent<SpriteRenderer>();
     }
@@ -57,7 +57,7 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
         if (temp < constraint && temp >= 0)
         {
             if (shapeMatrix[r, c] != null && !BoardManager.Instance.IsShapeCheckedBefore(shapeMatrix[r, c].GetComponent<Shape>()) &&
-                shapeMatrix[r, c].GetComponent<Shape>().shapeData.Color == shapeData.Color)
+                shapeMatrix[r, c].GetComponent<Shape>().shapeData.ShapeType == shapeData.ShapeType)
             {
                 BoardManager.Instance.AddShapeToAdjacentShapes(shapeMatrix[r, c].GetComponent<Shape>());
                 shapeMatrix[r, c].GetComponent<Shape>().CheckAdjacentShapes(false);
@@ -66,6 +66,12 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
     }
 
     public void ShiftDown()
+    {
+        int rowToShift = FindEmptyRow();
+        HandleShiftDown(rowToShift);
+    }
+
+    private int FindEmptyRow()
     {
         GameObject[,] shapeMatrix = BoardManager.Instance.GetShapeMatrix();
         int rowToShift = -1;
@@ -76,9 +82,15 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
                 rowToShift = i;
         }
 
+        return rowToShift;
+    }
 
+    private void HandleShiftDown(int rowToShift)
+    {
         if (rowToShift != -1)
         {
+            GameObject[,] shapeMatrix = BoardManager.Instance.GetShapeMatrix();
+
             shapeMatrix[rowToShift, col] = this.gameObject;
             shapeMatrix[row, col] = null;
             _ShiftDown(rowToShift);

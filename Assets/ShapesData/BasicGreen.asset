@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc9244f80a95c6349b64c11804b062fe, type: 3}
   m_Name: BasicGreen
   m_EditorClassIdentifier: 
-  shapeName: BasicGreen
+  shapeType: 2
   color: Green
   sprite: {fileID: 21300000, guid: b423ab9b75cbe8b4db545b8c30f6a7a6, type: 3}

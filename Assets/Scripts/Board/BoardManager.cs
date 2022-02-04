@@ -21,6 +21,7 @@ public class BoardManager : MonoBehaviour
     private GameObject[,] instantiatedShapes;
     private List<Shape> adjacentShapes;
     private List<int> distinctColumns;
+    private Dictionary<int, int> explodeCountOfColumns;
 
     public static BoardManager Instance
     {
@@ -44,6 +45,8 @@ public class BoardManager : MonoBehaviour
     {
         adjacentShapes = new List<Shape>();
         distinctColumns = new List<int>();
+        explodeCountOfColumns = new Dictionary<int, int>();
+
         shapeSpriteRenderer = shapePrefab.GetComponent<SpriteRenderer>();
         SetShapeRect();
         CreateTiles();
@@ -54,6 +57,11 @@ public class BoardManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
         }
+    }
+
+    public void restart()
+    {
+        Application.LoadLevel(Application.loadedLevel);
     }
 
     public void CreateTiles()
@@ -113,9 +121,8 @@ public class BoardManager : MonoBehaviour
         ShapeData randomShape = RandomShape();
         shapeSpriteRenderer.sprite = randomShape.Sprite;
 
-        GameObject instantiatedShape = Instantiate(shapePrefab, instantiateTransform, shapePrefab.transform.rotation);
+        GameObject instantiatedShape = Instantiate(shapePrefab, instantiateTransform, shapePrefab.transform.rotation, transform);
         Shape _shape = instantiatedShape.AddComponent<Cube>();
-        instantiatedShape.transform.SetParent(transform);
         _shape.SetShapeData(randomShape, i, j);
 
         return instantiatedShape;
@@ -133,12 +140,14 @@ public class BoardManager : MonoBehaviour
         {
             foreach (Shape shape in adjacentShapes)
             {
+                IncreaseCountOfColumnsValue(shape.col);
                 instantiatedShapes[shape.row, shape.col] = null;
                 Destroy(shape.gameObject);
             }
         }
 
         StartShiftDown();
+        RefillBoard();
     }
 
     private void StartShiftDown()
@@ -185,6 +194,40 @@ public class BoardManager : MonoBehaviour
         return distinctColumns;
     }
 
+    private void IncreaseCountOfColumnsValue(int key)
+    {
+        if (!explodeCountOfColumns.ContainsKey(key))
+        {
+            explodeCountOfColumns.Add(key, 1);
+        }
+        else
+        {
+            explodeCountOfColumns[key]++;
+        }
+    }
+
+    private void RefillBoard()
+    {
+        Vector2 offset = shapeSpriteRenderer.bounds.size;
+
+        foreach (int k in explodeCountOfColumns.Keys)
+        {
+
+            Vector3 instantiatedTransform = new Vector3(offset.x * k,
+                                                        offset.y * rows,
+                                                        0f);
+
+            for (int i = 0; i < explodeCountOfColumns[k]; i++)
+            {
+                instantiatedShapes[rows - 1, k] = CreateShape(instantiatedTransform, rows - 1, k);
+                instantiatedShapes[rows - 1, k].transform.localPosition = new Vector3(offset.x * k, offset.y * (rows - 1), 0f);
+                instantiatedShapes[rows - 1, k].GetComponent<Shape>().ShiftDown();
+            }
+        }
+
+        explodeCountOfColumns.Clear();
+    }
+
     public int GetRowCount()
     {
         return rows;
@@ -195,9 +238,9 @@ public class BoardManager : MonoBehaviour
         return columns;
     }
 
-    public ref GameObject[,] GetShapeMatrix()
+    public GameObject[,] GetShapeMatrix()
     {
-        return ref instantiatedShapes;
+        return instantiatedShapes;
     }
 
     public void DestroyInstantiatedShapes()
