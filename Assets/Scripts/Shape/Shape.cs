@@ -4,17 +4,29 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using DG.Tweening;
 
+public enum ShapeState
+{
+    Waiting, Shifting
+}
+
 public abstract class Shape : MonoBehaviour, IPointerDownHandler
 {
-    public ShapeData shapeData;
+    public ShapeData _shapeData;
+    public ShapeState _shapeState;
+
+    private const float TimeShiftDown = 0.15f;
+    private const float TimeRefillShiftDown = 0.15f;
+    private const float TimeBounce = 0.1f;
+    private const float BounceAmount = 0.05f;
+
     public int row;
     public int col;
 
-    private SpriteRenderer shapeSpriteRenderer;
+    private SpriteRenderer _shapeSpriteRenderer;
 
     void Awake()
     {
-        shapeSpriteRenderer = GetComponent<SpriteRenderer>();
+        _shapeSpriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -23,11 +35,11 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
         BoardManager.Instance.HandleShiftDown();
     }
 
-    public void SetShapeData(ShapeData _shapeData, int row, int col)
+    public void SetShapeData(ShapeData shapeData, int row, int col)
     {
         this.row = row;
         this.col = col;
-        shapeData = _shapeData;
+        _shapeData = shapeData;
     }
 
     public void CheckAdjacentShapes(bool isThisClickedShape)
@@ -57,7 +69,7 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
         if (temp < constraint && temp >= 0)
         {
             if (shapeMatrix[r, c] != null && !BoardManager.Instance.IsShapeCheckedBefore(shapeMatrix[r, c].GetComponent<Shape>()) &&
-                shapeMatrix[r, c].GetComponent<Shape>().shapeData.ShapeType == shapeData.ShapeType)
+                shapeMatrix[r, c].GetComponent<Shape>()._shapeData.ShapeType == _shapeData.ShapeType)
             {
                 BoardManager.Instance.AddShapeToAdjacentShapes(shapeMatrix[r, c].GetComponent<Shape>());
                 shapeMatrix[r, c].GetComponent<Shape>().CheckAdjacentShapes(false);
@@ -65,18 +77,28 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
         }
     }
 
-    public void ShiftDown()
+    public void ShiftDown(bool forRefill = false)
     {
-        int rowToShift = FindEmptyRow();
-        HandleShiftDown(rowToShift);
+        int rowToShift;
+
+        if (forRefill)
+        {
+            rowToShift = FindEmptyRow(BoardManager.Instance.GetRowCount() - 1);
+            HandleShiftDownForRefill(rowToShift);
+        }
+        else
+        {
+            rowToShift = FindEmptyRow(row);
+            HandleShiftDown(rowToShift);
+        }
     }
 
-    private int FindEmptyRow()
+    private int FindEmptyRow(int rowIndex)
     {
         GameObject[,] shapeMatrix = BoardManager.Instance.GetShapeMatrix();
         int rowToShift = -1;
 
-        for (int i = row - 1; i >= 0; i--)
+        for (int i = rowIndex; i >= 0; i--)
         {
             if (shapeMatrix[i, col] == null)
                 rowToShift = i;
@@ -93,20 +115,31 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
 
             shapeMatrix[rowToShift, col] = this.gameObject;
             shapeMatrix[row, col] = null;
-            _ShiftDown(rowToShift);
+            Shift(rowToShift, TimeShiftDown);
         }
     }
 
-    private void _ShiftDown(int rowToShift)
+    private void HandleShiftDownForRefill(int rowToShift)
     {
-        Vector2 offset = shapeSpriteRenderer.bounds.size;
+        if (rowToShift != -1)
+        {
+            GameObject[,] shapeMatrix = BoardManager.Instance.GetShapeMatrix();
+
+            shapeMatrix[rowToShift, col] = this.gameObject;
+            Shift(rowToShift, TimeRefillShiftDown);
+        }
+    }
+
+    private void Shift(int rowToShift, float shiftDownTime)
+    {
+        Vector2 offset = _shapeSpriteRenderer.bounds.size;
 
         Vector3 posToShift = transform.position;
         posToShift.y -= offset.y * (row - rowToShift);
 
-        transform.DOMove(posToShift, 0.15f * (row - rowToShift)).SetEase(Ease.InSine).OnComplete(() =>
+        transform.DOMove(posToShift, shiftDownTime * (row - rowToShift)).SetEase(Ease.InQuad).OnComplete(() =>
         {
-            BounceShape(transform.position.y + 0.05f);
+            BounceShape(transform.position.y + BounceAmount);
         });
 
         row = rowToShift;
@@ -114,7 +147,7 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
 
     private void BounceShape(float pos)
     {
-        transform.DOMoveY(pos, 0.1f).SetEase(Ease.OutQuad).SetLoops(2, LoopType.Yoyo);
+        transform.DOMoveY(pos, TimeBounce).SetEase(Ease.OutQuad).SetLoops(2, LoopType.Yoyo);
     }
 
     public abstract void Explode();

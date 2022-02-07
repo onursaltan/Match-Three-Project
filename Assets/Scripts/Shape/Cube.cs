@@ -6,6 +6,7 @@ public class Cube : Shape
 {
     public override void Explode()
     {
-        throw new System.NotImplementedException();
+        Instantiate(_shapeData.ExplodeEffect, transform.position, transform.rotation, transform.parent);
+        Destroy(gameObject);
     }
 }

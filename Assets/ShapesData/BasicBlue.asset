@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc9244f80a95c6349b64c11804b062fe, type: 3}
   m_Name: BasicBlue
   m_EditorClassIdentifier: 
-  shapeName: BasicBlue
-  color: Blue
-  sprite: {fileID: 21300000, guid: 5bd7f4670cc2c2343a7640cbbfef435e, type: 3}
+  _shapeType: 0
+  _sprite: {fileID: 21300000, guid: 5bd7f4670cc2c2343a7640cbbfef435e, type: 3}
+  _explodeEffect: {fileID: 6314450734431520952, guid: fbbc576b4522d414ab4b509f3095011e, type: 3}

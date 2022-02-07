@@ -4,7 +4,7 @@ using UnityEngine;
 
 public enum ShapeType
 {
-    BlueCube, RedCube, GreenCube, Bomb
+    BlueCube, RedCube, GreenCube, Bomb, Rocket
 }
 
 [CreateAssetMenu(fileName = "New Shape", menuName = "Shape Data", order = 51)]
@@ -12,15 +12,17 @@ public enum ShapeType
 public class ShapeData : ScriptableObject
 {
     [SerializeField]
-    private ShapeType shapeType;
+    private ShapeType _shapeType;
     [SerializeField]
-    private Sprite sprite;
+    private Sprite _sprite;
+    [SerializeField]
+    private GameObject _explodeEffect;
 
     public ShapeType ShapeType
     {
         get
         {
-            return shapeType;
+            return _shapeType;
         }
     }
 
@@ -28,7 +30,15 @@ public class ShapeData : ScriptableObject
     {
         get
         {
-            return sprite;
+            return _sprite;
+        }
+    }
+
+    public GameObject ExplodeEffect
+    {
+        get
+        {
+            return _explodeEffect;
         }
     }
 }
