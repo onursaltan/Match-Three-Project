@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc9244f80a95c6349b64c11804b062fe, type: 3}
   m_Name: Rocket
   m_EditorClassIdentifier: 
-  shapeType: 4
-  sprite: {fileID: 0}
+  _shapeType: 4
+  _sprite: {fileID: 21300000, guid: a8844b859446c6844900f16121e76061, type: 3}
+  _explodeEffect: {fileID: 0}

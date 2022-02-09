@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class BoardManager : MonoBehaviour
 {
     private static BoardManager _instance;
     private int RefillStartPos = 3;
+
+    public ShapeData RocketShapeData;
 
     [SerializeField] private ShapeData[] shapesData;
     [SerializeField] private GameObject shapePrefab;
@@ -17,7 +19,7 @@ public class BoardManager : MonoBehaviour
     [SerializeField] private float paddingHorizontal;
     [SerializeField] private float paddingBottom;
 
-    
+
     private SpriteRenderer _shapeSpriteRenderer;
     private GameObject[,] _instantiatedShapes;
     private List<Shape> _adjacentShapes;
@@ -60,7 +62,7 @@ public class BoardManager : MonoBehaviour
 
     public void restart()
     {
-        Application.LoadLevel(Application.loadedLevel);
+        SceneManager.LoadScene(0);
     }
 
     public void CreateTiles()
@@ -118,7 +120,6 @@ public class BoardManager : MonoBehaviour
     private GameObject CreateShape(Vector3 instantiateTransform, int i, int j)
     {
         ShapeData randomShape = RandomShape();
-        _shapeSpriteRenderer.sprite = randomShape.Sprite;
 
         GameObject instantiatedShape = Instantiate(shapePrefab, instantiateTransform, shapePrefab.transform.rotation, transform);
         Shape _shape = instantiatedShape.AddComponent<Cube>();
@@ -133,22 +134,7 @@ public class BoardManager : MonoBehaviour
         return shapesData[randInt];
     }
 
-    public void HandleShiftDown()
-    {
-        if (_adjacentShapes.Count > 1)
-        {
-            foreach (Shape shape in _adjacentShapes)
-            {
-                _instantiatedShapes[shape.row, shape.col] = null;
-                shape.Explode();
-            }
-        }
-
-        StartShiftDown();
-        RefillBoard();
-    }
-
-    private void StartShiftDown()
+    public void StartShiftDown()
     {
         FindDistinctColums();
 
@@ -162,6 +148,8 @@ public class BoardManager : MonoBehaviour
         }
 
         _adjacentShapes.Clear();
+
+        RefillBoard();
     }
 
     public void AddShapeToAdjacentShapes(Shape shape)
@@ -182,14 +170,14 @@ public class BoardManager : MonoBehaviour
     {
         foreach (Shape shape in _adjacentShapes)
         {
-            if (!_distinctColumns.ContainsKey(shape.col))
-                _distinctColumns.Add(shape.col, 1);
+            if (!_distinctColumns.ContainsKey(shape._col))
+                _distinctColumns.Add(shape._col, 1);
             else
-                _distinctColumns[shape.col]++;
+                _distinctColumns[shape._col]++;
         }
     }
 
-    private void RefillBoard()
+    public void RefillBoard()
     {
         Vector2 offset = _shapeSpriteRenderer.bounds.size;
 
@@ -202,7 +190,7 @@ public class BoardManager : MonoBehaviour
 
             for (int i = 0; i < _distinctColumns[k]; i++)
             {
-                GameObject refillShape =  CreateShape(instantiatedTransform, rows + counter, k);
+                GameObject refillShape = CreateShape(instantiatedTransform, rows + counter, k);
                 refillShape.transform.localPosition = new Vector3(offset.x * k, offset.y * (rows + counter), 0f);
                 refillShape.GetComponent<Shape>().ShiftDown(true);
                 counter++;
@@ -210,6 +198,15 @@ public class BoardManager : MonoBehaviour
         }
 
         _distinctColumns.Clear();
+    }
+
+    public List<Shape> GetAdjacentShapes()
+    {
+        return _adjacentShapes;
+    }
+    public GameObject[,] GetInstantiatedShapes()
+    {
+        return _instantiatedShapes;
     }
 
     public int GetRowCount()
@@ -225,6 +222,17 @@ public class BoardManager : MonoBehaviour
     public GameObject[,] GetShapeMatrix()
     {
         return _instantiatedShapes;
+    }
+
+    public void RemoveFromInstantiatedShapes(int row, int col)
+    {
+        _instantiatedShapes[row, col] = null;
+    }
+
+    public void DestroyShape(Shape shape)
+    {
+        _instantiatedShapes[shape._row, shape._col] = null;
+        Destroy(shape.gameObject);
     }
 
     public void DestroyInstantiatedShapes()

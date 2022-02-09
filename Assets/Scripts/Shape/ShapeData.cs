@@ -13,9 +13,11 @@ public class ShapeData : ScriptableObject
 {
     [SerializeField]
     private ShapeType _shapeType;
+
     [SerializeField]
     private Sprite _sprite;
-    [SerializeField]
+
+    [SerializeField] 
     private GameObject _explodeEffect;
 
     public ShapeType ShapeType
