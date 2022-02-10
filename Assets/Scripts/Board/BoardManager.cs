@@ -13,6 +13,8 @@ public class BoardManager : MonoBehaviour
 
     [SerializeField] private ShapeData[] shapesData;
     [SerializeField] private GameObject shapePrefab;
+    [SerializeField] private GameObject tint;
+    [SerializeField] private GameObject noMovesLeft;
     [SerializeField] private Text moves;
 
     [SerializeField] private int rows;
@@ -186,7 +188,7 @@ public class BoardManager : MonoBehaviour
     {
         Vector2 offset = _shapeSpriteRenderer.bounds.size;
 
-        if (remainingMoves > 0)
+        if (remainingMoves > 1)
         {
             remainingMoves--;
             moves.text = remainingMoves.ToString();
@@ -207,6 +209,11 @@ public class BoardManager : MonoBehaviour
                     counter++;
                 }
             }
+        }
+        else if (remainingMoves == 1)
+        {
+            moves.text = "0";
+            StartCoroutine(RestartButtonWithDelay(1.2f));
         }
         _distinctColumns.Clear();
     }
@@ -256,4 +263,12 @@ public class BoardManager : MonoBehaviour
         foreach (GameObject shape in _instantiatedShapes)
             Destroy(shape);
     }
+
+    IEnumerator RestartButtonWithDelay(float time)
+    {
+        yield return new WaitForSeconds(time);
+        noMovesLeft.SetActive(true);
+        tint.SetActive(true);
+    }
+
 }
