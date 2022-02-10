@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class BoardManager : MonoBehaviour
@@ -12,9 +13,12 @@ public class BoardManager : MonoBehaviour
 
     [SerializeField] private ShapeData[] shapesData;
     [SerializeField] private GameObject shapePrefab;
+    [SerializeField] private Text moves;
 
     [SerializeField] private int rows;
     [SerializeField] private int columns;
+
+    [SerializeField] private int remainingMoves;
 
     [SerializeField] private float paddingHorizontal;
     [SerializeField] private float paddingBottom;
@@ -51,6 +55,7 @@ public class BoardManager : MonoBehaviour
 
         SetShapeRect();
         CreateTiles();
+        int.TryParse(moves.text, out remainingMoves);
     }
 
     private void Update()
@@ -181,22 +186,28 @@ public class BoardManager : MonoBehaviour
     {
         Vector2 offset = _shapeSpriteRenderer.bounds.size;
 
-        foreach (int k in _distinctColumns.Keys)
+        if (remainingMoves > 0)
         {
-            int counter = RefillStartPos;
-            Vector3 instantiatedTransform = new Vector3(offset.x * k,
-                                                        offset.y * rows,
-                                                        0f);
+            remainingMoves--;
+            moves.text = remainingMoves.ToString();
 
-            for (int i = 0; i < _distinctColumns[k]; i++)
+
+            foreach (int k in _distinctColumns.Keys)
             {
-                GameObject refillShape = CreateShape(instantiatedTransform, rows + counter, k);
-                refillShape.transform.localPosition = new Vector3(offset.x * k, offset.y * (rows + counter), 0f);
-                refillShape.GetComponent<Shape>().ShiftDown(true);
-                counter++;
+                int counter = RefillStartPos;
+                Vector3 instantiatedTransform = new Vector3(offset.x * k,
+                                                            offset.y * rows,
+                                                            0f);
+
+                for (int i = 0; i < _distinctColumns[k]; i++)
+                {
+                    GameObject refillShape = CreateShape(instantiatedTransform, rows + counter, k);
+                    refillShape.transform.localPosition = new Vector3(offset.x * k, offset.y * (rows + counter), 0f);
+                    refillShape.GetComponent<Shape>().ShiftDown(true);
+                    counter++;
+                }
             }
         }
-
         _distinctColumns.Clear();
     }
 
