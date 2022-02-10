@@ -19,7 +19,7 @@ public class Rocket : Shape
                     instantiatedShapes[i, _col].GetComponent<Shape>().Explode();
             }
 
-            BoardManager.Instance.RefillBoard();
+            BoardManager.Instance.GetDistinctColumns().Add(_col, BoardManager.Instance.GetRowCount());
         }
 
         instantiatedShapes[_row, _col] = null;

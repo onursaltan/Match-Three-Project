@@ -211,6 +211,11 @@ public class BoardManager : MonoBehaviour
         _distinctColumns.Clear();
     }
 
+    public Dictionary<int, int> GetDistinctColumns()
+    {
+        return _distinctColumns;
+    } 
+
     public List<Shape> GetAdjacentShapes()
     {
         return _adjacentShapes;
