@@ -10,9 +10,12 @@ public class BoardManager : MonoBehaviour
 
     [SerializeField] private ShapeData[] shapesData;
     [SerializeField] private GameObject shapePrefab;
+    [SerializeField] private Text moves;
 
     [SerializeField] private int rows;
     [SerializeField] private int columns;
+
+    [SerializeField] private int remainingMoves;
 
     [SerializeField] private float paddingHorizontal;
     [SerializeField] private float paddingBottom;
@@ -49,6 +52,7 @@ public class BoardManager : MonoBehaviour
 
         SetShapeRect();
         CreateTiles();
+        int.TryParse(moves.text, out remainingMoves);
     }
 
     private void Update()
@@ -135,8 +139,10 @@ public class BoardManager : MonoBehaviour
 
     public void HandleShiftDown()
     {
-        if (_adjacentShapes.Count > 1)
+        if (_adjacentShapes.Count > 1 && remainingMoves > 0)
         {
+            remainingMoves--;
+            moves.text = remainingMoves.ToString();
             foreach (Shape shape in _adjacentShapes)
             {
                 _instantiatedShapes[shape.row, shape.col] = null;
