@@ -12,8 +12,8 @@ enum CubeOperation
 public class Cube : Shape
 {
     private const float TimeToWaitTurn = 0.05f;
-    private const float TimeToExpandOut = 0.5f;
-    private const float TimeToExpandIn = 0.3f;
+    private const float TimeToExpandOut = 0.3f;
+    private const float TimeToExpandIn = 0.15f;
     private const float ExpandRateScale = 1.08f;
     private const float ExpandRatePosition = 0.2f;
 
