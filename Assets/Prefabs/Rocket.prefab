@@ -4780,7 +4780,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 98
   m_RenderMode: 0
   m_SortMode: 0
   m_MinParticleSize: 0
@@ -4878,7 +4878,7 @@ TrailRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 98
   m_Time: 1
   m_Parameters:
     serializedVersion: 3
@@ -5050,7 +5050,7 @@ TrailRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 98
   m_Time: 1
   m_Parameters:
     serializedVersion: 3

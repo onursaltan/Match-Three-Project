@@ -6,27 +6,28 @@ using DG.Tweening;
 
 public class Rocket : Shape
 {
+
+    private const float TimeBetweenExplosions = 0.09f;
     private bool _isDirectionVertical;
 
     public override void Explode()
     {
         GameObject[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
 
+        _shapeSpriteRenderer.enabled = false;
+
         if (_isDirectionVertical)
         {
-            for (int i = 0; i < BoardManager.Instance.GetRowCount(); i++)
-            {
-                if (i != _row)
-                    instantiatedShapes[i, _col].GetComponent<Shape>().Explode();
-            }
-
-            BoardManager.Instance.GetDistinctColumns().Add(_col, BoardManager.Instance.GetRowCount());
+            ExplodeAllColumn();
+        }
+        else
+        {
+            ExplodeAllRow();
         }
 
         HandleExplosion();
         instantiatedShapes[_row, _col] = null;
-        BoardManager.Instance.StartShiftDown();
-        Destroy(gameObject);
+        StartCoroutine(WaitStartShift());
     }
 
     public override void Merge()
@@ -42,9 +43,8 @@ public class Rocket : Shape
     public override void SetShapeData(ShapeData shapeData, int row, int col)
     {
         base.SetShapeData(shapeData, row, col);
-        //  _isDirectionVertical = GetRandomBool();
+        _isDirectionVertical = GetRandomBool();
 
-        _isDirectionVertical = true;
         if (_isDirectionVertical)
         {
         }
@@ -59,25 +59,78 @@ public class Rocket : Shape
         return Random.Range(0, 2) == 1;
     }
 
+    private void ExplodeAllColumn()
+    {
+        GameObject[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
+
+        int index = 0;
+
+        for (int i = _row + 1; i < BoardManager.Instance.GetRowCount(); i++)
+            StartCoroutine(WaitExplodeShape(instantiatedShapes[i, _col].GetComponent<Shape>(), index++));
+
+        index = 0;
+
+        for (int i = _row - 1; i >= 0; i--)
+            StartCoroutine(WaitExplodeShape(instantiatedShapes[i, _col].GetComponent<Shape>(), index++));
+
+        BoardManager.Instance.GetDistinctColumns().Add(_col, BoardManager.Instance.GetRowCount());
+    }
+
+    private void ExplodeAllRow()
+    {
+        GameObject[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
+
+        int index = 0;
+
+        for (int i = _col + 1; i < BoardManager.Instance.GetColumnCount(); i++)
+            StartCoroutine(WaitExplodeShape(instantiatedShapes[_row, i].GetComponent<Shape>(), index++));
+
+        index = 0;
+
+        for (int i = _col - 1; i >= 0; i--)
+            StartCoroutine(WaitExplodeShape(instantiatedShapes[_row, i].GetComponent<Shape>(), index++));
+
+        Dictionary<int, int> distinctColumns = BoardManager.Instance.GetDistinctColumns();
+
+        for (int i = 0; i < BoardManager.Instance.GetColumnCount(); i++)
+            distinctColumns.Add(i, 1);
+    }
+
+    private IEnumerator WaitExplodeShape(Shape shape, int index)
+    {
+        yield return new WaitForSeconds(TimeBetweenExplosions * (float)index);
+        shape.Explode();
+    }
+
+    private IEnumerator WaitStartShift()
+    {
+        int rowCount = BoardManager.Instance.GetRowCount();
+        int biggerConstraint = Mathf.Max(rowCount - _row, (rowCount + _row) % rowCount);
+        yield return new WaitForSeconds(TimeBetweenExplosions * biggerConstraint);
+        BoardManager.Instance.StartShiftDown();
+        Destroy(gameObject);
+    }
     private void HandleExplosion()
     {
-        Vector3 pointTop = transform.position;
-        Vector3 pointBottom = transform.position;
-
-        pointTop.y += 1;
-        pointBottom.y -= -1;
+        Vector3 point1 = transform.position;
+        Vector3 point2 = transform.position;
 
         GameObject s = Instantiate(_shapeData.ExplodeEffect, transform.position, transform.rotation, transform.parent);
         GameObject s1 = Instantiate(_shapeData.ExplodeEffect, transform.position, transform.rotation, transform.parent);
 
-        s.transform.DOMove(pointTop, 0.1f).OnComplete( () => {
-            pointTop.y += 6;
-            s.transform.DOMove(pointTop, 1.1f);
-        });
+        if (_isDirectionVertical)
+        {
+            point1.y += 6;
+            point2.y -= 6;
+        }
+        else
+        {
+            point1.x += 6;
+            point2.x -= 6;
+        }
 
-        s1.transform.DOMove(pointBottom, 0.1f).OnComplete(() => {
-            pointBottom.y -= 6;
-            s1.transform.DOMove(pointBottom, 1.1f);
-        });
+        s.transform.DOMove(point1, 1.1f);
+
+        s1.transform.DOMove(point2, 1.1f);
     }
 }
