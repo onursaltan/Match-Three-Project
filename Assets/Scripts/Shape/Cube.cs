@@ -6,14 +6,14 @@ using UnityEngine.EventSystems;
 
 enum CubeOperation
 {
-    BasicExplosion, TurnIntoRocket, Fail
+    BasicExplosion, TurnIntoRocket, TurnIntoBomb, TurnIntoDisco, Fail
 }
 
 public class Cube : Shape
 {
-    private const float TimeToWaitTurn = 0.05f;
-    private const float TimeToExpandOut = 0.3f;
-    private const float TimeToExpandIn = 0.15f;
+    private const float TimeToWaitTurn = 0.03f;
+    private const float TimeToExpandOut = 0.2f;
+    private const float TimeToExpandIn = 0.1f;
     private const float ExpandRateScale = 1.08f;
     private const float ExpandRatePosition = 0.2f;
 
@@ -28,8 +28,6 @@ public class Cube : Shape
     {
         foreach (Cube cube in BoardManager.Instance.GetAdjacentShapes())
             cube.MoveToMergePoint(_row, _col);
-
-        StartCoroutine(TurnIntoRocket());
     }
 
     public override void OnPointerDown(PointerEventData eventData)
@@ -47,18 +45,26 @@ public class Cube : Shape
             BasicExplosionOperation();
             return CubeOperation.BasicExplosion;
         }
-        else if (adjacentShapesCount == 5 || adjacentShapesCount == 6)
+        else if (adjacentShapesCount == 5 || adjacentShapesCount <= 25)
         {
             TurnIntoRocketOperation();
             return CubeOperation.TurnIntoRocket;
         }
-        else if (adjacentShapesCount == 1)
+        else if (adjacentShapesCount == 7 || adjacentShapesCount == 8)
         {
+            TurnIntoBombOperation();
+            return CubeOperation.TurnIntoBomb;
+        }
+        else if(adjacentShapesCount >= 9)
+        {
+            TurnIntoDiscoOperation();
+            return CubeOperation.TurnIntoDisco;
+        }
+        else
+        {
+            FailOperation();
             return CubeOperation.Fail;
         }
-        BasicExplosionOperation();
-
-        return CubeOperation.BasicExplosion;
     }
 
     private void BasicExplosionOperation()
@@ -72,16 +78,22 @@ public class Cube : Shape
         BoardManager.Instance.StartShiftDown();
     }
 
-    private void TurnIntoRocketOperation()
+    private void TurnIntoBooster()
     {
         BoardManager.Instance.GetAdjacentShapes()[0].Merge();
         StartCoroutine(WaitForShiftDown());
     }
 
+    private void FailOperation()
+    {
+        BoardManager.Instance.GetAdjacentShapes().Clear();
+        FailAnimation();
+    }
+
     private IEnumerator WaitForShiftDown()
     {
         yield return new WaitForSeconds(TimeToExpandIn + TimeToExpandOut);
-        Debug.Log("selam");
+        BoardManager.Instance.GetAdjacentShapes().Remove(this);
         BoardManager.Instance.StartShiftDown();
     }
 
@@ -108,7 +120,7 @@ public class Cube : Shape
             {
                 transform.DOMove(new Vector3(posX, posY), TimeToExpandIn).OnComplete(() =>
                 {
-                    if (row != _row || col != _col)  // Bura deðiþcek
+                    if (!(row == _row && col == _col))  // Bura deðiþcek
                         BoardManager.Instance.DestroyShape(this);
 
                 });
@@ -121,11 +133,51 @@ public class Cube : Shape
         });
     }
 
+    private void FailAnimation()
+    {
+
+    }
+
+    private void TurnIntoRocketOperation()
+    {
+        TurnIntoBooster();
+        StartCoroutine(TurnIntoRocket());
+    }
+
+    private void TurnIntoBombOperation()
+    {
+        TurnIntoBooster();
+        StartCoroutine(TurnIntoBomb());
+    }
+
+    private void TurnIntoDiscoOperation()
+    {
+        TurnIntoBooster();
+        StartCoroutine(TurnIntoDisco());
+    }
+
     private IEnumerator TurnIntoRocket()
     {
         yield return new WaitForSeconds(TimeToExpandIn + TimeToExpandOut + TimeToWaitTurn);
         Rocket rocket = gameObject.AddComponent<Rocket>();
         rocket.SetShapeData(BoardManager.Instance.RocketShapeData, _row, _col);
+        BoardManager.Instance.ReloadShapeToList(rocket, _row, _col);
+        Destroy(gameObject.GetComponent<Cube>());
+    }
+
+    private IEnumerator TurnIntoBomb()
+    {
+        yield return new WaitForSeconds(TimeToExpandIn + TimeToExpandOut + TimeToWaitTurn);
+        Bomb bomb = gameObject.AddComponent<Bomb>();
+        bomb.SetShapeData(BoardManager.Instance.BombShapeData, _row, _col);
+        Destroy(gameObject.GetComponent<Cube>());
+    }
+
+    private IEnumerator TurnIntoDisco()
+    {
+        yield return new WaitForSeconds(TimeToExpandIn + TimeToExpandOut + TimeToWaitTurn);
+        Disco disco = gameObject.AddComponent<Disco>();
+        disco.SetShapeData(BoardManager.Instance.DiscoShapeData, _row, _col);
         Destroy(gameObject.GetComponent<Cube>());
     }
 }

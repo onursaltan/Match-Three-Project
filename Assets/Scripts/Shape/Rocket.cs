@@ -6,26 +6,21 @@ using DG.Tweening;
 
 public class Rocket : Shape
 {
-
-    private const float TimeBetweenExplosions = 0.09f;
+    private const float TimeBetweenExplosions = 0.05f;
     private bool _isDirectionVertical;
 
     public override void Explode()
     {
-        GameObject[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
+        Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
 
         _shapeSpriteRenderer.enabled = false;
 
         if (_isDirectionVertical)
-        {
             ExplodeAllColumn();
-        }
         else
-        {
             ExplodeAllRow();
-        }
 
-        HandleExplosion();
+        ExplosionAnimation();
         instantiatedShapes[_row, _col] = null;
         StartCoroutine(WaitStartShift());
     }
@@ -61,7 +56,7 @@ public class Rocket : Shape
 
     private void ExplodeAllColumn()
     {
-        GameObject[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
+        Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
 
         int index = 0;
 
@@ -78,7 +73,7 @@ public class Rocket : Shape
 
     private void ExplodeAllRow()
     {
-        GameObject[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
+        Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
 
         int index = 0;
 
@@ -110,7 +105,8 @@ public class Rocket : Shape
         BoardManager.Instance.StartShiftDown();
         Destroy(gameObject);
     }
-    private void HandleExplosion()
+
+    private void ExplosionAnimation()
     {
         Vector3 point1 = transform.position;
         Vector3 point2 = transform.position;
@@ -130,7 +126,6 @@ public class Rocket : Shape
         }
 
         s.transform.DOMove(point1, 1.1f);
-
         s1.transform.DOMove(point2, 1.1f);
     }
 }

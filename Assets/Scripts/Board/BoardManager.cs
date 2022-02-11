@@ -7,9 +7,11 @@ using UnityEngine.SceneManagement;
 public class BoardManager : MonoBehaviour
 {
     private static BoardManager _instance;
-    private int RefillStartPos = 6;
+    private int RefillStartPos = 4;
 
     public ShapeData RocketShapeData;
+    public ShapeData DiscoShapeData;
+    public ShapeData BombShapeData;
 
     [SerializeField] private ShapeData[] shapesData;
     [SerializeField] private GameObject shapePrefab;
@@ -27,7 +29,7 @@ public class BoardManager : MonoBehaviour
 
 
     private SpriteRenderer _shapeSpriteRenderer;
-    private GameObject[,] _instantiatedShapes;
+    private Shape[,] _instantiatedShapes;
     private List<Shape> _adjacentShapes;
     private Dictionary<int, int> _distinctColumns;
 
@@ -64,6 +66,12 @@ public class BoardManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            Vector2 offset = _shapeSpriteRenderer.bounds.size;
+            Vector3 instantiatedTransform = new Vector3(2 * offset.x,
+                                                            offset.y * 3,
+                                                            0f);
+
+            CreateShape(instantiatedTransform, 2, 3).transform.localPosition = instantiatedTransform;
         }
     }
 
@@ -74,7 +82,7 @@ public class BoardManager : MonoBehaviour
 
     public void CreateTiles()
     {
-        _instantiatedShapes = new GameObject[rows, columns];
+        _instantiatedShapes = new Shape[rows, columns];
 
         Vector2 offset = _shapeSpriteRenderer.bounds.size;
 
@@ -124,7 +132,7 @@ public class BoardManager : MonoBehaviour
         transform.position = _transform;
     }
 
-    private GameObject CreateShape(Vector3 instantiateTransform, int i, int j)
+    private Shape CreateShape(Vector3 instantiateTransform, int i, int j)
     {
         ShapeData randomShape = RandomShape();
 
@@ -132,7 +140,7 @@ public class BoardManager : MonoBehaviour
         Shape _shape = instantiatedShape.AddComponent<Cube>();
         _shape.SetShapeData(randomShape, i, j);
 
-        return instantiatedShape;
+        return _shape;
     }
 
     private ShapeData RandomShape()
@@ -203,7 +211,7 @@ public class BoardManager : MonoBehaviour
 
                 for (int i = 0; i < _distinctColumns[k]; i++)
                 {
-                    GameObject refillShape = CreateShape(instantiatedTransform, rows + counter, k);
+                    Shape refillShape = CreateShape(instantiatedTransform, rows + counter, k);
                     refillShape.transform.localPosition = new Vector3(offset.x * k, offset.y * (rows + counter), 0f);
                     refillShape.GetComponent<Shape>().ShiftDown(true);
                     counter++;
@@ -218,6 +226,11 @@ public class BoardManager : MonoBehaviour
         _distinctColumns.Clear();
     }
 
+    public void ReloadShapeToList(Shape shape, int row, int col)
+    {
+        _instantiatedShapes[row, col] = shape;
+    }
+
     public Dictionary<int, int> GetDistinctColumns()
     {
         return _distinctColumns;
@@ -227,7 +240,7 @@ public class BoardManager : MonoBehaviour
     {
         return _adjacentShapes;
     }
-    public GameObject[,] GetInstantiatedShapes()
+    public Shape[,] GetInstantiatedShapes()
     {
         return _instantiatedShapes;
     }
@@ -242,7 +255,7 @@ public class BoardManager : MonoBehaviour
         return columns;
     }
 
-    public GameObject[,] GetShapeMatrix()
+    public Shape[,] GetShapeMatrix()
     {
         return _instantiatedShapes;
     }
@@ -260,7 +273,7 @@ public class BoardManager : MonoBehaviour
 
     public void DestroyInstantiatedShapes()
     {
-        foreach (GameObject shape in _instantiatedShapes)
+        foreach (Shape shape in _instantiatedShapes)
             Destroy(shape);
     }
 
