@@ -6,21 +6,23 @@ using DG.Tweening;
 
 public enum ShapeState
 {
-    Waiting, Shifting
+    Waiting, Shifting, Merging
 }
 
 public abstract class Shape : MonoBehaviour, IPointerDownHandler
 {
-    private const float TimeShiftDown = 0.15f;
-    private const float TimeRefillShiftDown = 0.1f;
-    private const float TimeBounce = 0.1f;
-    private const float BounceAmount = 0.05f;
+    private const float TimeShiftDown = 0.07f;
+    private const float TimeRefillShiftDown = 0.08f;
+    private const float TimeBounce = 0.06f;
+    private const float BounceAmount = 0.1f;
 
     public ShapeData _shapeData;
     public ShapeState _shapeState;
 
     public int _row;
     public int _col;
+
+    private Sequence _shiftDownSequence;
 
     protected SpriteRenderer _shapeSpriteRenderer;
 
@@ -37,7 +39,7 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
         this._col = col;
         _shapeData = shapeData;
         _shapeSpriteRenderer.sprite = shapeData.Sprite;
-        _shapeSpriteRenderer.sortingOrder = row + 1;
+        _shapeSpriteRenderer.sortingOrder = row + 2;
     }
 
     public void CheckAdjacentShapes(bool isThisClickedShape)
@@ -56,7 +58,7 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
 
     private void _CheckAdjacentShapes(int row, int col, int constraint, bool isRowChanging)
     {
-        GameObject[,] shapeMatrix = BoardManager.Instance.GetShapeMatrix();
+        Shape[,] shapeMatrix = BoardManager.Instance.GetShapeMatrix();
         int temp;
 
         if (isRowChanging)
@@ -93,7 +95,7 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
 
     private int FindEmptyRow(int rowIndex)
     {
-        GameObject[,] shapeMatrix = BoardManager.Instance.GetShapeMatrix();
+        Shape[,] shapeMatrix = BoardManager.Instance.GetShapeMatrix();
         int rowToShift = -1;
 
         for (int i = rowIndex; i >= 0; i--)
@@ -109,9 +111,9 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
     {
         if (rowToShift != -1)
         {
-            GameObject[,] shapeMatrix = BoardManager.Instance.GetShapeMatrix();
+            Shape[,] shapeMatrix = BoardManager.Instance.GetShapeMatrix();
 
-            shapeMatrix[rowToShift, _col] = this.gameObject;
+            shapeMatrix[rowToShift, _col] = this;
             shapeMatrix[_row, _col] = null;
             Shift(rowToShift, TimeShiftDown);
         }
@@ -121,27 +123,48 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
     {
         if (rowToShift != -1)
         {
-            GameObject[,] shapeMatrix = BoardManager.Instance.GetShapeMatrix();
+            Shape[,] shapeMatrix = BoardManager.Instance.GetShapeMatrix();
 
-            shapeMatrix[rowToShift, _col] = this.gameObject;
+            shapeMatrix[rowToShift, _col] = this;
             Shift(rowToShift, TimeRefillShiftDown);
         }
     }
 
     private void Shift(int rowToShift, float shiftDownTime)
     {
+        if(_shapeState == ShapeState.Shifting)
+        {
+            _shiftDownSequence.Kill();
+            _row = FindCurrentRow();
+        }
+        else
+        {
+            _shapeState = ShapeState.Shifting;
+        }
+
+        _shiftDownSequence = DOTween.Sequence();
+
         Vector2 offset = _shapeSpriteRenderer.bounds.size;
 
-        Vector3 posToShift = transform.position;
-        posToShift.y -= offset.y * (_row - rowToShift);
+        float posToShift = offset.y * rowToShift;
 
-        transform.DOMove(posToShift, shiftDownTime * (_row - rowToShift)).SetEase(Ease.InQuad).OnComplete(() =>
+        _shiftDownSequence.Append(transform.DOLocalMoveY(posToShift, shiftDownTime * (_row - rowToShift)).SetEase(Ease.InQuad)).OnComplete(() =>
         {
             BounceShape(transform.position.y + BounceAmount);
+            _shapeState = ShapeState.Waiting;
         });
-
+     
+        
         _row = rowToShift;
         _shapeSpriteRenderer.sortingOrder = _row + 1;
+    }
+
+    private int FindCurrentRow()
+    {
+        int currentRow;
+        Vector2 offset = _shapeSpriteRenderer.bounds.size;
+        currentRow = Mathf.RoundToInt(transform.localPosition.y / offset.y);
+        return currentRow;
     }
 
     private void BounceShape(float pos)

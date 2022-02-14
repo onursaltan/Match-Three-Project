@@ -7,7 +7,7 @@ public class Bomb : Shape
 {
     public override void Explode()
     {
-        throw new System.NotImplementedException();
+
     }
 
     public override void Merge()
@@ -17,6 +17,6 @@ public class Bomb : Shape
 
     public override void OnPointerDown(PointerEventData eventData)
     {
-        throw new System.NotImplementedException();
+        Explode();
     }
 }
