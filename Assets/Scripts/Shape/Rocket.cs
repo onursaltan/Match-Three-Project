@@ -32,7 +32,7 @@ public class Rocket : Shape
 
     public override void OnPointerDown(PointerEventData eventData)
     {
-        if (BoardManager.Instance.isMovesLeft())
+        if (BoardManager.Instance.isMovesLeft() && BoardManager.Instance.gameState == GameState.Ready)
         {
             Explode();
         }
@@ -104,6 +104,7 @@ public class Rocket : Shape
         int rowCount = BoardManager.Instance.GetRowCount();
         int biggerConstraint = Mathf.Max(rowCount - _row, (rowCount + _row) % rowCount);
         yield return new WaitForSeconds(TimeBetweenExplosions * biggerConstraint);
+        Debug.Log("sea");
         BoardManager.Instance.StartShiftDown();
         Destroy(gameObject);
     }

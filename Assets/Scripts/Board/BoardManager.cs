@@ -4,6 +4,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+public enum GameState
+{
+    Ready, Merging,
+}
+
 public class BoardManager : MonoBehaviour
 {
     private static BoardManager _instance;
@@ -12,6 +17,7 @@ public class BoardManager : MonoBehaviour
     public ShapeData RocketShapeData;
     public ShapeData DiscoShapeData;
     public ShapeData BombShapeData;
+    public GameState gameState;
 
     [SerializeField] private ShapeData[] shapesData;
     [SerializeField] private GameObject shapePrefab;
@@ -60,6 +66,7 @@ public class BoardManager : MonoBehaviour
         SetShapeRect();
         CreateTiles();
         int.TryParse(moves.text, out remainingMoves);
+        gameState = GameState.Ready;
     }
 
     private void Update()

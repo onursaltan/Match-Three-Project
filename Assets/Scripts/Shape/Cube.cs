@@ -19,7 +19,7 @@ public class Cube : Shape
 
     public override void Explode()
     {
-        if (_shapeState == ShapeState.Waiting)
+        if (_shapeState == ShapeState.Waiting && BoardManager.Instance.gameState == GameState.Ready)
         {
             Instantiate(_shapeData.ExplodeEffect, transform.position, transform.rotation, transform.parent);
             BoardManager.Instance.GetInstantiatedShapes()[_row, _col] = null;
@@ -30,6 +30,7 @@ public class Cube : Shape
     public override void Merge()
     {
         _shapeState = ShapeState.Merging;
+        BoardManager.Instance.gameState = GameState.Merging;
 
         foreach (Cube cube in BoardManager.Instance.GetAdjacentShapes())
             cube.MoveToMergePoint(_row, _col);
@@ -37,7 +38,7 @@ public class Cube : Shape
 
     public override void OnPointerDown(PointerEventData eventData)
     {
-        if (BoardManager.Instance.isMovesLeft())
+        if (BoardManager.Instance.isMovesLeft() && BoardManager.Instance.gameState == GameState.Ready)
         {
             CheckAdjacentShapes(true);
             HandleCubeOperation();
@@ -104,6 +105,7 @@ public class Cube : Shape
         yield return new WaitForSeconds(TimeToExpandIn + TimeToExpandOut);
         BoardManager.Instance.GetAdjacentShapes().Remove(this);
         BoardManager.Instance.StartShiftDown();
+        BoardManager.Instance.gameState = GameState.Ready;
     }
 
     private void MoveToMergePoint(int row, int col)
@@ -133,6 +135,7 @@ public class Cube : Shape
                     if (!(row == _row && col == _col))  // Bura de?i?cek
                         BoardManager.Instance.DestroyShape(this);
 
+                    _shapeState = ShapeState.Waiting;
                 });
             });
 
