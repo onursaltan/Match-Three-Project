@@ -31,7 +31,10 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
         _shapeSpriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    public abstract void OnPointerDown(PointerEventData eventData);
+    public virtual void OnPointerDown(PointerEventData eventData)
+    {
+        BoardManager.Instance.DecreaseRemainingMoves();
+    }
 
     public virtual void SetShapeData(ShapeData shapeData, int row, int col)
     {

@@ -42,6 +42,7 @@ public class Cube : Shape
             CheckAdjacentShapes(true);
             HandleCubeOperation();
         }
+        base.OnPointerDown(eventData);
     }
 
     private CubeOperation HandleCubeOperation()

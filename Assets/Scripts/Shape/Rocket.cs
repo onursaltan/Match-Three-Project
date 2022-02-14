@@ -31,11 +31,12 @@ public class Rocket : Shape
     }
 
     public override void OnPointerDown(PointerEventData eventData)
-    { 
+    {
         if (BoardManager.Instance.isMovesLeft())
         {
             Explode();
         }
+        base.OnPointerDown(eventData);
     }
 
     public override void SetShapeData(ShapeData shapeData, int row, int col)
@@ -43,13 +44,8 @@ public class Rocket : Shape
         base.SetShapeData(shapeData, row, col);
         _isDirectionVertical = GetRandomBool();
 
-        if (_isDirectionVertical)
-        {
-        }
-        else
-        {
+        if (!_isDirectionVertical)
             transform.Rotate(new Vector3(0f, 0f, 90f));
-        }
     }
 
     private bool GetRandomBool()
@@ -64,12 +60,12 @@ public class Rocket : Shape
         int index = 0;
 
         for (int i = _row + 1; i < BoardManager.Instance.GetRowCount(); i++)
-                StartCoroutine(WaitExplodeShape(instantiatedShapes[i, _col].GetComponent<Shape>(), index++));
+                StartCoroutine(WaitExplodeShape(instantiatedShapes[i, _col], index++));
 
         index = 0;
 
         for (int i = _row - 1; i >= 0; i--)
-                StartCoroutine(WaitExplodeShape(instantiatedShapes[i, _col].GetComponent<Shape>(), index++));
+                StartCoroutine(WaitExplodeShape(instantiatedShapes[i, _col], index++));
 
         if (!BoardManager.Instance.GetDistinctColumns().ContainsKey(_col))
                 BoardManager.Instance.GetDistinctColumns().Add(_col, BoardManager.Instance.GetRowCount());
@@ -82,12 +78,12 @@ public class Rocket : Shape
         int index = 0;
 
         for (int i = _col + 1; i < BoardManager.Instance.GetColumnCount(); i++)
-                StartCoroutine(WaitExplodeShape(instantiatedShapes[_row, i].GetComponent<Shape>(), index++));
+                StartCoroutine(WaitExplodeShape(instantiatedShapes[_row, i], index++));
 
         index = 0;
 
         for (int i = _col - 1; i >= 0; i--)
-                StartCoroutine(WaitExplodeShape(instantiatedShapes[_row, i].GetComponent<Shape>(), index++));
+                StartCoroutine(WaitExplodeShape(instantiatedShapes[_row, i], index++));
 
         Dictionary<int, int> distinctColumns = BoardManager.Instance.GetDistinctColumns();
 

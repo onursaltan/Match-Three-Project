@@ -196,43 +196,47 @@ public class BoardManager : MonoBehaviour
     {
         Vector2 offset = _shapeSpriteRenderer.bounds.size;
 
-            remainingMoves--;
-            moves.text = remainingMoves.ToString();
+        foreach (int k in _distinctColumns.Keys)
+        {
+            int counter = RefillStartPos;
+            Vector3 instantiatedTransform = new Vector3(offset.x * k,
+                                                        offset.y * rows,
+                                                        0f);
 
-
-            foreach (int k in _distinctColumns.Keys)
+            for (int i = 0; i < _distinctColumns[k]; i++)
             {
-                int counter = RefillStartPos;
-                Vector3 instantiatedTransform = new Vector3(offset.x * k,
-                                                            offset.y * rows,
-                                                            0f);
+                Shape refillShape = CreateShape(instantiatedTransform, rows + counter, k);
+                refillShape.transform.localPosition = new Vector3(offset.x * k, offset.y * (rows + counter), 0f);
+                refillShape.GetComponent<Shape>().ShiftDown(true);
+                counter++;
+            }
+        }
 
-                for (int i = 0; i < _distinctColumns[k]; i++)
-                {
-                    Shape refillShape = CreateShape(instantiatedTransform, rows + counter, k);
-                    refillShape.transform.localPosition = new Vector3(offset.x * k, offset.y * (rows + counter), 0f);
-                    refillShape.GetComponent<Shape>().ShiftDown(true);
-                    counter++;
-                }
-            }
-            if (remainingMoves == 0)
-            {
-                remainingMoves--;
-                moves.text = "0";
-                StartCoroutine(RestartButtonWithDelay(1.2f));
-            }
-            _distinctColumns.Clear();
+        _distinctColumns.Clear();
     }
 
     public void ReloadShapeToList(Shape shape, int row, int col)
     {
         _instantiatedShapes[row, col] = shape;
     }
+    public void DecreaseRemainingMoves()
+    {
+        if (remainingMoves > 0)
+        {
+            remainingMoves--;
+            moves.text = remainingMoves.ToString();
+        }
+
+        if(remainingMoves == 0)
+        {
+            StartCoroutine(RestartButtonWithDelay(1.2f));
+        }
+    }
 
     public Dictionary<int, int> GetDistinctColumns()
     {
         return _distinctColumns;
-    } 
+    }
 
     public List<Shape> GetAdjacentShapes()
     {
@@ -291,7 +295,7 @@ public class BoardManager : MonoBehaviour
         else
         {
             return false;
-        } 
+        }
     }
 
 }
