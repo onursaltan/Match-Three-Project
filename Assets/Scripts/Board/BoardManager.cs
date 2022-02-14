@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class BoardManager : MonoBehaviour
 {
     private static BoardManager _instance;
-    private int RefillStartPos = 4;
+    private const int RefillStartPos = 5;
 
     public ShapeData RocketShapeData;
     public ShapeData DiscoShapeData;

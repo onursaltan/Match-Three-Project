@@ -64,14 +64,15 @@ public class Rocket : Shape
         int index = 0;
 
         for (int i = _row + 1; i < BoardManager.Instance.GetRowCount(); i++)
-            StartCoroutine(WaitExplodeShape(instantiatedShapes[i, _col].GetComponent<Shape>(), index++));
+                StartCoroutine(WaitExplodeShape(instantiatedShapes[i, _col].GetComponent<Shape>(), index++));
 
         index = 0;
 
         for (int i = _row - 1; i >= 0; i--)
-            StartCoroutine(WaitExplodeShape(instantiatedShapes[i, _col].GetComponent<Shape>(), index++));
+                StartCoroutine(WaitExplodeShape(instantiatedShapes[i, _col].GetComponent<Shape>(), index++));
 
-        BoardManager.Instance.GetDistinctColumns().Add(_col, BoardManager.Instance.GetRowCount());
+        if (!BoardManager.Instance.GetDistinctColumns().ContainsKey(_col))
+                BoardManager.Instance.GetDistinctColumns().Add(_col, BoardManager.Instance.GetRowCount());
     }
 
     private void ExplodeAllRow()
@@ -81,23 +82,25 @@ public class Rocket : Shape
         int index = 0;
 
         for (int i = _col + 1; i < BoardManager.Instance.GetColumnCount(); i++)
-            StartCoroutine(WaitExplodeShape(instantiatedShapes[_row, i].GetComponent<Shape>(), index++));
+                StartCoroutine(WaitExplodeShape(instantiatedShapes[_row, i].GetComponent<Shape>(), index++));
 
         index = 0;
 
         for (int i = _col - 1; i >= 0; i--)
-            StartCoroutine(WaitExplodeShape(instantiatedShapes[_row, i].GetComponent<Shape>(), index++));
+                StartCoroutine(WaitExplodeShape(instantiatedShapes[_row, i].GetComponent<Shape>(), index++));
 
         Dictionary<int, int> distinctColumns = BoardManager.Instance.GetDistinctColumns();
 
         for (int i = 0; i < BoardManager.Instance.GetColumnCount(); i++)
-            distinctColumns.Add(i, 1);
+            if(!distinctColumns.ContainsKey(i))
+                distinctColumns.Add(i, 1);
     }
 
     private IEnumerator WaitExplodeShape(Shape shape, int index)
     {
         yield return new WaitForSeconds(TimeBetweenExplosions * (float)index);
-        shape.Explode();
+        if(shape != null)
+            shape.Explode();
     }
 
     private IEnumerator WaitStartShift()

@@ -12,7 +12,7 @@ public enum ShapeState
 public abstract class Shape : MonoBehaviour, IPointerDownHandler
 {
     private const float TimeShiftDown = 0.07f;
-    private const float TimeRefillShiftDown = 0.08f;
+    private const float TimeRefillShiftDown = 0.06f;
     private const float TimeBounce = 0.06f;
     private const float BounceAmount = 0.1f;
 

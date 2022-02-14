@@ -19,13 +19,18 @@ public class Cube : Shape
 
     public override void Explode()
     {
-        Instantiate(_shapeData.ExplodeEffect, transform.position, transform.rotation, transform.parent);
-        BoardManager.Instance.GetInstantiatedShapes()[_row, _col] = null;
-        Destroy(gameObject);
+        if (_shapeState == ShapeState.Waiting)
+        {
+            Instantiate(_shapeData.ExplodeEffect, transform.position, transform.rotation, transform.parent);
+            BoardManager.Instance.GetInstantiatedShapes()[_row, _col] = null;
+            Destroy(gameObject);
+        }
     }
 
     public override void Merge()
     {
+        _shapeState = ShapeState.Merging;
+
         foreach (Cube cube in BoardManager.Instance.GetAdjacentShapes())
             cube.MoveToMergePoint(_row, _col);
     }
@@ -58,7 +63,7 @@ public class Cube : Shape
             TurnIntoBombOperation();
             return CubeOperation.TurnIntoBomb;
         }
-        else if(adjacentShapesCount >= 9)
+        else if (adjacentShapesCount >= 9)
         {
             TurnIntoDiscoOperation();
             return CubeOperation.TurnIntoDisco;
@@ -103,6 +108,7 @@ public class Cube : Shape
     private void MoveToMergePoint(int row, int col)
     {
         Vector2 offset = _shapeSpriteRenderer.bounds.size;
+        _shapeState = ShapeState.Merging;
         _shapeSpriteRenderer.sortingOrder = 98;
 
         int directionX = col - _col;
@@ -157,7 +163,7 @@ public class Cube : Shape
 
             });
         });
-        
+
     }
 
     private void TurnIntoRocketOperation()
