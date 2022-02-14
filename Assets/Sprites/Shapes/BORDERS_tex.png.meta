@@ -1,7 +1,52 @@
 fileFormatVersion: 2
 guid: bb93786839619dd4dab55feafaac98ef
 TextureImporter:
-  internalIDToNameTable: []
+  internalIDToNameTable:
+  - first:
+      213: -5084634163368977784
+    second: BORDERS_tex_0
+  - first:
+      213: 756282649852220892
+    second: BORDERS_tex_1
+  - first:
+      213: -4889786414294826486
+    second: BORDERS_tex_2
+  - first:
+      213: 6693145547477478752
+    second: BORDERS_tex_3
+  - first:
+      213: 3067702915792882720
+    second: BORDERS_tex_4
+  - first:
+      213: -4072491897730788617
+    second: BORDERS_tex_5
+  - first:
+      213: 4270483855870141201
+    second: BORDERS_tex_6
+  - first:
+      213: -4458134905503187693
+    second: BORDERS_tex_7
+  - first:
+      213: -7179357411569638864
+    second: BORDERS_tex_8
+  - first:
+      213: -6523358659615987713
+    second: BORDERS_tex_9
+  - first:
+      213: -1082024455892714829
+    second: BORDERS_tex_10
+  - first:
+      213: 6808677638562317340
+    second: BORDERS_tex_11
+  - first:
+      213: 8848813739092679919
+    second: BORDERS_tex_12
+  - first:
+      213: -3740392023096007378
+    second: BORDERS_tex_13
+  - first:
+      213: 9167895985233976818
+    second: BORDERS_tex_14
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -41,7 +86,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -75,9 +120,348 @@ TextureImporter:
     overridden: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: BORDERS_tex_0
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 214
+        width: 40
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 88a939ffa20cf69b0800000000000000
+      internalID: -5084634163368977784
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BORDERS_tex_1
+      rect:
+        serializedVersion: 2
+        x: 53
+        y: 215
+        width: 31
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cd59b36201bde7a00800000000000000
+      internalID: 756282649852220892
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BORDERS_tex_2
+      rect:
+        serializedVersion: 2
+        x: 95
+        y: 214
+        width: 31
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a020d64d92df32cb0800000000000000
+      internalID: -4889786414294826486
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BORDERS_tex_3
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 214
+        width: 40
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 06de163e964d2ec50800000000000000
+      internalID: 6693145547477478752
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BORDERS_tex_4
+      rect:
+        serializedVersion: 2
+        x: 170
+        y: 214
+        width: 40
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 02cc34c6c8ba29a20800000000000000
+      internalID: 3067702915792882720
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BORDERS_tex_5
+      rect:
+        serializedVersion: 2
+        x: 212
+        y: 214
+        width: 40
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7f2991d223a9b77c0800000000000000
+      internalID: -4072491897730788617
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BORDERS_tex_6
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 172
+        width: 31
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1132e20e07ec34b30800000000000000
+      internalID: 4270483855870141201
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BORDERS_tex_7
+      rect:
+        serializedVersion: 2
+        x: 44
+        y: 172
+        width: 40
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 31d76b47ce58122c0800000000000000
+      internalID: -4458134905503187693
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BORDERS_tex_8
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 131
+        width: 31
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 032e2d7d87ccd5c90800000000000000
+      internalID: -7179357411569638864
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BORDERS_tex_9
+      rect:
+        serializedVersion: 2
+        x: 44
+        y: 130
+        width: 40
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ff7ee1f7cdf5875a0800000000000000
+      internalID: -6523358659615987713
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BORDERS_tex_10
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 88
+        width: 31
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3baba3c7d70ebf0f0800000000000000
+      internalID: -1082024455892714829
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BORDERS_tex_11
+      rect:
+        serializedVersion: 2
+        x: 44
+        y: 88
+        width: 40
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c1407a40d384d7e50800000000000000
+      internalID: 6808677638562317340
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BORDERS_tex_12
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 46
+        width: 40
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fec1732763d4dca70800000000000000
+      internalID: 8848813739092679919
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BORDERS_tex_13
+      rect:
+        serializedVersion: 2
+        x: 44
+        y: 47
+        width: 40
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e2568aeb545771cc0800000000000000
+      internalID: -3740392023096007378
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BORDERS_tex_14
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 4
+        width: 31
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2fdd99133d8ea3f70800000000000000
+      internalID: 9167895985233976818
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []

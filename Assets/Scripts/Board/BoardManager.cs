@@ -75,7 +75,7 @@ public class BoardManager : MonoBehaviour
         }
     }
 
-    public void restart()
+    public void Restart()
     {
         SceneManager.LoadScene(0);
     }
@@ -220,6 +220,7 @@ public class BoardManager : MonoBehaviour
         }
         else if (remainingMoves == 1)
         {
+            remainingMoves--;
             moves.text = "0";
             StartCoroutine(RestartButtonWithDelay(1.2f));
         }
@@ -282,6 +283,18 @@ public class BoardManager : MonoBehaviour
         yield return new WaitForSeconds(time);
         noMovesLeft.SetActive(true);
         tint.SetActive(true);
+    }
+
+    public bool isMovesLeft()
+    {
+        if (remainingMoves > 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        } 
     }
 
 }
