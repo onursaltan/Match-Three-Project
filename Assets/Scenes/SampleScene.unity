@@ -207,7 +207,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 785137480}
         m_TargetAssemblyTypeName: BoardManager, Assembly-CSharp
-        m_MethodName: restart
+        m_MethodName: Restart
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1332,7 +1332,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 785137480}
         m_TargetAssemblyTypeName: BoardManager, Assembly-CSharp
-        m_MethodName: restart
+        m_MethodName: Restart
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

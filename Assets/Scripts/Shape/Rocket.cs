@@ -31,8 +31,11 @@ public class Rocket : Shape
     }
 
     public override void OnPointerDown(PointerEventData eventData)
-    {
-        Explode();
+    { 
+        if (BoardManager.Instance.isMovesLeft())
+        {
+            Explode();
+        }
     }
 
     public override void SetShapeData(ShapeData shapeData, int row, int col)

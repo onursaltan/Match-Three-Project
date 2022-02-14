@@ -32,8 +32,11 @@ public class Cube : Shape
 
     public override void OnPointerDown(PointerEventData eventData)
     {
-        CheckAdjacentShapes(true);
-        HandleCubeOperation();
+        if (BoardManager.Instance.isMovesLeft())
+        {
+            CheckAdjacentShapes(true);
+            HandleCubeOperation();
+        }
     }
 
     private CubeOperation HandleCubeOperation()
@@ -45,7 +48,7 @@ public class Cube : Shape
             BasicExplosionOperation();
             return CubeOperation.BasicExplosion;
         }
-        else if (adjacentShapesCount == 5 || adjacentShapesCount <= 25)
+        else if (adjacentShapesCount >= 5 && adjacentShapesCount <= 25)
         {
             TurnIntoRocketOperation();
             return CubeOperation.TurnIntoRocket;
@@ -120,7 +123,7 @@ public class Cube : Shape
             {
                 transform.DOMove(new Vector3(posX, posY), TimeToExpandIn).OnComplete(() =>
                 {
-                    if (!(row == _row && col == _col))  // Bura deðiþcek
+                    if (!(row == _row && col == _col))  // Bura de?i?cek
                         BoardManager.Instance.DestroyShape(this);
 
                 });
@@ -135,7 +138,26 @@ public class Cube : Shape
 
     private void FailAnimation()
     {
+        transform.DORotate(new Vector3(0, 0, 10), 0.05f).OnComplete(() =>
+        {
+            transform.DORotate(new Vector3(0, 0, -10), 0.1f).OnComplete(() =>
+            {
+                transform.DORotate(new Vector3(0, 0, 0), 0.05f).OnComplete(() =>
+                {
+                    transform.DORotate(new Vector3(0, 0, 5), 0.03f).OnComplete(() =>
+                    {
+                        transform.DORotate(new Vector3(0, 0, -5), 0.06f).OnComplete(() =>
+                        {
+                            transform.DORotate(new Vector3(0, 0, 0), 0.03f);
 
+                        });
+                    });
+
+                });
+
+            });
+        });
+        
     }
 
     private void TurnIntoRocketOperation()
