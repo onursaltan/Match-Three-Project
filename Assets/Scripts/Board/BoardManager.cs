@@ -196,8 +196,6 @@ public class BoardManager : MonoBehaviour
     {
         Vector2 offset = _shapeSpriteRenderer.bounds.size;
 
-        if (remainingMoves > 1)
-        {
             remainingMoves--;
             moves.text = remainingMoves.ToString();
 
@@ -217,14 +215,13 @@ public class BoardManager : MonoBehaviour
                     counter++;
                 }
             }
-        }
-        else if (remainingMoves == 1)
-        {
-            remainingMoves--;
-            moves.text = "0";
-            StartCoroutine(RestartButtonWithDelay(1.2f));
-        }
-        _distinctColumns.Clear();
+            if (remainingMoves == 0)
+            {
+                remainingMoves--;
+                moves.text = "0";
+                StartCoroutine(RestartButtonWithDelay(1.2f));
+            }
+            _distinctColumns.Clear();
     }
 
     public void ReloadShapeToList(Shape shape, int row, int col)
