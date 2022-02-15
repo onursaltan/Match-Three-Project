@@ -86,7 +86,7 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
 
         if (forRefill)
         {
-            rowToShift = FindEmptyRow(BoardManager.Instance.GetRowCount() - 1);
+            rowToShift = FindEmptyRow(BoardManager.Instance.GetRowCount() - 1);    
             HandleShiftDownForRefill(rowToShift);
         }
         else

@@ -19,12 +19,9 @@ public class Cube : Shape
 
     public override void Explode()
     {
-        if (_shapeState == ShapeState.Waiting && BoardManager.Instance.gameState == GameState.Ready)
-        {
             Instantiate(_shapeData.ExplodeEffect, transform.position, transform.rotation, transform.parent);
             BoardManager.Instance.GetInstantiatedShapes()[_row, _col] = null;
             Destroy(gameObject);
-        }
     }
 
     public override void Merge()
@@ -33,7 +30,11 @@ public class Cube : Shape
         BoardManager.Instance.gameState = GameState.Merging;
 
         foreach (Cube cube in BoardManager.Instance.GetAdjacentShapes())
+        {
             cube.MoveToMergePoint(_row, _col);
+            if (!(cube._row == _row && cube._col == _col))
+                BoardManager.Instance.RemoveFromInstantiatedShapes(cube._row, cube._col);
+        }
     }
 
     public override void OnPointerDown(PointerEventData eventData)
@@ -46,35 +47,20 @@ public class Cube : Shape
         base.OnPointerDown(eventData);
     }
 
-    private CubeOperation HandleCubeOperation()
+    private void HandleCubeOperation()
     {
         int adjacentShapesCount = BoardManager.Instance.GetAdjacentShapes().Count;
 
         if (adjacentShapesCount > 1 && adjacentShapesCount < 5)
-        {
             BasicExplosionOperation();
-            return CubeOperation.BasicExplosion;
-        }
-        else if (adjacentShapesCount >= 5 && adjacentShapesCount <= 25)
-        {
+        else if (adjacentShapesCount == 5 || adjacentShapesCount == 6)
             TurnIntoRocketOperation();
-            return CubeOperation.TurnIntoRocket;
-        }
         else if (adjacentShapesCount == 7 || adjacentShapesCount == 8)
-        {
-            TurnIntoBombOperation();
-            return CubeOperation.TurnIntoBomb;
-        }
+            BasicExplosionOperation();
         else if (adjacentShapesCount >= 9)
-        {
-            TurnIntoDiscoOperation();
-            return CubeOperation.TurnIntoDisco;
-        }
+            BasicExplosionOperation();
         else
-        {
             FailOperation();
-            return CubeOperation.Fail;
-        }
     }
 
     private void BasicExplosionOperation()

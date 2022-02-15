@@ -14,14 +14,15 @@ public class Rocket : Shape
         Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
 
         _shapeSpriteRenderer.enabled = false;
+        GetComponent<BoxCollider2D>().enabled = false;
 
         if (_isDirectionVertical)
             ExplodeAllColumn();
         else
             ExplodeAllRow();
 
-        ExplosionAnimation();
         instantiatedShapes[_row, _col] = null;
+        ExplosionAnimation();
         StartCoroutine(WaitStartShift());
     }
 
@@ -33,9 +34,8 @@ public class Rocket : Shape
     public override void OnPointerDown(PointerEventData eventData)
     {
         if (BoardManager.Instance.isMovesLeft() && BoardManager.Instance.gameState == GameState.Ready)
-        {
             Explode();
-        }
+
         base.OnPointerDown(eventData);
     }
 
@@ -95,6 +95,7 @@ public class Rocket : Shape
     private IEnumerator WaitExplodeShape(Shape shape, int index)
     {
         yield return new WaitForSeconds(TimeBetweenExplosions * (float)index);
+
         if(shape != null)
             shape.Explode();
     }
@@ -102,11 +103,9 @@ public class Rocket : Shape
     private IEnumerator WaitStartShift()
     {
         int rowCount = BoardManager.Instance.GetRowCount();
-        int biggerConstraint = Mathf.Max(rowCount - _row, (rowCount + _row) % rowCount);
-        yield return new WaitForSeconds(TimeBetweenExplosions * biggerConstraint);
-        Debug.Log("sea");
+        yield return new WaitForSeconds(TimeBetweenExplosions * rowCount);
         BoardManager.Instance.StartShiftDown();
-        Destroy(gameObject);
+        Destroy(gameObject, 0.75f);
     }
 
     private void ExplosionAnimation()

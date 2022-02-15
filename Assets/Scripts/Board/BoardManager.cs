@@ -155,6 +155,19 @@ public class BoardManager : MonoBehaviour
         int randInt = Random.Range(0, shapesData.Length);
         return shapesData[randInt];
     }
+    public bool IsShapeCheckedBefore(Shape _shape)
+    {
+        foreach (Shape shape in this._adjacentShapes)
+            if (shape == _shape)
+                return true;
+
+        return false;
+    }
+
+    public void AddShapeToAdjacentShapes(Shape shape)
+    {
+        _adjacentShapes.Add(shape);
+    }
 
     public void StartShiftDown()
     {
@@ -170,22 +183,7 @@ public class BoardManager : MonoBehaviour
         }
 
         _adjacentShapes.Clear();
-
         RefillBoard();
-    }
-
-    public void AddShapeToAdjacentShapes(Shape shape)
-    {
-        _adjacentShapes.Add(shape);
-    }
-
-    public bool IsShapeCheckedBefore(Shape _shape)
-    {
-        foreach (Shape shape in this._adjacentShapes)
-            if (shape == _shape)
-                return true;
-
-        return false;
     }
 
     private void FindDistinctColums()
@@ -199,7 +197,7 @@ public class BoardManager : MonoBehaviour
         }
     }
 
-    public void RefillBoard()
+    private void RefillBoard()
     {
         Vector2 offset = _shapeSpriteRenderer.bounds.size;
 
@@ -226,6 +224,7 @@ public class BoardManager : MonoBehaviour
     {
         _instantiatedShapes[row, col] = shape;
     }
+
     public void DecreaseRemainingMoves()
     {
         if (remainingMoves > 0)
