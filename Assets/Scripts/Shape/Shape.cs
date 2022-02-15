@@ -12,7 +12,7 @@ public enum ShapeState
 public abstract class Shape : MonoBehaviour, IPointerDownHandler
 {
     private const float TimeShiftDown = 0.07f;
-    private const float TimeRefillShiftDown = 0.08f;
+    private const float TimeRefillShiftDown = 0.06f;
     private const float TimeBounce = 0.06f;
     private const float BounceAmount = 0.1f;
 
@@ -31,7 +31,10 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
         _shapeSpriteRenderer = GetComponent<SpriteRenderer>();
     }
 
-    public abstract void OnPointerDown(PointerEventData eventData);
+    public virtual void OnPointerDown(PointerEventData eventData)
+    {
+        BoardManager.Instance.DecreaseRemainingMoves();
+    }
 
     public virtual void SetShapeData(ShapeData shapeData, int row, int col)
     {
@@ -83,7 +86,7 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
 
         if (forRefill)
         {
-            rowToShift = FindEmptyRow(BoardManager.Instance.GetRowCount() - 1);
+            rowToShift = FindEmptyRow(BoardManager.Instance.GetRowCount() - 1);    
             HandleShiftDownForRefill(rowToShift);
         }
         else

@@ -705,8 +705,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 647337398}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.0034, y: -0.6742, z: -2}
-  m_LocalScale: {x: 0.5770955, y: 0.5772607, z: 0.8845285}
+  m_LocalPosition: {x: -0.0016, y: -1.1914, z: -2}
+  m_LocalScale: {x: 0.447935, y: 0.44486958, z: 0.8845285}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
@@ -1180,7 +1180,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 10
+  m_Text: 100
 --- !u!222 &697999780
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1221,6 +1221,7 @@ MonoBehaviour:
   RocketShapeData: {fileID: 11400000, guid: 828bc56eb85d3454ea2605a856b44dc4, type: 2}
   DiscoShapeData: {fileID: 11400000, guid: 7470f50457f19344aa408a397e24fb7c, type: 2}
   BombShapeData: {fileID: 11400000, guid: 90a62e9875c6eb241bd215fb7c9bed0b, type: 2}
+  gameState: 0
   shapesData:
   - {fileID: 11400000, guid: e0b6948231aa51549a805f8b98588ff7, type: 2}
   - {fileID: 11400000, guid: 3780296dccda2364e9aa7be9788d44e7, type: 2}
@@ -1232,7 +1233,7 @@ MonoBehaviour:
   rows: 6
   columns: 6
   remainingMoves: 0
-  paddingHorizontal: 5
+  paddingHorizontal: 10
   paddingBottom: 20
 --- !u!4 &785137481
 Transform:

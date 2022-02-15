@@ -19,55 +19,48 @@ public class Cube : Shape
 
     public override void Explode()
     {
-        Instantiate(_shapeData.ExplodeEffect, transform.position, transform.rotation, transform.parent);
-        BoardManager.Instance.GetInstantiatedShapes()[_row, _col] = null;
-        Destroy(gameObject);
+            Instantiate(_shapeData.ExplodeEffect, transform.position, transform.rotation, transform.parent);
+            BoardManager.Instance.GetInstantiatedShapes()[_row, _col] = null;
+            Destroy(gameObject);
     }
 
     public override void Merge()
     {
+        _shapeState = ShapeState.Merging;
+        BoardManager.Instance.gameState = GameState.Merging;
+
         foreach (Cube cube in BoardManager.Instance.GetAdjacentShapes())
+        {
             cube.MoveToMergePoint(_row, _col);
+            if (!(cube._row == _row && cube._col == _col))
+                BoardManager.Instance.RemoveFromInstantiatedShapes(cube._row, cube._col);
+        }
     }
 
     public override void OnPointerDown(PointerEventData eventData)
     {
-        if (BoardManager.Instance.isMovesLeft())
+        if (BoardManager.Instance.isMovesLeft() && BoardManager.Instance.gameState == GameState.Ready)
         {
             CheckAdjacentShapes(true);
             HandleCubeOperation();
         }
+        base.OnPointerDown(eventData);
     }
 
-    private CubeOperation HandleCubeOperation()
+    private void HandleCubeOperation()
     {
         int adjacentShapesCount = BoardManager.Instance.GetAdjacentShapes().Count;
 
         if (adjacentShapesCount > 1 && adjacentShapesCount < 5)
-        {
             BasicExplosionOperation();
-            return CubeOperation.BasicExplosion;
-        }
-        else if (adjacentShapesCount >= 5 && adjacentShapesCount <= 25)
-        {
+        else if (adjacentShapesCount == 5 || adjacentShapesCount == 6)
             TurnIntoRocketOperation();
-            return CubeOperation.TurnIntoRocket;
-        }
         else if (adjacentShapesCount == 7 || adjacentShapesCount == 8)
-        {
-            TurnIntoBombOperation();
-            return CubeOperation.TurnIntoBomb;
-        }
-        else if(adjacentShapesCount >= 9)
-        {
-            TurnIntoDiscoOperation();
-            return CubeOperation.TurnIntoDisco;
-        }
+            BasicExplosionOperation();
+        else if (adjacentShapesCount >= 9)
+            BasicExplosionOperation();
         else
-        {
             FailOperation();
-            return CubeOperation.Fail;
-        }
     }
 
     private void BasicExplosionOperation()
@@ -98,11 +91,13 @@ public class Cube : Shape
         yield return new WaitForSeconds(TimeToExpandIn + TimeToExpandOut);
         BoardManager.Instance.GetAdjacentShapes().Remove(this);
         BoardManager.Instance.StartShiftDown();
+        BoardManager.Instance.gameState = GameState.Ready;
     }
 
     private void MoveToMergePoint(int row, int col)
     {
         Vector2 offset = _shapeSpriteRenderer.bounds.size;
+        _shapeState = ShapeState.Merging;
         _shapeSpriteRenderer.sortingOrder = 98;
 
         int directionX = col - _col;
@@ -126,6 +121,7 @@ public class Cube : Shape
                     if (!(row == _row && col == _col))  // Bura de?i?cek
                         BoardManager.Instance.DestroyShape(this);
 
+                    _shapeState = ShapeState.Waiting;
                 });
             });
 
@@ -157,7 +153,7 @@ public class Cube : Shape
 
             });
         });
-        
+
     }
 
     private void TurnIntoRocketOperation()

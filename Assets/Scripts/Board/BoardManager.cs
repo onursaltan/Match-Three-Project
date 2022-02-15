@@ -4,14 +4,20 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
+public enum GameState
+{
+    Ready, Merging,
+}
+
 public class BoardManager : MonoBehaviour
 {
     private static BoardManager _instance;
-    private int RefillStartPos = 4;
+    private const int RefillStartPos = 5;
 
     public ShapeData RocketShapeData;
     public ShapeData DiscoShapeData;
     public ShapeData BombShapeData;
+    public GameState gameState;
 
     [SerializeField] private ShapeData[] shapesData;
     [SerializeField] private GameObject shapePrefab;
@@ -60,6 +66,7 @@ public class BoardManager : MonoBehaviour
         SetShapeRect();
         CreateTiles();
         int.TryParse(moves.text, out remainingMoves);
+        gameState = GameState.Ready;
     }
 
     private void Update()
@@ -148,6 +155,19 @@ public class BoardManager : MonoBehaviour
         int randInt = Random.Range(0, shapesData.Length);
         return shapesData[randInt];
     }
+    public bool IsShapeCheckedBefore(Shape _shape)
+    {
+        foreach (Shape shape in this._adjacentShapes)
+            if (shape == _shape)
+                return true;
+
+        return false;
+    }
+
+    public void AddShapeToAdjacentShapes(Shape shape)
+    {
+        _adjacentShapes.Add(shape);
+    }
 
     public void StartShiftDown()
     {
@@ -163,22 +183,7 @@ public class BoardManager : MonoBehaviour
         }
 
         _adjacentShapes.Clear();
-
         RefillBoard();
-    }
-
-    public void AddShapeToAdjacentShapes(Shape shape)
-    {
-        _adjacentShapes.Add(shape);
-    }
-
-    public bool IsShapeCheckedBefore(Shape _shape)
-    {
-        foreach (Shape shape in this._adjacentShapes)
-            if (shape == _shape)
-                return true;
-
-        return false;
     }
 
     private void FindDistinctColums()
@@ -192,36 +197,27 @@ public class BoardManager : MonoBehaviour
         }
     }
 
-    public void RefillBoard()
+    private void RefillBoard()
     {
         Vector2 offset = _shapeSpriteRenderer.bounds.size;
 
-            remainingMoves--;
-            moves.text = remainingMoves.ToString();
+        foreach (int k in _distinctColumns.Keys)
+        {
+            int counter = RefillStartPos;
+            Vector3 instantiatedTransform = new Vector3(offset.x * k,
+                                                        offset.y * rows,
+                                                        0f);
 
-
-            foreach (int k in _distinctColumns.Keys)
+            for (int i = 0; i < _distinctColumns[k]; i++)
             {
-                int counter = RefillStartPos;
-                Vector3 instantiatedTransform = new Vector3(offset.x * k,
-                                                            offset.y * rows,
-                                                            0f);
+                Shape refillShape = CreateShape(instantiatedTransform, rows + counter, k);
+                refillShape.transform.localPosition = new Vector3(offset.x * k, offset.y * (rows + counter), 0f);
+                refillShape.GetComponent<Shape>().ShiftDown(true);
+                counter++;
+            }
+        }
 
-                for (int i = 0; i < _distinctColumns[k]; i++)
-                {
-                    Shape refillShape = CreateShape(instantiatedTransform, rows + counter, k);
-                    refillShape.transform.localPosition = new Vector3(offset.x * k, offset.y * (rows + counter), 0f);
-                    refillShape.GetComponent<Shape>().ShiftDown(true);
-                    counter++;
-                }
-            }
-            if (remainingMoves == 0)
-            {
-                remainingMoves--;
-                moves.text = "0";
-                StartCoroutine(RestartButtonWithDelay(1.2f));
-            }
-            _distinctColumns.Clear();
+        _distinctColumns.Clear();
     }
 
     public void ReloadShapeToList(Shape shape, int row, int col)
@@ -229,10 +225,24 @@ public class BoardManager : MonoBehaviour
         _instantiatedShapes[row, col] = shape;
     }
 
+    public void DecreaseRemainingMoves()
+    {
+        if (remainingMoves > 0)
+        {
+            remainingMoves--;
+            moves.text = remainingMoves.ToString();
+        }
+
+        if(remainingMoves == 0)
+        {
+            StartCoroutine(RestartButtonWithDelay(1.2f));
+        }
+    }
+
     public Dictionary<int, int> GetDistinctColumns()
     {
         return _distinctColumns;
-    } 
+    }
 
     public List<Shape> GetAdjacentShapes()
     {
@@ -291,7 +301,7 @@ public class BoardManager : MonoBehaviour
         else
         {
             return false;
-        } 
+        }
     }
 
 }

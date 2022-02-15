@@ -17,6 +17,7 @@ public class Bomb : Shape
 
     public override void OnPointerDown(PointerEventData eventData)
     {
+        base.OnPointerDown(eventData);
         Explode();
     }
 }

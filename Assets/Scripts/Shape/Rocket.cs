@@ -14,14 +14,15 @@ public class Rocket : Shape
         Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
 
         _shapeSpriteRenderer.enabled = false;
+        GetComponent<BoxCollider2D>().enabled = false;
 
         if (_isDirectionVertical)
             ExplodeAllColumn();
         else
             ExplodeAllRow();
 
-        ExplosionAnimation();
         instantiatedShapes[_row, _col] = null;
+        ExplosionAnimation();
         StartCoroutine(WaitStartShift());
     }
 
@@ -31,11 +32,11 @@ public class Rocket : Shape
     }
 
     public override void OnPointerDown(PointerEventData eventData)
-    { 
-        if (BoardManager.Instance.isMovesLeft())
-        {
+    {
+        if (BoardManager.Instance.isMovesLeft() && BoardManager.Instance.gameState == GameState.Ready)
             Explode();
-        }
+
+        base.OnPointerDown(eventData);
     }
 
     public override void SetShapeData(ShapeData shapeData, int row, int col)
@@ -43,13 +44,8 @@ public class Rocket : Shape
         base.SetShapeData(shapeData, row, col);
         _isDirectionVertical = GetRandomBool();
 
-        if (_isDirectionVertical)
-        {
-        }
-        else
-        {
+        if (!_isDirectionVertical)
             transform.Rotate(new Vector3(0f, 0f, 90f));
-        }
     }
 
     private bool GetRandomBool()
@@ -64,14 +60,15 @@ public class Rocket : Shape
         int index = 0;
 
         for (int i = _row + 1; i < BoardManager.Instance.GetRowCount(); i++)
-            StartCoroutine(WaitExplodeShape(instantiatedShapes[i, _col].GetComponent<Shape>(), index++));
+                StartCoroutine(WaitExplodeShape(instantiatedShapes[i, _col], index++));
 
         index = 0;
 
         for (int i = _row - 1; i >= 0; i--)
-            StartCoroutine(WaitExplodeShape(instantiatedShapes[i, _col].GetComponent<Shape>(), index++));
+                StartCoroutine(WaitExplodeShape(instantiatedShapes[i, _col], index++));
 
-        BoardManager.Instance.GetDistinctColumns().Add(_col, BoardManager.Instance.GetRowCount());
+        if (!BoardManager.Instance.GetDistinctColumns().ContainsKey(_col))
+                BoardManager.Instance.GetDistinctColumns().Add(_col, BoardManager.Instance.GetRowCount());
     }
 
     private void ExplodeAllRow()
@@ -81,32 +78,34 @@ public class Rocket : Shape
         int index = 0;
 
         for (int i = _col + 1; i < BoardManager.Instance.GetColumnCount(); i++)
-            StartCoroutine(WaitExplodeShape(instantiatedShapes[_row, i].GetComponent<Shape>(), index++));
+                StartCoroutine(WaitExplodeShape(instantiatedShapes[_row, i], index++));
 
         index = 0;
 
         for (int i = _col - 1; i >= 0; i--)
-            StartCoroutine(WaitExplodeShape(instantiatedShapes[_row, i].GetComponent<Shape>(), index++));
+                StartCoroutine(WaitExplodeShape(instantiatedShapes[_row, i], index++));
 
         Dictionary<int, int> distinctColumns = BoardManager.Instance.GetDistinctColumns();
 
         for (int i = 0; i < BoardManager.Instance.GetColumnCount(); i++)
-            distinctColumns.Add(i, 1);
+            if(!distinctColumns.ContainsKey(i))
+                distinctColumns.Add(i, 1);
     }
 
     private IEnumerator WaitExplodeShape(Shape shape, int index)
     {
         yield return new WaitForSeconds(TimeBetweenExplosions * (float)index);
-        shape.Explode();
+
+        if(shape != null)
+            shape.Explode();
     }
 
     private IEnumerator WaitStartShift()
     {
         int rowCount = BoardManager.Instance.GetRowCount();
-        int biggerConstraint = Mathf.Max(rowCount - _row, (rowCount + _row) % rowCount);
-        yield return new WaitForSeconds(TimeBetweenExplosions * biggerConstraint);
+        yield return new WaitForSeconds(TimeBetweenExplosions * rowCount);
         BoardManager.Instance.StartShiftDown();
-        Destroy(gameObject);
+        Destroy(gameObject, 0.75f);
     }
 
     private void ExplosionAnimation()
