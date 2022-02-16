@@ -26,8 +26,10 @@ public class Bomb : Shape
 
     public override void OnPointerDown(PointerEventData eventData)
     {
+        if (BoardManager.Instance.isMovesLeft() && BoardManager.Instance.gameState == GameState.Ready)
+            Explode();
+
         base.OnPointerDown(eventData);
-        Explode();
     }
 
     private IEnumerator WaitStartShift()
