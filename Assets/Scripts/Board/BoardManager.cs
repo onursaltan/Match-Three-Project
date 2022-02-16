@@ -25,8 +25,8 @@ public class BoardManager : MonoBehaviour
     [SerializeField] private GameObject noMovesLeft;
     [SerializeField] private Text moves;
 
-    [SerializeField] private int rows;
-    [SerializeField] private int columns;
+    [SerializeField] public int rows;
+    [SerializeField] public int columns;
 
     [SerializeField] private int remainingMoves;
 
@@ -218,6 +218,7 @@ public class BoardManager : MonoBehaviour
         }
 
         _distinctColumns.Clear();
+
     }
 
     public void ReloadShapeToList(Shape shape, int row, int col)

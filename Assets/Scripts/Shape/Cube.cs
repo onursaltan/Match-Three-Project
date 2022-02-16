@@ -56,7 +56,7 @@ public class Cube : Shape
         else if (adjacentShapesCount == 5 || adjacentShapesCount == 6)
             TurnIntoRocketOperation();
         else if (adjacentShapesCount == 7 || adjacentShapesCount == 8)
-            BasicExplosionOperation();
+            TurnIntoBombOperation();
         else if (adjacentShapesCount >= 9)
             BasicExplosionOperation();
         else
@@ -124,7 +124,6 @@ public class Cube : Shape
                     _shapeState = ShapeState.Waiting;
                 });
             });
-
 
         transform.DOScale(new Vector3(transform.localScale.x * ExpandRateScale, transform.localScale.y * ExpandRateScale), TimeToExpandOut).SetEase(Ease.OutSine).OnComplete(() =>
         {
