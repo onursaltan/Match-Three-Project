@@ -14,7 +14,7 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
     private const float TimeShiftDown = 0.07f;
     private const float TimeRefillShiftDown = 0.06f;
     private const float TimeBounce = 0.06f;
-    private const float BounceAmount = 0.1f;
+    private const float BounceAmount = 0.03f;
 
     public ShapeData _shapeData;
     public ShapeState _shapeState;
@@ -23,7 +23,6 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
     public int _col;
 
     private Sequence _shiftDownSequence;
-
     protected SpriteRenderer _shapeSpriteRenderer;
 
     void Awake()
@@ -62,12 +61,8 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
     private void _CheckAdjacentShapes(int row, int col, int constraint, bool isRowChanging)
     {
         Shape[,] shapeMatrix = BoardManager.Instance.GetShapeMatrix();
-        int temp;
 
-        if (isRowChanging)
-            temp = row;
-        else
-            temp = col;
+        int temp = isRowChanging ? row : col;
 
         if (temp < constraint && temp >= 0)
         {
@@ -80,20 +75,13 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
         }
     }
 
-    public void ShiftDown(bool forRefill = false)
+    public void ShiftDown(bool isForRefill = false)
     {
-        int rowToShift;
+        int rowToShift = isForRefill ? 
+            FindEmptyRow(BoardManager.Instance.GetRowCount() - 1) : 
+            FindEmptyRow(_row);
 
-        if (forRefill)
-        {
-            rowToShift = FindEmptyRow(BoardManager.Instance.GetRowCount() - 1);    
-            HandleShiftDownForRefill(rowToShift);
-        }
-        else
-        {
-            rowToShift = FindEmptyRow(_row);
-            HandleShiftDown(rowToShift);
-        }
+        HandleShiftDown(rowToShift, isForRefill);
     }
 
     private int FindEmptyRow(int rowIndex)
@@ -102,34 +90,25 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
         int rowToShift = -1;
 
         for (int i = rowIndex; i >= 0; i--)
-        {
             if (shapeMatrix[i, _col] == null)
                 rowToShift = i;
-        }
 
         return rowToShift;
     }
 
-    private void HandleShiftDown(int rowToShift)
+    private void HandleShiftDown(int rowToShift, bool isForRefill = false)
     {
         if (rowToShift != -1)
         {
             Shape[,] shapeMatrix = BoardManager.Instance.GetShapeMatrix();
 
             shapeMatrix[rowToShift, _col] = this;
-            shapeMatrix[_row, _col] = null;
-            Shift(rowToShift, TimeShiftDown);
-        }
-    }
 
-    private void HandleShiftDownForRefill(int rowToShift)
-    {
-        if (rowToShift != -1)
-        {
-            Shape[,] shapeMatrix = BoardManager.Instance.GetShapeMatrix();
+            if (!isForRefill)
+                shapeMatrix[_row, _col] = null;
 
-            shapeMatrix[rowToShift, _col] = this;
-            Shift(rowToShift, TimeRefillShiftDown);
+            float temp = isForRefill ? TimeRefillShiftDown : TimeShiftDown;
+            Shift(rowToShift, temp);
         }
     }
 
@@ -145,21 +124,25 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
             _shapeState = ShapeState.Shifting;
         }
 
-        _shiftDownSequence = DOTween.Sequence();
-
         Vector2 offset = _shapeSpriteRenderer.bounds.size;
 
         float posToShift = offset.y * rowToShift;
+        ShiftAnimation(posToShift, shiftDownTime, rowToShift);
 
-        _shiftDownSequence.Append(transform.DOLocalMoveY(posToShift, shiftDownTime * (_row - rowToShift)).SetEase(Ease.InQuad)).OnComplete(() =>
-        {
-            BounceShape(transform.position.y + BounceAmount);
-            _shapeState = ShapeState.Waiting;
-        });
-     
-        
         _row = rowToShift;
         _shapeSpriteRenderer.sortingOrder = _row + 1;
+    }
+
+    private void ShiftAnimation(float posToShift, float shiftDownTime, int rowToShift)
+    {
+        _shiftDownSequence = DOTween.Sequence();
+        float shiftAmount = _row - rowToShift;
+
+        _shiftDownSequence.Append(transform.DOLocalMoveY(posToShift, shiftDownTime * shiftAmount).SetEase(Ease.InQuad)).OnComplete(() =>
+        {     
+            BounceShape(transform.position.y + BounceAmount * shiftAmount);
+            _shapeState = ShapeState.Waiting;
+        });
     }
 
     private int FindCurrentRow()

@@ -32,6 +32,7 @@ public class Cube : Shape
         foreach (Cube cube in BoardManager.Instance.GetAdjacentShapes())
         {
             cube.MoveToMergePoint(_row, _col);
+
             if (!(cube._row == _row && cube._col == _col))
                 BoardManager.Instance.RemoveFromInstantiatedShapes(cube._row, cube._col);
         }
@@ -39,7 +40,9 @@ public class Cube : Shape
 
     public override void OnPointerDown(PointerEventData eventData)
     {
-        if (BoardManager.Instance.isMovesLeft() && BoardManager.Instance.gameState == GameState.Ready)
+        if (BoardManager.Instance.isMovesLeft() && 
+            BoardManager.Instance.gameState == GameState.Ready && 
+            _shapeState == ShapeState.Waiting)
         {
             CheckAdjacentShapes(true);
             HandleCubeOperation();

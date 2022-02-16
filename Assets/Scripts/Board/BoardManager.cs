@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public enum GameState
 {
-    Ready, Merging,
+    Ready, Merging, BoosterExplosion
 }
 
 public class BoardManager : MonoBehaviour
@@ -36,6 +36,7 @@ public class BoardManager : MonoBehaviour
 
     private SpriteRenderer _shapeSpriteRenderer;
     private Shape[,] _instantiatedShapes;
+    private List<int> _explodedRows;
     private List<Shape> _adjacentShapes;
     private Dictionary<int, int> _distinctColumns;
 
@@ -60,6 +61,7 @@ public class BoardManager : MonoBehaviour
     private void Start()
     {
         _adjacentShapes = new List<Shape>();
+        _explodedRows = new List<int>();
         _distinctColumns = new Dictionary<int, int>();
         _shapeSpriteRenderer = shapePrefab.GetComponent<SpriteRenderer>();
 
@@ -249,6 +251,12 @@ public class BoardManager : MonoBehaviour
     {
         return _adjacentShapes;
     }
+
+    public List<int> GetExplodedRows()
+    {
+        return _explodedRows;
+    }
+
     public Shape[,] GetInstantiatedShapes()
     {
         return _instantiatedShapes;

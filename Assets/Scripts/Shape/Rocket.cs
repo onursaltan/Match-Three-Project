@@ -7,11 +7,13 @@ using DG.Tweening;
 public class Rocket : Shape
 {
     private const float TimeBetweenExplosions = 0.05f;
+
     private bool _isDirectionVertical;
 
     public override void Explode()
     {
         Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
+        BoardManager.Instance.gameState = GameState.BoosterExplosion;
 
         _shapeSpriteRenderer.enabled = false;
         GetComponent<BoxCollider2D>().enabled = false;
@@ -33,7 +35,9 @@ public class Rocket : Shape
 
     public override void OnPointerDown(PointerEventData eventData)
     {
-        if (BoardManager.Instance.isMovesLeft() && BoardManager.Instance.gameState == GameState.Ready)
+        if (BoardManager.Instance.isMovesLeft() && 
+            BoardManager.Instance.gameState == GameState.Ready && 
+            _shapeState == ShapeState.Waiting)
             Explode();
 
         base.OnPointerDown(eventData);
@@ -60,15 +64,14 @@ public class Rocket : Shape
         int index = 0;
 
         for (int i = _row + 1; i < BoardManager.Instance.GetRowCount(); i++)
-                StartCoroutine(WaitExplodeShape(instantiatedShapes[i, _col], index++));
+            StartCoroutine(WaitExplodeShape(instantiatedShapes[i, _col], index++));
 
         index = 0;
 
         for (int i = _row - 1; i >= 0; i--)
-                StartCoroutine(WaitExplodeShape(instantiatedShapes[i, _col], index++));
+            StartCoroutine(WaitExplodeShape(instantiatedShapes[i, _col], index++));
 
-        if (!BoardManager.Instance.GetDistinctColumns().ContainsKey(_col))
-                BoardManager.Instance.GetDistinctColumns().Add(_col, BoardManager.Instance.GetRowCount());
+        AddToDistinctColumns(false);
     }
 
     private void ExplodeAllRow()
@@ -78,25 +81,54 @@ public class Rocket : Shape
         int index = 0;
 
         for (int i = _col + 1; i < BoardManager.Instance.GetColumnCount(); i++)
-                StartCoroutine(WaitExplodeShape(instantiatedShapes[_row, i], index++));
+            StartCoroutine(WaitExplodeShape(instantiatedShapes[_row, i], index++));
 
         index = 0;
 
         for (int i = _col - 1; i >= 0; i--)
-                StartCoroutine(WaitExplodeShape(instantiatedShapes[_row, i], index++));
+            StartCoroutine(WaitExplodeShape(instantiatedShapes[_row, i], index++));
 
+        AddToDistinctColumns(true);
+    }
+
+    private void AddToDistinctColumns(bool isForRow)
+    {
         Dictionary<int, int> distinctColumns = BoardManager.Instance.GetDistinctColumns();
+        List<int> explodedRows = BoardManager.Instance.GetExplodedRows();
+        int rowCount = BoardManager.Instance.GetRowCount();
+        int columnCount = BoardManager.Instance.GetColumnCount();
 
-        for (int i = 0; i < BoardManager.Instance.GetColumnCount(); i++)
-            if(!distinctColumns.ContainsKey(i))
-                distinctColumns.Add(i, 1);
+        if (isForRow)
+        {
+            if (!explodedRows.Contains(_row))
+            {
+                explodedRows.Add(_row);
+                for (int i = 0; i < columnCount; i++)
+                    if (!distinctColumns.ContainsKey(i))
+                        distinctColumns.Add(i, 1);
+                    else
+                    {
+                        if (i != _col)
+                        {
+                            distinctColumns[i] += 1;
+                        }
+                    }
+            }
+        }
+        else
+        {
+            if (!distinctColumns.ContainsKey(_col))
+                distinctColumns.Add(_col, rowCount);
+            else
+                distinctColumns[_col] = rowCount;
+        }
     }
 
     private IEnumerator WaitExplodeShape(Shape shape, int index)
     {
         yield return new WaitForSeconds(TimeBetweenExplosions * (float)index);
 
-        if(shape != null)
+        if (shape != null)
             shape.Explode();
     }
 
@@ -105,6 +137,8 @@ public class Rocket : Shape
         int rowCount = BoardManager.Instance.GetRowCount();
         yield return new WaitForSeconds(TimeBetweenExplosions * rowCount);
         BoardManager.Instance.StartShiftDown();
+        BoardManager.Instance.GetExplodedRows().Clear();
+        BoardManager.Instance.gameState = GameState.Ready;
         Destroy(gameObject, 0.75f);
     }
 
