@@ -14,6 +14,7 @@ public class Rocket : Shape
     {
         Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
         BoardManager.Instance.gameState = GameState.BoosterExplosion;
+        BoardManager.Instance.IncreaseDistinctColumns(_col);
 
         _shapeSpriteRenderer.enabled = false;
         GetComponent<BoxCollider2D>().enabled = false;
@@ -70,8 +71,6 @@ public class Rocket : Shape
 
         for (int i = _row - 1; i >= 0; i--)
             StartCoroutine(WaitExplodeShape(instantiatedShapes[i, _col], index++));
-
-        AddToDistinctColumns(false);
     }
 
     private void ExplodeAllRow()
@@ -87,49 +86,17 @@ public class Rocket : Shape
 
         for (int i = _col - 1; i >= 0; i--)
             StartCoroutine(WaitExplodeShape(instantiatedShapes[_row, i], index++));
-
-        AddToDistinctColumns(true);
-    }
-
-    private void AddToDistinctColumns(bool isForRow)
-    {
-        Dictionary<int, int> distinctColumns = BoardManager.Instance.GetDistinctColumns();
-        List<int> explodedRows = BoardManager.Instance.GetExplodedRows();
-        int rowCount = BoardManager.Instance.GetRowCount();
-        int columnCount = BoardManager.Instance.GetColumnCount();
-
-        if (isForRow)
-        {
-            if (!explodedRows.Contains(_row))
-            {
-                explodedRows.Add(_row);
-                for (int i = 0; i < columnCount; i++)
-                    if (!distinctColumns.ContainsKey(i))
-                        distinctColumns.Add(i, 1);
-                    else
-                    {
-                        if (i != _col)
-                        {
-                            distinctColumns[i] += 1;
-                        }
-                    }
-            }
-        }
-        else
-        {
-            if (!distinctColumns.ContainsKey(_col))
-                distinctColumns.Add(_col, rowCount);
-            else
-                distinctColumns[_col] = rowCount;
-        }
-    }
+    } 
 
     private IEnumerator WaitExplodeShape(Shape shape, int index)
     {
         yield return new WaitForSeconds(TimeBetweenExplosions * (float)index);
 
         if (shape != null)
+        {
             shape.Explode();
+            BoardManager.Instance.IncreaseDistinctColumns(shape._col);
+        }
     }
 
     private IEnumerator WaitStartShift()

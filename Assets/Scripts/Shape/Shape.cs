@@ -6,7 +6,7 @@ using DG.Tweening;
 
 public enum ShapeState
 {
-    Waiting, Shifting, Merging
+    Waiting, Shifting, Merging, Explode
 }
 
 public abstract class Shape : MonoBehaviour, IPointerDownHandler

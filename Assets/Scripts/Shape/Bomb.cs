@@ -7,16 +7,23 @@ public class Bomb : Shape
 {
     public override void Explode()
     {
-        Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
+        if (_shapeState != ShapeState.Explode)
+        {
+            Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
 
-        _shapeSpriteRenderer.enabled = false;
-        GetComponent<BoxCollider2D>().enabled = false;
+            _shapeState = ShapeState.Explode;
+            _shapeSpriteRenderer.enabled = false;
+            GetComponent<BoxCollider2D>().enabled = false;
 
-        Explode3x3();
+            Explode3x3();
 
-        instantiatedShapes[_row, _col] = null;
+            Instantiate(_shapeData.ExplodeEffect, transform.position, transform.rotation, transform.parent);
 
-        StartCoroutine(WaitStartShift());
+            instantiatedShapes[_row, _col] = null;
+            BoardManager.Instance.IncreaseDistinctColumns(_col);
+
+            StartCoroutine(WaitStartShift());
+        }
     }
 
     public override void Merge()
@@ -30,6 +37,10 @@ public class Bomb : Shape
             Explode();
 
         base.OnPointerDown(eventData);
+    }
+    public override void SetShapeData(ShapeData shapeData, int row, int col)
+    {
+        base.SetShapeData(shapeData, row, col);
     }
 
     private IEnumerator WaitStartShift()
@@ -50,8 +61,12 @@ public class Bomb : Shape
             {
                 if (!(i == 0 && j == 0) && !(_row + i < 0 || _col + j < 0 || _row + i > BoardManager.Instance.rows - 1 || _col + j > BoardManager.Instance.columns - 1))
                 {
-                    instantiatedShapes[_row + i, _col + j].Explode();
-                    BoardManager.Instance.RemoveFromInstantiatedShapes(_row + i, _col + j);
+                    if (instantiatedShapes[_row + i, _col + j] != null)
+                    {
+                        BoardManager.Instance.IncreaseDistinctColumns(instantiatedShapes[_row + i, _col + j]._col);
+                        instantiatedShapes[_row + i, _col + j].Explode();
+                        BoardManager.Instance.RemoveFromInstantiatedShapes(_row + i, _col + j);
+                    }
                 }
             }
         }

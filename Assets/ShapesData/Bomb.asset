@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _shapeType: 3
   _sprite: {fileID: -695447591071750130, guid: 92e2cd4a996def347ab88564e216bf68, type: 3}
-  _explodeEffect: {fileID: 0}
+  _explodeEffect: {fileID: 6174443465438293769, guid: 4582d321b0c50ec4fba96f42400c7d34, type: 3}

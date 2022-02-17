@@ -14,6 +14,7 @@ public class Cube : Shape
     private const float TimeToWaitTurn = 0.03f;
     private const float TimeToExpandOut = 0.2f;
     private const float TimeToExpandIn = 0.1f;
+    private const float TimeToTurnIntoBooster = 0.33f;
     private const float ExpandRateScale = 1.08f;
     private const float ExpandRatePosition = 0.2f;
 
@@ -178,7 +179,7 @@ public class Cube : Shape
 
     private IEnumerator TurnIntoRocket()
     {
-        yield return new WaitForSeconds(TimeToExpandIn + TimeToExpandOut + TimeToWaitTurn);
+        yield return new WaitForSeconds(TimeToTurnIntoBooster);
         Rocket rocket = gameObject.AddComponent<Rocket>();
         rocket.SetShapeData(BoardManager.Instance.RocketShapeData, _row, _col);
         BoardManager.Instance.ReloadShapeToList(rocket, _row, _col);
@@ -187,15 +188,16 @@ public class Cube : Shape
 
     private IEnumerator TurnIntoBomb()
     {
-        yield return new WaitForSeconds(TimeToExpandIn + TimeToExpandOut + TimeToWaitTurn);
+        yield return new WaitForSeconds(TimeToTurnIntoBooster);
         Bomb bomb = gameObject.AddComponent<Bomb>();
         bomb.SetShapeData(BoardManager.Instance.BombShapeData, _row, _col);
+        BoardManager.Instance.ReloadShapeToList(bomb, _row, _col);
         Destroy(gameObject.GetComponent<Cube>());
     }
 
     private IEnumerator TurnIntoDisco()
     {
-        yield return new WaitForSeconds(TimeToExpandIn + TimeToExpandOut + TimeToWaitTurn);
+        yield return new WaitForSeconds(TimeToTurnIntoBooster);
         Disco disco = gameObject.AddComponent<Disco>();
         disco.SetShapeData(BoardManager.Instance.DiscoShapeData, _row, _col);
         Destroy(gameObject.GetComponent<Cube>());

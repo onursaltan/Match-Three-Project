@@ -228,6 +228,14 @@ public class BoardManager : MonoBehaviour
         _instantiatedShapes[row, col] = shape;
     }
 
+    public void IncreaseDistinctColumns(int col)
+    {
+        if (!_distinctColumns.ContainsKey(col))
+            _distinctColumns.Add(col, 1);
+        else
+            _distinctColumns[col] += 1;
+    }
+
     public void DecreaseRemainingMoves()
     {
         if (remainingMoves > 0)
