@@ -19,4 +19,9 @@ public class Disco : Shape
     {
         throw new System.NotImplementedException();
     }
+
+    public override bool IsMergeExist()
+    {
+        throw new System.NotImplementedException();
+    }
 }

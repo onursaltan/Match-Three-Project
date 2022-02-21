@@ -4,6 +4,11 @@ using UnityEngine;
 using DG.Tweening;
 using UnityEngine.EventSystems;
 
+enum CubeState
+{
+    Basic, Rocket, Bomb, Disco,
+}
+
 enum CubeOperation
 {
     BasicExplosion, TurnIntoRocket, TurnIntoBomb, TurnIntoDisco, Fail
@@ -18,11 +23,14 @@ public class Cube : Shape
     private const float ExpandRateScale = 1.08f;
     private const float ExpandRatePosition = 0.2f;
 
+    protected bool _isCubeCheckedBefore = false;
+    private CubeState _cubeState;
+
     public override void Explode()
     {
-            Instantiate(_shapeData.ExplodeEffect, transform.position, transform.rotation, transform.parent);
-            BoardManager.Instance.GetInstantiatedShapes()[_row, _col] = null;
-            Destroy(gameObject);
+        Instantiate(_shapeData.ExplodeEffect, transform.position, transform.rotation, transform.parent);
+        BoardManager.Instance.GetInstantiatedShapes()[_row, _col] = null;
+        Destroy(gameObject);
     }
 
     public override void Merge()
@@ -41,30 +49,81 @@ public class Cube : Shape
 
     public override void OnPointerDown(PointerEventData eventData)
     {
-        if (BoardManager.Instance.isMovesLeft() && 
-            BoardManager.Instance.gameState == GameState.Ready && 
+        if (BoardManager.Instance.isMovesLeft() &&
+            BoardManager.Instance.gameState == GameState.Ready &&
             _shapeState == ShapeState.Waiting)
         {
-            CheckAdjacentShapes(true);
+            FindAdjacentShapes(true);
             HandleCubeOperation();
         }
         base.OnPointerDown(eventData);
     }
 
-    private void HandleCubeOperation()
+    public override bool IsMergeExist()
+    {
+        if (!_isCubeCheckedBefore)
+        {
+            Debug.Log("sea");
+            FindAdjacentShapes(true);
+            CubeOperation cubeOperation = FindCubeOperation();
+
+            if (cubeOperation == CubeOperation.TurnIntoRocket)
+            {
+                Debug.Log("Roketim");
+            }
+            else if (cubeOperation == CubeOperation.TurnIntoBomb)
+            {
+                Debug.Log("Bombayým");
+            }
+
+            SetCheckBefore();
+            BoardManager.Instance.GetAdjacentShapes().Clear();
+            return true;
+        }
+        return false;
+    }
+
+    public void SetCheckBefore()
+    {
+        foreach (Cube cube in BoardManager.Instance.GetAdjacentShapes())
+        {
+            cube._isCubeCheckedBefore = true;
+        }
+    }
+
+    private CubeOperation FindCubeOperation()
     {
         int adjacentShapesCount = BoardManager.Instance.GetAdjacentShapes().Count;
 
         if (adjacentShapesCount > 1 && adjacentShapesCount < 5)
-            BasicExplosionOperation();
+            return CubeOperation.BasicExplosion;
         else if (adjacentShapesCount == 5 || adjacentShapesCount == 6)
-            TurnIntoRocketOperation();
+            return CubeOperation.TurnIntoRocket;
         else if (adjacentShapesCount == 7 || adjacentShapesCount == 8)
-            TurnIntoBombOperation();
+            return CubeOperation.TurnIntoBomb;
         else if (adjacentShapesCount >= 9)
+            return CubeOperation.BasicExplosion;
+        else
+            return CubeOperation.Fail;
+    }
+
+    private void HandleCubeOperation()
+    {
+        CubeOperation cubeOperation = FindCubeOperation();
+
+        if (cubeOperation == CubeOperation.BasicExplosion)
+            BasicExplosionOperation();
+        else if (cubeOperation == CubeOperation.BasicExplosion)
+            BasicExplosionOperation();
+        else if (cubeOperation == CubeOperation.TurnIntoRocket)
+            TurnIntoRocketOperation();
+        else if (cubeOperation == CubeOperation.TurnIntoBomb)
+            TurnIntoBombOperation();
+        else if (cubeOperation == CubeOperation.TurnIntoDisco)
             BasicExplosionOperation();
         else
             FailOperation();
+
     }
 
     private void BasicExplosionOperation()
@@ -81,7 +140,7 @@ public class Cube : Shape
     private void TurnIntoBooster()
     {
         BoardManager.Instance.GetAdjacentShapes()[0].Merge();
-        StartCoroutine(WaitForShiftDown());
+        StartCoroutine(WaitForShiftDownAfterMerge());
     }
 
     private void FailOperation()
@@ -90,12 +149,11 @@ public class Cube : Shape
         FailAnimation();
     }
 
-    private IEnumerator WaitForShiftDown()
+    private IEnumerator WaitForShiftDownAfterMerge()
     {
         yield return new WaitForSeconds(TimeToExpandIn + TimeToExpandOut);
         BoardManager.Instance.GetAdjacentShapes().Remove(this);
         BoardManager.Instance.StartShiftDown();
-        BoardManager.Instance.gameState = GameState.Ready;
     }
 
     private void MoveToMergePoint(int row, int col)
@@ -183,6 +241,7 @@ public class Cube : Shape
         Rocket rocket = gameObject.AddComponent<Rocket>();
         rocket.SetShapeData(BoardManager.Instance.RocketShapeData, _row, _col);
         BoardManager.Instance.ReloadShapeToList(rocket, _row, _col);
+        BoardManager.Instance.gameState = GameState.Ready;
         Destroy(gameObject.GetComponent<Cube>());
     }
 
@@ -192,6 +251,7 @@ public class Cube : Shape
         Bomb bomb = gameObject.AddComponent<Bomb>();
         bomb.SetShapeData(BoardManager.Instance.BombShapeData, _row, _col);
         BoardManager.Instance.ReloadShapeToList(bomb, _row, _col);
+        BoardManager.Instance.gameState = GameState.Ready;
         Destroy(gameObject.GetComponent<Cube>());
     }
 

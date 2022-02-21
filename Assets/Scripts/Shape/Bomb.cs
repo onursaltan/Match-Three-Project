@@ -10,6 +10,7 @@ public class Bomb : Shape
         if (_shapeState != ShapeState.Explode)
         {
             Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
+            BoardManager.Instance.gameState = GameState.BoosterExplosion;
 
             _shapeState = ShapeState.Explode;
             _shapeSpriteRenderer.enabled = false;
@@ -20,8 +21,6 @@ public class Bomb : Shape
             Instantiate(_shapeData.ExplodeEffect, transform.position, transform.rotation, transform.parent);
 
             instantiatedShapes[_row, _col] = null;
-            BoardManager.Instance.IncreaseDistinctColumns(_col);
-
             StartCoroutine(WaitStartShift());
         }
     }
@@ -34,7 +33,10 @@ public class Bomb : Shape
     public override void OnPointerDown(PointerEventData eventData)
     {
         if (BoardManager.Instance.isMovesLeft() && BoardManager.Instance.gameState == GameState.Ready)
+        {
+            BoardManager.Instance.IncreaseDistinctColumns(_col);
             Explode();
+        }
 
         base.OnPointerDown(eventData);
     }
@@ -47,7 +49,8 @@ public class Bomb : Shape
     {
         int rowCount = BoardManager.Instance.GetRowCount();
         yield return new WaitForSeconds(0.05f * rowCount);
-        BoardManager.Instance.StartShiftDown();
+        BoardManager.Instance.StartShiftDown(); 
+        BoardManager.Instance.gameState = GameState.Ready;
         Destroy(gameObject, 0.75f);
     }
 
@@ -63,12 +66,16 @@ public class Bomb : Shape
                 {
                     if (instantiatedShapes[_row + i, _col + j] != null)
                     {
-                        BoardManager.Instance.IncreaseDistinctColumns(instantiatedShapes[_row + i, _col + j]._col);
                         instantiatedShapes[_row + i, _col + j].Explode();
-                        BoardManager.Instance.RemoveFromInstantiatedShapes(_row + i, _col + j);
+                        BoardManager.Instance.IncreaseDistinctColumns(_col + j);
                     }
                 }
             }
         }
+    }
+
+    public override bool IsMergeExist()
+    {
+        throw new System.NotImplementedException();
     }
 }

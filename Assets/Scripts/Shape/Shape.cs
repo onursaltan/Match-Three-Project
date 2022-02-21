@@ -12,18 +12,21 @@ public enum ShapeState
 public abstract class Shape : MonoBehaviour, IPointerDownHandler
 {
     private const float TimeShiftDown = 0.07f;
-    private const float TimeRefillShiftDown = 0.06f;
+    private const float TimeRefillShiftDown = 0.07f;
     private const float TimeBounce = 0.06f;
-    private const float BounceAmount = 0.03f;
+    private const float BounceAmount = 0.015f;
 
     public ShapeData _shapeData;
     public ShapeState _shapeState;
+    public SpriteRenderer _shapeSpriteRenderer;
 
     public int _row;
     public int _col;
 
+    private Sprite _CubeRocketSprite;
+    private Sprite _CubeBombSprite;
+
     private Sequence _shiftDownSequence;
-    protected SpriteRenderer _shapeSpriteRenderer;
 
     void Awake()
     {
@@ -44,7 +47,7 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
         _shapeSpriteRenderer.sortingOrder = row + 2;
     }
 
-    public void CheckAdjacentShapes(bool isThisClickedShape)
+    public void FindAdjacentShapes(bool isThisClickedShape)
     {
         int rows = BoardManager.Instance.GetRowCount();
         int columns = BoardManager.Instance.GetColumnCount();
@@ -52,13 +55,13 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
         if (isThisClickedShape)
             BoardManager.Instance.AddShapeToAdjacentShapes(this);
 
-        _CheckAdjacentShapes(_row, _col + 1, columns, false);
-        _CheckAdjacentShapes(_row, _col - 1, columns, false);
-        _CheckAdjacentShapes(_row + 1, _col, rows, true);
-        _CheckAdjacentShapes(_row - 1, _col, rows, true);
+        _FindAdjacentShapes(_row, _col + 1, columns, false);
+        _FindAdjacentShapes(_row, _col - 1, columns, false);
+        _FindAdjacentShapes(_row + 1, _col, rows, true);
+        _FindAdjacentShapes(_row - 1, _col, rows, true);
     }
 
-    private void _CheckAdjacentShapes(int row, int col, int constraint, bool isRowChanging)
+    private void _FindAdjacentShapes(int row, int col, int constraint, bool isRowChanging)
     {
         Shape[,] shapeMatrix = BoardManager.Instance.GetShapeMatrix();
 
@@ -66,19 +69,19 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
 
         if (temp < constraint && temp >= 0)
         {
-            if (shapeMatrix[row, col] != null && !BoardManager.Instance.IsShapeCheckedBefore(shapeMatrix[row, col].GetComponent<Shape>()) &&
-                shapeMatrix[row, col].GetComponent<Shape>()._shapeData.ShapeType == _shapeData.ShapeType)
+            if (shapeMatrix[row, col] != null && !BoardManager.Instance.IsShapeCheckedBefore(shapeMatrix[row, col]) &&
+                shapeMatrix[row, col]._shapeData.ShapeType == _shapeData.ShapeType)
             {
-                BoardManager.Instance.AddShapeToAdjacentShapes(shapeMatrix[row, col].GetComponent<Shape>());
-                shapeMatrix[row, col].GetComponent<Shape>().CheckAdjacentShapes(false);
+                BoardManager.Instance.AddShapeToAdjacentShapes(shapeMatrix[row, col]);
+                shapeMatrix[row, col].FindAdjacentShapes(false);
             }
         }
     }
 
     public void ShiftDown(bool isForRefill = false)
     {
-        int rowToShift = isForRefill ? 
-            FindEmptyRow(BoardManager.Instance.GetRowCount() - 1) : 
+        int rowToShift = isForRefill ?
+            FindEmptyRow(BoardManager.Instance.GetRowCount() - 1) :
             FindEmptyRow(_row);
 
         HandleShiftDown(rowToShift, isForRefill);
@@ -114,7 +117,7 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
 
     private void Shift(int rowToShift, float shiftDownTime)
     {
-        if(_shapeState == ShapeState.Shifting)
+        if (_shapeState == ShapeState.Shifting)
         {
             _shiftDownSequence.Kill();
             _row = FindCurrentRow();
@@ -139,10 +142,17 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
         float shiftAmount = _row - rowToShift;
 
         _shiftDownSequence.Append(transform.DOLocalMoveY(posToShift, shiftDownTime * shiftAmount).SetEase(Ease.InQuad)).OnComplete(() =>
-        {     
-            BounceShape(transform.position.y + BounceAmount * shiftAmount);
+        {
+            BounceShape(transform.position.y + BounceAmount * shiftAmount, posToShift);
             _shapeState = ShapeState.Waiting;
         });
+    }
+
+    private void FixPosition(float fixPos)
+    {
+        Vector3 fixVector = transform.localPosition;
+        fixVector.y = fixPos;
+        transform.localPosition = fixVector;
     }
 
     private int FindCurrentRow()
@@ -153,12 +163,19 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
         return currentRow;
     }
 
-    private void BounceShape(float pos)
+    private void BounceShape(float pos, float realPos)
     {
-        transform.DOMoveY(pos, TimeBounce).SetEase(Ease.OutQuad).SetLoops(2, LoopType.Yoyo);
+        transform.DOMoveY(pos, TimeBounce).SetEase(Ease.OutQuad).SetLoops(2, LoopType.Yoyo).OnComplete(() => {
+            if (realPos != transform.localPosition.y)
+                FixPosition(realPos);
+
+            IsMergeExist();
+        });
     }
 
     public abstract void Explode();
 
     public abstract void Merge();
+
+    public abstract bool IsMergeExist();
 }

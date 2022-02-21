@@ -12,21 +12,23 @@ public class Rocket : Shape
 
     public override void Explode()
     {
-        Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
-        BoardManager.Instance.gameState = GameState.BoosterExplosion;
-        BoardManager.Instance.IncreaseDistinctColumns(_col);
+        if (_shapeState != ShapeState.Explode)
+        {
+            Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
+            BoardManager.Instance.gameState = GameState.BoosterExplosion;
 
-        _shapeSpriteRenderer.enabled = false;
-        GetComponent<BoxCollider2D>().enabled = false;
+            _shapeSpriteRenderer.enabled = false;
+            GetComponent<BoxCollider2D>().enabled = false;
 
-        if (_isDirectionVertical)
-            ExplodeAllColumn();
-        else
-            ExplodeAllRow();
+            if (_isDirectionVertical)
+                ExplodeAllColumn();
+            else
+                ExplodeAllRow();
 
-        instantiatedShapes[_row, _col] = null;
-        ExplosionAnimation();
-        StartCoroutine(WaitStartShift());
+            instantiatedShapes[_row, _col] = null;
+            ExplosionAnimation();
+            StartCoroutine(WaitStartShift());
+        }
     }
 
     public override void Merge()
@@ -34,12 +36,21 @@ public class Rocket : Shape
         throw new System.NotImplementedException();
     }
 
+    public override bool IsMergeExist()
+    {
+        Debug.Log("selam");
+        return true;
+    }
+
     public override void OnPointerDown(PointerEventData eventData)
     {
-        if (BoardManager.Instance.isMovesLeft() && 
-            BoardManager.Instance.gameState == GameState.Ready && 
+        if (BoardManager.Instance.isMovesLeft() &&
+            BoardManager.Instance.gameState == GameState.Ready &&
             _shapeState == ShapeState.Waiting)
+        {
+            BoardManager.Instance.IncreaseDistinctColumns(_col);
             Explode();
+        }
 
         base.OnPointerDown(eventData);
     }
@@ -86,7 +97,7 @@ public class Rocket : Shape
 
         for (int i = _col - 1; i >= 0; i--)
             StartCoroutine(WaitExplodeShape(instantiatedShapes[_row, i], index++));
-    } 
+    }
 
     private IEnumerator WaitExplodeShape(Shape shape, int index)
     {
@@ -131,4 +142,5 @@ public class Rocket : Shape
         s.transform.DOMove(point1, 1.1f);
         s1.transform.DOMove(point2, 1.1f);
     }
+
 }
