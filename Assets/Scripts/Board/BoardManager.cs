@@ -74,12 +74,6 @@ public class BoardManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            Vector2 offset = _shapeSpriteRenderer.bounds.size;
-            Vector3 instantiatedTransform = new Vector3(2 * offset.x,
-                                                            offset.y * 3,
-                                                            0f);
-
-            CreateShape(instantiatedTransform, 2, 3).transform.localPosition = instantiatedTransform;
         }
     }
 
