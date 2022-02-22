@@ -17,7 +17,7 @@ public class Rocket : Shape
             Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
             BoardManager.Instance.gameState = GameState.BoosterExplosion;
 
-            _shapeSpriteRenderer.enabled = false;
+            _spriteRenderer.enabled = false;
             GetComponent<BoxCollider2D>().enabled = false;
 
             if (_isDirectionVertical)
@@ -36,14 +36,10 @@ public class Rocket : Shape
         throw new System.NotImplementedException();
     }
 
-    public override bool IsMergeExist()
-    {
-        Debug.Log("selam");
-        return true;
-    }
-
     public override void OnPointerDown(PointerEventData eventData)
     {
+        base.OnPointerDown(eventData);
+
         if (BoardManager.Instance.isMovesLeft() &&
             BoardManager.Instance.gameState == GameState.Ready &&
             _shapeState == ShapeState.Waiting)
@@ -51,8 +47,6 @@ public class Rocket : Shape
             BoardManager.Instance.IncreaseDistinctColumns(_col);
             Explode();
         }
-
-        base.OnPointerDown(eventData);
     }
 
     public override void SetShapeData(ShapeData shapeData, int row, int col)
@@ -143,4 +137,8 @@ public class Rocket : Shape
         s1.transform.DOMove(point2, 1.1f);
     }
 
+    public override void SetMergeSprite(int count)
+    {
+        throw new System.NotImplementedException();
+    }
 }

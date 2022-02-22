@@ -20,7 +20,7 @@ public class Disco : Shape
         throw new System.NotImplementedException();
     }
 
-    public override bool IsMergeExist()
+    public override void SetMergeSprite(int count)
     {
         throw new System.NotImplementedException();
     }

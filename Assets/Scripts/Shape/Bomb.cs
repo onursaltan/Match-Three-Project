@@ -13,7 +13,7 @@ public class Bomb : Shape
             BoardManager.Instance.gameState = GameState.BoosterExplosion;
 
             _shapeState = ShapeState.Explode;
-            _shapeSpriteRenderer.enabled = false;
+            _spriteRenderer.enabled = false;
             GetComponent<BoxCollider2D>().enabled = false;
 
             Explode3x3();
@@ -32,13 +32,13 @@ public class Bomb : Shape
 
     public override void OnPointerDown(PointerEventData eventData)
     {
+        base.OnPointerDown(eventData);
+
         if (BoardManager.Instance.isMovesLeft() && BoardManager.Instance.gameState == GameState.Ready)
         {
             BoardManager.Instance.IncreaseDistinctColumns(_col);
             Explode();
         }
-
-        base.OnPointerDown(eventData);
     }
     public override void SetShapeData(ShapeData shapeData, int row, int col)
     {
@@ -74,7 +74,7 @@ public class Bomb : Shape
         }
     }
 
-    public override bool IsMergeExist()
+    public override void SetMergeSprite(int count)
     {
         throw new System.NotImplementedException();
     }
