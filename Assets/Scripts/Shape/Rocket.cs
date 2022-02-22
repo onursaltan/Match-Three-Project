@@ -7,23 +7,28 @@ using DG.Tweening;
 public class Rocket : Shape
 {
     private const float TimeBetweenExplosions = 0.05f;
+
     private bool _isDirectionVertical;
 
     public override void Explode()
     {
-        Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
+        if (_shapeState != ShapeState.Explode)
+        {
+            Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
+            BoardManager.Instance.gameState = GameState.BoosterExplosion;
 
-        _shapeSpriteRenderer.enabled = false;
-        GetComponent<BoxCollider2D>().enabled = false;
+            _spriteRenderer.enabled = false;
+            GetComponent<BoxCollider2D>().enabled = false;
 
-        if (_isDirectionVertical)
-            ExplodeAllColumn();
-        else
-            ExplodeAllRow();
+            if (_isDirectionVertical)
+                ExplodeAllColumn();
+            else
+                ExplodeAllRow();
 
-        instantiatedShapes[_row, _col] = null;
-        ExplosionAnimation();
-        StartCoroutine(WaitStartShift());
+            instantiatedShapes[_row, _col] = null;
+            ExplosionAnimation();
+            StartCoroutine(WaitStartShift());
+        }
     }
 
     public override void Merge()
@@ -33,10 +38,15 @@ public class Rocket : Shape
 
     public override void OnPointerDown(PointerEventData eventData)
     {
-        if (BoardManager.Instance.isMovesLeft() && BoardManager.Instance.gameState == GameState.Ready)
-            Explode();
-
         base.OnPointerDown(eventData);
+
+        if (BoardManager.Instance.isMovesLeft() &&
+            BoardManager.Instance.gameState == GameState.Ready &&
+            _shapeState == ShapeState.Waiting)
+        {
+            BoardManager.Instance.IncreaseDistinctColumns(_col);
+            Explode();
+        }
     }
 
     public override void SetShapeData(ShapeData shapeData, int row, int col)
@@ -60,15 +70,12 @@ public class Rocket : Shape
         int index = 0;
 
         for (int i = _row + 1; i < BoardManager.Instance.GetRowCount(); i++)
-                StartCoroutine(WaitExplodeShape(instantiatedShapes[i, _col], index++));
+            StartCoroutine(WaitExplodeShape(instantiatedShapes[i, _col], index++));
 
         index = 0;
 
         for (int i = _row - 1; i >= 0; i--)
-                StartCoroutine(WaitExplodeShape(instantiatedShapes[i, _col], index++));
-
-        if (!BoardManager.Instance.GetDistinctColumns().ContainsKey(_col))
-                BoardManager.Instance.GetDistinctColumns().Add(_col, BoardManager.Instance.GetRowCount());
+            StartCoroutine(WaitExplodeShape(instantiatedShapes[i, _col], index++));
     }
 
     private void ExplodeAllRow()
@@ -78,26 +85,23 @@ public class Rocket : Shape
         int index = 0;
 
         for (int i = _col + 1; i < BoardManager.Instance.GetColumnCount(); i++)
-                StartCoroutine(WaitExplodeShape(instantiatedShapes[_row, i], index++));
+            StartCoroutine(WaitExplodeShape(instantiatedShapes[_row, i], index++));
 
         index = 0;
 
         for (int i = _col - 1; i >= 0; i--)
-                StartCoroutine(WaitExplodeShape(instantiatedShapes[_row, i], index++));
-
-        Dictionary<int, int> distinctColumns = BoardManager.Instance.GetDistinctColumns();
-
-        for (int i = 0; i < BoardManager.Instance.GetColumnCount(); i++)
-            if(!distinctColumns.ContainsKey(i))
-                distinctColumns.Add(i, 1);
+            StartCoroutine(WaitExplodeShape(instantiatedShapes[_row, i], index++));
     }
 
     private IEnumerator WaitExplodeShape(Shape shape, int index)
     {
         yield return new WaitForSeconds(TimeBetweenExplosions * (float)index);
 
-        if(shape != null)
+        if (shape != null)
+        {
             shape.Explode();
+            BoardManager.Instance.IncreaseDistinctColumns(shape._col);
+        }
     }
 
     private IEnumerator WaitStartShift()
@@ -105,6 +109,8 @@ public class Rocket : Shape
         int rowCount = BoardManager.Instance.GetRowCount();
         yield return new WaitForSeconds(TimeBetweenExplosions * rowCount);
         BoardManager.Instance.StartShiftDown();
+        BoardManager.Instance.GetExplodedRows().Clear();
+        BoardManager.Instance.gameState = GameState.Ready;
         Destroy(gameObject, 0.75f);
     }
 
@@ -129,5 +135,10 @@ public class Rocket : Shape
 
         s.transform.DOMove(point1, 1.1f);
         s1.transform.DOMove(point2, 1.1f);
+    }
+
+    public override void SetMergeSprite(int count)
+    {
+        throw new System.NotImplementedException();
     }
 }

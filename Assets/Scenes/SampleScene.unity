@@ -540,6 +540,7 @@ GameObject:
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
   - component: {fileID: 519420030}
+  - component: {fileID: 519420033}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -628,6 +629,38 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &519420033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_ClearDepth: 1
+  m_AllowXRRendering: 1
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_Version: 2
 --- !u!1 &647337398
 GameObject:
   m_ObjectHideFlags: 0
@@ -965,7 +998,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!331 &679292402
 SpriteMask:
   m_ObjectHideFlags: 0
@@ -1218,13 +1251,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 914b8f5b7b651844386fedb168f54c99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RocketShapeData: {fileID: 11400000, guid: 828bc56eb85d3454ea2605a856b44dc4, type: 2}
-  DiscoShapeData: {fileID: 11400000, guid: 7470f50457f19344aa408a397e24fb7c, type: 2}
-  BombShapeData: {fileID: 11400000, guid: 90a62e9875c6eb241bd215fb7c9bed0b, type: 2}
   gameState: 0
-  shapesData:
-  - {fileID: 11400000, guid: e0b6948231aa51549a805f8b98588ff7, type: 2}
+  shapeDatas:
+  - {fileID: 11400000, guid: 828bc56eb85d3454ea2605a856b44dc4, type: 2}
+  - {fileID: 11400000, guid: 90a62e9875c6eb241bd215fb7c9bed0b, type: 2}
+  - {fileID: 11400000, guid: 7470f50457f19344aa408a397e24fb7c, type: 2}
+  mergeSprites:
+  - {fileID: 21300000, guid: 30e3fc1bd21f44db7926806309c7ecf3, type: 3}
+  - {fileID: 21300000, guid: 9c22077a141fb425cbe35ca336b69703, type: 3}
+  - {fileID: 21300000, guid: 0bbd9ee0965214ed1914082a51b3500b, type: 3}
+  - {fileID: 21300000, guid: 84f5ebcd93bc24cb1b205c951cebc4d8, type: 3}
+  - {fileID: 21300000, guid: a0e0dd1e81d5b45cfbebaa6ee2883c58, type: 3}
+  - {fileID: 21300000, guid: 0e4426e4747874ff58ac61190c92955c, type: 3}
+  BasicCubes:
   - {fileID: 11400000, guid: 3780296dccda2364e9aa7be9788d44e7, type: 2}
+  - {fileID: 11400000, guid: e0b6948231aa51549a805f8b98588ff7, type: 2}
   - {fileID: 11400000, guid: 37f6905e12235514ca27d86304398407, type: 2}
   shapePrefab: {fileID: 4720713198385590470, guid: 043b4479207b8504d8c091a73ec988f2, type: 3}
   tint: {fileID: 194408095}

@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public enum GameState
 {
-    Ready, Merging,
+    Ready, Merging, BoosterExplosion
 }
 
 public class BoardManager : MonoBehaviour
@@ -14,12 +15,11 @@ public class BoardManager : MonoBehaviour
     private static BoardManager _instance;
     private const int RefillStartPos = 5;
 
-    public ShapeData RocketShapeData;
-    public ShapeData DiscoShapeData;
-    public ShapeData BombShapeData;
     public GameState gameState;
 
-    [SerializeField] private ShapeData[] shapesData;
+    [SerializeField] private ShapeData[] shapeDatas;
+    [SerializeField] private List<Sprite> mergeSprites;
+    [SerializeField] private ShapeData[] BasicCubes;
     [SerializeField] private GameObject shapePrefab;
     [SerializeField] private GameObject tint;
     [SerializeField] private GameObject noMovesLeft;
@@ -33,9 +33,9 @@ public class BoardManager : MonoBehaviour
     [SerializeField] private float paddingHorizontal;
     [SerializeField] private float paddingBottom;
 
-
     private SpriteRenderer _shapeSpriteRenderer;
     private Shape[,] _instantiatedShapes;
+    private List<int> _explodedRows;
     private List<Shape> _adjacentShapes;
     private Dictionary<int, int> _distinctColumns;
 
@@ -60,6 +60,7 @@ public class BoardManager : MonoBehaviour
     private void Start()
     {
         _adjacentShapes = new List<Shape>();
+        _explodedRows = new List<int>();
         _distinctColumns = new Dictionary<int, int>();
         _shapeSpriteRenderer = shapePrefab.GetComponent<SpriteRenderer>();
 
@@ -152,21 +153,22 @@ public class BoardManager : MonoBehaviour
 
     private ShapeData RandomShape()
     {
-        int randInt = Random.Range(0, shapesData.Length);
-        return shapesData[randInt];
+        int randInt = Random.Range(0, BasicCubes.Length);
+        return BasicCubes[randInt];
     }
-    public bool IsShapeCheckedBefore(Shape _shape)
+
+    public bool IsShapeCheckedBefore(List<Shape> adjacentShapes, Shape _shape)
     {
-        foreach (Shape shape in this._adjacentShapes)
+        foreach (Shape shape in adjacentShapes)
             if (shape == _shape)
                 return true;
 
         return false;
     }
 
-    public void AddShapeToAdjacentShapes(Shape shape)
+    public void SetAdjacentShapes(List<Shape> adjacentShapes)
     {
-        _adjacentShapes.Add(shape);
+        _adjacentShapes = adjacentShapes;
     }
 
     public void StartShiftDown()
@@ -218,12 +220,77 @@ public class BoardManager : MonoBehaviour
         }
 
         _distinctColumns.Clear();
-
     }
 
+    #region Find Merge
+
+    public void FindMerges()
+    {
+        StartCoroutine(WaitFindMerges());
+    }
+
+    private IEnumerator WaitFindMerges()
+    {
+        yield return new WaitForSeconds(0.6f);
+
+        List<Shape> instantiatedShapes = Array2DToList(_instantiatedShapes);
+        List<Shape> adjacentShapes = new List<Shape>();
+
+        for (int i = 0; i < instantiatedShapes.Count; i++)
+        {
+            if (instantiatedShapes.ElementAt(i) != null)
+            {
+                instantiatedShapes.ElementAt(i).FindAdjacentShapes(true, adjacentShapes);
+                RemoveIntersections(instantiatedShapes, adjacentShapes);
+                SetMergesSprite(adjacentShapes);
+                adjacentShapes.Clear();
+            }
+        }
+    }
+
+    private void RemoveIntersections(List<Shape> instantiatedShapes, List<Shape> adjacentShapes)
+    {
+        foreach (Shape shape in instantiatedShapes.ToList())
+            if (adjacentShapes.Contains(shape))
+                instantiatedShapes.Remove(shape);
+    }
+
+    private List<Shape> Array2DToList(Shape[,] arr)
+    {
+        List<Shape> shapeList = new List<Shape>();
+
+        foreach (Shape shape in arr)
+            shapeList.Add(shape);
+
+        return shapeList;
+    }
+
+    private void SetMergesSprite(List<Shape> adjacentShapes)
+    {
+        if (adjacentShapes.Count >= 5 && adjacentShapes.Count <= 8)
+            foreach (Shape shape in adjacentShapes)
+                shape.SetMergeSprite(adjacentShapes.Count);
+    }
+
+    public void ReverseShapesSprite() 
+    {
+        foreach (Shape shape in _instantiatedShapes)
+            if(shape != null)
+                shape.ReverseShapeSprite();
+    }
+
+    #endregion
     public void ReloadShapeToList(Shape shape, int row, int col)
     {
         _instantiatedShapes[row, col] = shape;
+    }
+
+    public void IncreaseDistinctColumns(int col)
+    {
+        if (!_distinctColumns.ContainsKey(col))
+            _distinctColumns.Add(col, 1);
+        else
+            _distinctColumns[col] += 1;
     }
 
     public void DecreaseRemainingMoves()
@@ -234,7 +301,7 @@ public class BoardManager : MonoBehaviour
             moves.text = remainingMoves.ToString();
         }
 
-        if(remainingMoves == 0)
+        if (remainingMoves == 0)
         {
             StartCoroutine(RestartButtonWithDelay(1.2f));
         }
@@ -249,6 +316,12 @@ public class BoardManager : MonoBehaviour
     {
         return _adjacentShapes;
     }
+
+    public List<int> GetExplodedRows()
+    {
+        return _explodedRows;
+    }
+
     public Shape[,] GetInstantiatedShapes()
     {
         return _instantiatedShapes;
@@ -267,6 +340,27 @@ public class BoardManager : MonoBehaviour
     public Shape[,] GetShapeMatrix()
     {
         return _instantiatedShapes;
+    }
+
+    public ShapeData GetShapeData(ShapeType shapeType)
+    {
+        foreach (ShapeData shapeData in shapeDatas)
+            if (shapeData.ShapeType == shapeType)
+                return shapeData;
+
+        return null;
+    }
+
+    public Sprite GetMergeSprite(CubeOperation cubeOperation, string color)
+    {
+        string spriteName = color;
+
+        if (cubeOperation == CubeOperation.TurnIntoRocket)
+            spriteName += "-rocket";
+        else if (cubeOperation == CubeOperation.TurnIntoBomb)
+            spriteName += "-bomb";
+
+        return mergeSprites.Find(sprt => sprt.name == spriteName);
     }
 
     public void RemoveFromInstantiatedShapes(int row, int col)

@@ -19,4 +19,9 @@ public class Disco : Shape
     {
         throw new System.NotImplementedException();
     }
+
+    public override void SetMergeSprite(int count)
+    {
+        throw new System.NotImplementedException();
+    }
 }
