@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 
 public class Bomb : Shape
 {
+
     public override void Explode()
     {
         if (_shapeState != ShapeState.Explode)
@@ -38,6 +39,7 @@ public class Bomb : Shape
         {
             BoardManager.Instance.IncreaseDistinctColumns(_col);
             Explode();
+            BoardManager.Instance.DecreaseRemainingMoves();
         }
     }
     public override void SetShapeData(ShapeData shapeData, int row, int col)

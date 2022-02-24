@@ -10,6 +10,11 @@ public class Disco : Shape
     private GameObject Explosion;
     private GameObject Trail;
     private List<Shape> toBeExploded = new List<Shape>();
+    private List<GameObject> trailsInstantiated = new List<GameObject>();
+    private float trailWait = 0.5f;
+    private float trailMove = 1f;
+
+    
 
     public override void Explode()
     {
@@ -29,8 +34,12 @@ public class Disco : Shape
     {
         base.OnPointerDown(eventData);
 
+        if (BoardManager.Instance.isMovesLeft() && BoardManager.Instance.gameState == GameState.Ready)
+        {
             BoardManager.Instance.IncreaseDistinctColumns(_col);
             Explode();
+            BoardManager.Instance.DecreaseRemainingMoves();
+        }
     }
 
     public override void SetShapeData(ShapeData shapeData, int row, int col)
@@ -64,11 +73,28 @@ public class Disco : Shape
     private IEnumerator DiscoExplode()
     {
         _spriteRenderer.sortingOrder = 99;
+        FindSameColor(this._shapeData.ShapeColor);
         Instantiate(Anticipation, transform.position, transform.rotation, transform.parent);
-        yield return new WaitForSeconds(1f);
+
+        //MOVING AND DESTROYING TRAILS
+        foreach (Shape shape in toBeExploded)
+        {
+            yield return new WaitForSeconds(0.1f);
+            GameObject trailInstance = Instantiate(Trail, transform.position, transform.rotation, transform.parent);
+            trailsInstantiated.Add(trailInstance);
+            trailInstance.transform.DOMove(shape.transform.position, trailMove);
+            BoardManager.Instance.IncreaseDistinctColumns(shape._col);
+            DestroyGameobjectAfterSeconds(trailInstance, trailMove + trailWait);
+        }
+
+        Anticipation.GetComponent<CubeExplosion>().TimeToDestroy = (toBeExploded.Count * 0.1f) + trailMove + trailWait;
+
+        yield return new WaitForSeconds(trailMove + trailWait);
+
+
+        //DESTROYING CUBES
         Instantiate(Explosion, transform.position, transform.rotation, transform.parent);
         Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
-        FindSameColor(this._shapeData.ShapeColor);
         foreach (Shape shape in toBeExploded)
         {
             shape.Explode();
@@ -85,11 +111,22 @@ public class Disco : Shape
         Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
         foreach (Shape shape in instantiatedShapes)
         {
-            if (shape != null && shape._shapeData.ShapeColor == color)
+            if (shape != null && shape._shapeData.ShapeColor == color && shape._shapeData.ShapeType != ShapeType.Disco)
             {
                 toBeExploded.Add(shape);
             }
         }
+    }
+
+    private IEnumerator _DestroyGameobjectAfterSeconds(GameObject gameObject, float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        Destroy(gameObject);
+    }
+
+    private void DestroyGameobjectAfterSeconds(GameObject gameObject, float seconds)
+    {
+        StartCoroutine(_DestroyGameobjectAfterSeconds(gameObject, seconds));
     }
 
 }

@@ -131,6 +131,7 @@ public class Cube : Shape
 
     private void BasicExplosionOperation()
     {
+        BoardManager.Instance.DecreaseRemainingMoves();
         foreach (Shape shape in BoardManager.Instance.GetAdjacentShapes())
         {
             BoardManager.Instance.RemoveFromInstantiatedShapes(shape._row, shape._col);
@@ -221,18 +222,22 @@ public class Cube : Shape
 
     private void TurnIntoRocketOperation()
     {
+        BoardManager.Instance.DecreaseRemainingMoves();
         TurnIntoBooster();
         StartCoroutine(TurnIntoRocket());
     }
 
     private void TurnIntoBombOperation()
     {
+        BoardManager.Instance.DecreaseRemainingMoves();
         TurnIntoBooster();
         StartCoroutine(TurnIntoBomb());
     }
 
     private void TurnIntoDiscoOperation()
     {
+        BoardManager.Instance.DecreaseRemainingMoves();
+
         TurnIntoBooster();
 
         ShapeColor sc = ShapeColor.None;
