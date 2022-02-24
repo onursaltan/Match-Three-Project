@@ -284,7 +284,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 1
+      scalar: 1.5
       minScalar: 0.5
       maxCurve:
         serializedVersion: 2
@@ -337,7 +337,7 @@ ParticleSystem:
     startSizeY:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.3
+      scalar: 0.5
       minScalar: 0.1
       maxCurve:
         serializedVersion: 2
@@ -1354,7 +1354,7 @@ ParticleSystem:
         m_RotationOrder: 4
     separateAxes: 0
   ColorModule:
-    enabled: 1
+    enabled: 0
     gradient:
       serializedVersion: 2
       minMaxState: 1
@@ -5119,7 +5119,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 0.972549, b: 0.77254903, a: 0.49019608}
+      maxColor: {r: 1, g: 0.972549, b: 0.77254903, a: 0.16862746}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -5181,7 +5181,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 4
+      scalar: 4.2
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -6251,7 +6251,7 @@ ParticleSystem:
         m_RotationOrder: 4
     separateAxes: 0
   ColorModule:
-    enabled: 1
+    enabled: 0
     gradient:
       serializedVersion: 2
       minMaxState: 1
@@ -9739,7 +9739,7 @@ ParticleSystemRenderer:
   m_RenderMode: 0
   m_SortMode: 0
   m_MinParticleSize: 0
-  m_MaxParticleSize: 0.5
+  m_MaxParticleSize: 1
   m_CameraVelocityScale: 0
   m_VelocityScale: 0
   m_LengthScale: 2
@@ -10045,7 +10045,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1.2
+      scalar: 2.25
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -14599,11 +14599,11 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 99
+  m_SortingOrder: 97
   m_RenderMode: 0
   m_SortMode: 0
   m_MinParticleSize: 0
-  m_MaxParticleSize: 0.5
+  m_MaxParticleSize: 3
   m_CameraVelocityScale: 0
   m_VelocityScale: 0
   m_LengthScale: 2
@@ -24929,7 +24929,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.75
+      scalar: 1.05
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -29483,7 +29483,7 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 99
+  m_SortingOrder: 97
   m_RenderMode: 0
   m_SortMode: 0
   m_MinParticleSize: 0
@@ -29519,6 +29519,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3854896781602449885}
   - component: {fileID: 3854896781602449882}
+  - component: {fileID: 2642916381181807962}
   m_Layer: 0
   m_Name: Anticipation
   m_TagString: Untagged
@@ -29563,6 +29564,19 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &2642916381181807962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3854896781602449884}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8032458aaa913514f8a9242cbce6459f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TimeToDestroy: 1
 --- !u!1 &3854896781641102167
 GameObject:
   m_ObjectHideFlags: 0

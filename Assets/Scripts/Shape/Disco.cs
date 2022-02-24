@@ -9,6 +9,7 @@ public class Disco : Shape
     private GameObject Anticipation;
     private GameObject Explosion;
     private GameObject Trail;
+    private List<Shape> toBeExploded = new List<Shape>();
 
     public override void Explode()
     {
@@ -18,13 +19,9 @@ public class Disco : Shape
             BoardManager.Instance.gameState = GameState.BoosterExplosion;
 
             _shapeState = ShapeState.Explode;
-            _spriteRenderer.enabled = false;
-            GetComponent<BoxCollider2D>().enabled = false;
+            
 
-            ExplodeSameColor();
-
-            instantiatedShapes[_row, _col] = null;
-            StartCoroutine(WaitStartShift());
+            StartCoroutine(DiscoExplode());
         }
     }
 
@@ -40,6 +37,8 @@ public class Disco : Shape
     {
         base.SetShapeData(shapeData, row, col);
         Anticipation = _shapeData.ExplodeEffect.transform.Find("Anticipation").gameObject;
+        Explosion = _shapeData.ExplodeEffect.transform.Find("Main Explosion").gameObject;
+        Trail = _shapeData.ExplodeEffect.transform.Find("Trails").gameObject;
     }
 
     public override void Merge()
@@ -62,17 +61,35 @@ public class Disco : Shape
         Destroy(gameObject, 0.75f);
     }
 
-    private void ExplodeSameColor()
+    private IEnumerator DiscoExplode()
+    {
+        _spriteRenderer.sortingOrder = 99;
+        Instantiate(Anticipation, transform.position, transform.rotation, transform.parent);
+        yield return new WaitForSeconds(1f);
+        Instantiate(Explosion, transform.position, transform.rotation, transform.parent);
+        Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
+        FindSameColor(this._shapeData.ShapeColor);
+        foreach (Shape shape in toBeExploded)
+        {
+            shape.Explode();
+            BoardManager.Instance.IncreaseDistinctColumns(shape._col);
+        }
+        _spriteRenderer.enabled = false;
+        GetComponent<BoxCollider2D>().enabled = false;
+        instantiatedShapes[_row, _col] = null;
+        StartCoroutine(WaitStartShift());
+    }
+
+    private void FindSameColor(ShapeColor color)
     {
         Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
-
         foreach (Shape shape in instantiatedShapes)
         {
-            if (shape._shapeData.ShapeType == ShapeType.BlueCube)
+            if (shape != null && shape._shapeData.ShapeColor == color)
             {
-                shape.Explode();
-                BoardManager.Instance.IncreaseDistinctColumns(shape._col);
+                toBeExploded.Add(shape);
             }
         }
     }
+
 }

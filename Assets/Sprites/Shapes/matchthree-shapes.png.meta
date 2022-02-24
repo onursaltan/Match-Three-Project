@@ -1,0 +1,480 @@
+fileFormatVersion: 2
+guid: 5c262d6d56bec4700b3baa816e3f2e1c
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 150123638449407257
+    second: matchthree-shapes_0
+  - first:
+      213: -1965781134408147026
+    second: matchthree-shapes_1
+  - first:
+      213: 8702759722162973126
+    second: matchthree-shapes_2
+  - first:
+      213: 8284803602268791681
+    second: matchthree-shapes_3
+  - first:
+      213: 96401293040692870
+    second: matchthree-shapes_4
+  - first:
+      213: -9209750062983017495
+    second: matchthree-shapes_5
+  - first:
+      213: -1554092526849909948
+    second: matchthree-shapes_6
+  - first:
+      213: -6110291228380575652
+    second: matchthree-shapes_7
+  - first:
+      213: -707637169389995234
+    second: matchthree-shapes_8
+  - first:
+      213: -5805099448801533850
+    second: matchthree-shapes_9
+  - first:
+      213: 5343083475562281645
+    second: matchthree-shapes_10
+  - first:
+      213: 7641651158198303906
+    second: matchthree-shapes_11
+  - first:
+      213: 4507649988818200580
+    second: matchthree-shapes_12
+  - first:
+      213: 4988722433594871940
+    second: matchthree-shapes_13
+  - first:
+      213: 2943947510120649838
+    second: matchthree-shapes_14
+  externalObjects: {}
+  serializedVersion: 11
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: matchthree-shapes_0
+      rect:
+        serializedVersion: 2
+        x: 84
+        y: 1584
+        width: 362
+        height: 405
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9158a2e57a8551200800000000000000
+      internalID: 150123638449407257
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: matchthree-shapes_1
+      rect:
+        serializedVersion: 2
+        x: 589
+        y: 1585
+        width: 362
+        height: 405
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: eaf1071397428b4e0800000000000000
+      internalID: -1965781134408147026
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: matchthree-shapes_2
+      rect:
+        serializedVersion: 2
+        x: 1092
+        y: 1585
+        width: 362
+        height: 405
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6c9e91dabd966c870800000000000000
+      internalID: 8702759722162973126
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: matchthree-shapes_3
+      rect:
+        serializedVersion: 2
+        x: 1596
+        y: 1585
+        width: 362
+        height: 405
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 183ab134bf889f270800000000000000
+      internalID: 8284803602268791681
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: matchthree-shapes_4
+      rect:
+        serializedVersion: 2
+        x: 84
+        y: 1031
+        width: 362
+        height: 405
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 68e249b177c765100800000000000000
+      internalID: 96401293040692870
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: matchthree-shapes_5
+      rect:
+        serializedVersion: 2
+        x: 589
+        y: 1031
+        width: 362
+        height: 405
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9eb04c1fc15603080800000000000000
+      internalID: -9209750062983017495
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: matchthree-shapes_6
+      rect:
+        serializedVersion: 2
+        x: 1092
+        y: 1031
+        width: 362
+        height: 405
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 44b950da411ce6ae0800000000000000
+      internalID: -1554092526849909948
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: matchthree-shapes_7
+      rect:
+        serializedVersion: 2
+        x: 1596
+        y: 1031
+        width: 362
+        height: 405
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c58c0326082e33ba0800000000000000
+      internalID: -6110291228380575652
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: matchthree-shapes_8
+      rect:
+        serializedVersion: 2
+        x: 85
+        y: 473
+        width: 362
+        height: 405
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e1b75a06eb7fd26f0800000000000000
+      internalID: -707637169389995234
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: matchthree-shapes_9
+      rect:
+        serializedVersion: 2
+        x: 588
+        y: 473
+        width: 362
+        height: 405
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6606e5cdec4207fa0800000000000000
+      internalID: -5805099448801533850
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: matchthree-shapes_10
+      rect:
+        serializedVersion: 2
+        x: 1092
+        y: 473
+        width: 362
+        height: 405
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: daa3626bc12762a40800000000000000
+      internalID: 5343083475562281645
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: matchthree-shapes_11
+      rect:
+        serializedVersion: 2
+        x: 1596
+        y: 473
+        width: 362
+        height: 405
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2acbcddbd399c0a60800000000000000
+      internalID: 7641651158198303906
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: matchthree-shapes_12
+      rect:
+        serializedVersion: 2
+        x: 379
+        y: 41
+        width: 362
+        height: 405
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4086d4348c36e8e30800000000000000
+      internalID: 4507649988818200580
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: matchthree-shapes_13
+      rect:
+        serializedVersion: 2
+        x: 843
+        y: 40
+        width: 362
+        height: 405
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 480d1793f908b3540800000000000000
+      internalID: 4988722433594871940
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: matchthree-shapes_14
+      rect:
+        serializedVersion: 2
+        x: 1307
+        y: 35
+        width: 362
+        height: 405
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e64132aa9a00bd820800000000000000
+      internalID: 2943947510120649838
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+  spritePackingTag: 
+  pSDRemoveMatte: 0
+  pSDShowRemoveMatteOption: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
