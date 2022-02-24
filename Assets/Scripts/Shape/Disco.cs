@@ -34,8 +34,12 @@ public class Disco : Shape
     {
         base.OnPointerDown(eventData);
 
+        if (BoardManager.Instance.isMovesLeft() && BoardManager.Instance.gameState == GameState.Ready)
+        {
             BoardManager.Instance.IncreaseDistinctColumns(_col);
             Explode();
+            BoardManager.Instance.DecreaseRemainingMoves();
+        }
     }
 
     public override void SetShapeData(ShapeData shapeData, int row, int col)

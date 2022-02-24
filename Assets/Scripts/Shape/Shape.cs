@@ -37,7 +37,6 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
     {
         BoardManager.Instance.ReverseShapesSprite();
         BoardManager.Instance.FindMerges();
-        BoardManager.Instance.DecreaseRemainingMoves();
     }
 
     public virtual void SetShapeData(ShapeData shapeData, int row, int col)

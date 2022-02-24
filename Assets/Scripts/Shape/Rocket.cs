@@ -46,6 +46,7 @@ public class Rocket : Shape
         { 
             BoardManager.Instance.IncreaseDistinctColumns(_col);
             Explode();
+            BoardManager.Instance.DecreaseRemainingMoves();
         }
     }
 
