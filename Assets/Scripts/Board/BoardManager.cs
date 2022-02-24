@@ -97,7 +97,7 @@ public class BoardManager : MonoBehaviour
             for (int j = 0; j < columns; j++)
             {
                 Vector3 instantiatedTransform = new Vector3(j * offset.x,
-                                                            offset.y * i,
+                                                            (offset.y - 0.08f) * i,
                                                             0f);
 
                 _instantiatedShapes[i, j] = CreateShape(instantiatedTransform, i, j);
@@ -113,7 +113,7 @@ public class BoardManager : MonoBehaviour
         float width = height * Screen.width / Screen.height;
 
         float shapeRect = _shapeSpriteRenderer.sprite.textureRect.width / _shapeSpriteRenderer.sprite.pixelsPerUnit * columns;
-        shapeRect += paddingHorizontal * 2;
+        shapeRect += (paddingHorizontal / 10) * 2;
         _shapeSpriteRenderer.transform.localScale = new Vector3(width / shapeRect, width / shapeRect);
     }
 
@@ -145,7 +145,7 @@ public class BoardManager : MonoBehaviour
         GameObject instantiatedShape = Instantiate(shapePrefab, instantiateTransform, shapePrefab.transform.rotation, transform);
         Shape _shape = instantiatedShape.AddComponent<Cube>();
         _shape.SetShapeData(randomShape, i, j);
-
+        
         return _shape;
     }
 
@@ -261,7 +261,7 @@ public class BoardManager : MonoBehaviour
 
     private void SetMergesSprite(List<Shape> adjacentShapes)
     {
-        if (adjacentShapes.Count >= 5 && adjacentShapes.Count <= 8)
+        if (adjacentShapes.Count >= 5)
             foreach (Shape shape in adjacentShapes)
                 shape.SetMergeSprite(adjacentShapes.Count);
     }
@@ -350,9 +350,11 @@ public class BoardManager : MonoBehaviour
         string spriteName = color;
 
         if (cubeOperation == CubeOperation.TurnIntoRocket)
-            spriteName += "-rocket";
+            spriteName += "_rocket_cube";
         else if (cubeOperation == CubeOperation.TurnIntoBomb)
-            spriteName += "-bomb";
+            spriteName += "_bomb_cube";
+        else if (cubeOperation == CubeOperation.TurnIntoDisco)
+            spriteName += "_disco_cube";
 
         return mergeSprites.Find(sprt => sprt.name == spriteName);
     }

@@ -4,49 +4,49 @@ TextureImporter:
   internalIDToNameTable:
   - first:
       213: 150123638449407257
-    second: matchthree-shapes_0
+    second: red_cube
   - first:
       213: -1965781134408147026
-    second: matchthree-shapes_1
+    second: red_rocket_cube
   - first:
       213: 8702759722162973126
-    second: matchthree-shapes_2
+    second: red_disco_cube
   - first:
       213: 8284803602268791681
-    second: matchthree-shapes_3
+    second: red_bomb_cube
   - first:
       213: 96401293040692870
-    second: matchthree-shapes_4
+    second: green_cube
   - first:
       213: -9209750062983017495
-    second: matchthree-shapes_5
+    second: green_rocket_cube
   - first:
       213: -1554092526849909948
-    second: matchthree-shapes_6
+    second: green_disco_cube
   - first:
       213: -6110291228380575652
-    second: matchthree-shapes_7
+    second: green_bomb_cube
   - first:
       213: -707637169389995234
-    second: matchthree-shapes_8
+    second: blue_cube
   - first:
       213: -5805099448801533850
-    second: matchthree-shapes_9
+    second: blue_rocket_cube
   - first:
       213: 5343083475562281645
-    second: matchthree-shapes_10
+    second: blue_disco_cube
   - first:
       213: 7641651158198303906
-    second: matchthree-shapes_11
+    second: blue_bomb_cube
   - first:
       213: 4507649988818200580
-    second: matchthree-shapes_12
+    second: blue_disco
   - first:
       213: 4988722433594871940
-    second: matchthree-shapes_13
+    second: green_disco
   - first:
       213: 2943947510120649838
-    second: matchthree-shapes_14
+    second: red_disco
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -88,10 +88,10 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 2
   spriteExtrude: 1
-  spriteMeshType: 1
+  spriteMeshType: 0
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 362
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -144,11 +144,23 @@ TextureImporter:
     overridden: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Windows Store Apps
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: matchthree-shapes_0
+      name: red_cube
       rect:
         serializedVersion: 2
         x: 84
@@ -169,7 +181,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: matchthree-shapes_1
+      name: red_rocket_cube
       rect:
         serializedVersion: 2
         x: 589
@@ -190,7 +202,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: matchthree-shapes_2
+      name: red_disco_cube
       rect:
         serializedVersion: 2
         x: 1092
@@ -211,10 +223,10 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: matchthree-shapes_3
+      name: red_bomb_cube
       rect:
         serializedVersion: 2
-        x: 1596
+        x: 1593
         y: 1585
         width: 362
         height: 405
@@ -232,7 +244,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: matchthree-shapes_4
+      name: green_cube
       rect:
         serializedVersion: 2
         x: 84
@@ -253,7 +265,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: matchthree-shapes_5
+      name: green_rocket_cube
       rect:
         serializedVersion: 2
         x: 589
@@ -274,7 +286,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: matchthree-shapes_6
+      name: green_disco_cube
       rect:
         serializedVersion: 2
         x: 1092
@@ -295,7 +307,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: matchthree-shapes_7
+      name: green_bomb_cube
       rect:
         serializedVersion: 2
         x: 1596
@@ -316,7 +328,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: matchthree-shapes_8
+      name: blue_cube
       rect:
         serializedVersion: 2
         x: 85
@@ -337,7 +349,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: matchthree-shapes_9
+      name: blue_rocket_cube
       rect:
         serializedVersion: 2
         x: 588
@@ -358,7 +370,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: matchthree-shapes_10
+      name: blue_disco_cube
       rect:
         serializedVersion: 2
         x: 1092
@@ -379,10 +391,10 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: matchthree-shapes_11
+      name: blue_bomb_cube
       rect:
         serializedVersion: 2
-        x: 1596
+        x: 1599
         y: 473
         width: 362
         height: 405
@@ -400,7 +412,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: matchthree-shapes_12
+      name: blue_disco
       rect:
         serializedVersion: 2
         x: 379
@@ -421,7 +433,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: matchthree-shapes_13
+      name: green_disco
       rect:
         serializedVersion: 2
         x: 843
@@ -442,7 +454,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: matchthree-shapes_14
+      name: red_disco
       rect:
         serializedVersion: 2
         x: 1307
