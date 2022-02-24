@@ -16,6 +16,7 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
     private const float TimeBounce = 0.1f;
     private const float BounceAmount = 0.02f;
 
+
     public ShapeData _shapeData;
     public ShapeState _shapeState;
 
@@ -89,11 +90,11 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
 
     public void ShiftDown(bool isForRefill = false)
     {
-        int rowToShift = isForRefill ?
-            FindEmptyRow(BoardManager.Instance.GetRowCount() - 1) :
-            FindEmptyRow(_row);
+            int rowToShift = isForRefill ?
+                FindEmptyRow(BoardManager.Instance.GetRowCount() - 1) :
+                FindEmptyRow(_row);
 
-        HandleShiftDown(rowToShift, isForRefill);
+            HandleShiftDown(rowToShift, isForRefill);
     }
 
     private int FindEmptyRow(int rowIndex)

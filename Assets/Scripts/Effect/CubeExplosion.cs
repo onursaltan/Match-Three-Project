@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CubeExplosion : MonoBehaviour
 {
-    [SerializeField] private float TimeToDestroy;
+    public float TimeToDestroy;
 
     void Start()
     {

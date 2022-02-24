@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 
 public class Bomb : Shape
 {
+
     public override void Explode()
     {
         if (_shapeState != ShapeState.Explode)
