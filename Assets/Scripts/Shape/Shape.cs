@@ -44,7 +44,7 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
         this._row = row;
         this._col = col;
         _shapeData = shapeData;
-        _spriteRenderer.sprite = shapeData.Sprite;
+        _spriteRenderer.sprite = _shapeData.Sprite;
         _spriteRenderer.sortingOrder = row + 2;
     }
 
@@ -138,7 +138,11 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
 
         Vector2 offset = _spriteRenderer.bounds.size;
 
-        float posToShift = offset.y * rowToShift;
+        Debug.Log(_row + " " + rowToShift);
+
+       
+        float posToShift = offset.y * rowToShift - (rowToShift * 0.08f);
+
         ShiftAnimation(posToShift, shiftDownTime, rowToShift);
 
         _row = rowToShift;

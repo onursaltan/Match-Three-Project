@@ -738,8 +738,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 647337398}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.0016, y: -1.1914, z: -2}
-  m_LocalScale: {x: 0.447935, y: 0.44486958, z: 0.8845285}
+  m_LocalPosition: {x: -0.0146, y: -0.7477, z: -2}
+  m_LocalScale: {x: 0.5026817, y: 0.56588006, z: 0.8845285}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
@@ -1262,12 +1262,15 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 98ad03e0648f3774aaff915c82820e30, type: 2}
   - {fileID: 11400000, guid: 7470f50457f19344aa408a397e24fb7c, type: 2}
   mergeSprites:
-  - {fileID: 21300000, guid: 30e3fc1bd21f44db7926806309c7ecf3, type: 3}
-  - {fileID: 21300000, guid: 9c22077a141fb425cbe35ca336b69703, type: 3}
-  - {fileID: 21300000, guid: 62d8c3863c41d43e684275bb88035a74, type: 3}
-  - {fileID: 21300000, guid: d972b6aaf6370410b85054af86dea33a, type: 3}
-  - {fileID: 21300000, guid: 6712f8e817aec443d833eb1d5d19a72c, type: 3}
-  - {fileID: 21300000, guid: 263343fd117c245a3924e95b87459701, type: 3}
+  - {fileID: 7641651158198303906, guid: 5c262d6d56bec4700b3baa816e3f2e1c, type: 3}
+  - {fileID: -5805099448801533850, guid: 5c262d6d56bec4700b3baa816e3f2e1c, type: 3}
+  - {fileID: 5343083475562281645, guid: 5c262d6d56bec4700b3baa816e3f2e1c, type: 3}
+  - {fileID: -6110291228380575652, guid: 5c262d6d56bec4700b3baa816e3f2e1c, type: 3}
+  - {fileID: -1554092526849909948, guid: 5c262d6d56bec4700b3baa816e3f2e1c, type: 3}
+  - {fileID: -9209750062983017495, guid: 5c262d6d56bec4700b3baa816e3f2e1c, type: 3}
+  - {fileID: 8284803602268791681, guid: 5c262d6d56bec4700b3baa816e3f2e1c, type: 3}
+  - {fileID: 8702759722162973126, guid: 5c262d6d56bec4700b3baa816e3f2e1c, type: 3}
+  - {fileID: -1965781134408147026, guid: 5c262d6d56bec4700b3baa816e3f2e1c, type: 3}
   BasicCubes:
   - {fileID: 11400000, guid: 3780296dccda2364e9aa7be9788d44e7, type: 2}
   - {fileID: 11400000, guid: e0b6948231aa51549a805f8b98588ff7, type: 2}
