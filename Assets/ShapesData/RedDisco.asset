@@ -10,8 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fc9244f80a95c6349b64c11804b062fe, type: 3}
-  m_Name: Disco
+  m_Name: RedDisco
   m_EditorClassIdentifier: 
-  _shapeType: 5
-  _sprite: {fileID: 8454916260744607575, guid: 92e2cd4a996def347ab88564e216bf68, type: 3}
-  _explodeEffect: {fileID: 0}
+  _shapeType: 3
+  _shapeColor: 1
+  _sprite: {fileID: 21300000, guid: 89d1692141e70354b925a7f0e5defc0e, type: 3}
+  _explodeEffect: {fileID: 3854896780779119827, guid: 8c84d123a908abb4da3bf0248aa2fc59, type: 3}

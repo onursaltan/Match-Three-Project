@@ -17,6 +17,10 @@ public class BoardManager : MonoBehaviour
 
     public GameState gameState;
 
+    public GameObject RocketMergeEffect;
+    public GameObject BombMergeEffect;
+    public GameObject DiscoMergeEffect;
+
     [SerializeField] private ShapeData[] shapeDatas;
     [SerializeField] private List<Sprite> mergeSprites;
     [SerializeField] private ShapeData[] BasicCubes;
@@ -59,7 +63,6 @@ public class BoardManager : MonoBehaviour
 
     private void Start()
     {
-        _adjacentShapes = new List<Shape>();
         _explodedRows = new List<int>();
         _distinctColumns = new Dictionary<int, int>();
         _shapeSpriteRenderer = shapePrefab.GetComponent<SpriteRenderer>();
@@ -68,6 +71,7 @@ public class BoardManager : MonoBehaviour
         CreateTiles();
         int.TryParse(moves.text, out remainingMoves);
         gameState = GameState.Ready;
+        FindMerges();
     }
 
     private void Update()
@@ -170,13 +174,9 @@ public class BoardManager : MonoBehaviour
         FindDistinctColums();
 
         foreach (int column in _distinctColumns.Keys)
-        {
             for (int i = 0; i < rows; i++)
-            {
                 if (_instantiatedShapes[i, column] != null)
                     _instantiatedShapes[i, column].GetComponent<Shape>().ShiftDown();
-            }
-        }
 
         _adjacentShapes.Clear();
         RefillBoard();
@@ -336,10 +336,10 @@ public class BoardManager : MonoBehaviour
         return _instantiatedShapes;
     }
 
-    public ShapeData GetShapeData(ShapeType shapeType)
+    public ShapeData GetShapeData(ShapeType shapeType, ShapeColor shapeColor)
     {
         foreach (ShapeData shapeData in shapeDatas)
-            if (shapeData.ShapeType == shapeType)
+            if (shapeData.ShapeType == shapeType && shapeData.ShapeColor == shapeColor)
                 return shapeData;
 
         return null;

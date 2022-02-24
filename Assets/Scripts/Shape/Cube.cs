@@ -51,11 +51,11 @@ public class Cube : Shape
     {
         string color = "";
 
-        if (_shapeData.ShapeType == ShapeType.BlueCube)
+        if (_shapeData.ShapeColor == ShapeColor.Blue)
             color = "blue";
-        else if(_shapeData.ShapeType == ShapeType.RedCube)
+        else if(_shapeData.ShapeColor == ShapeColor.Red)
             color = "red";
-        else if (_shapeData.ShapeType == ShapeType.GreenCube)
+        else if (_shapeData.ShapeColor == ShapeColor.Green)
             color = "green";
 
         _spriteRenderer.sprite = BoardManager.Instance.GetMergeSprite(FindCubeOperation(count), color);
@@ -71,9 +71,23 @@ public class Cube : Shape
         {
             _adjacentShapes = new List<Shape>();
             FindAdjacentShapes(true, _adjacentShapes);
-            BoardManager.Instance.SetAdjacentShapes(_adjacentShapes);
-            HandleCubeOperation();
+
+            if (IsAllShapesStateWaiting(_adjacentShapes))
+            {
+                BoardManager.Instance.SetAdjacentShapes(_adjacentShapes);
+                HandleCubeOperation();
+            }
         }
+    }
+
+    private bool IsAllShapesStateWaiting(List<Shape> adjacentShapes)
+    {
+
+        foreach (Shape shape in adjacentShapes)
+            if (shape._shapeState != ShapeState.Waiting)
+                return false;
+
+        return true;
     }
 
     public void SetCheckBefore(List<Shape> adjacentShapes)
@@ -91,7 +105,7 @@ public class Cube : Shape
         else if (adjacentShapesCount == 7 || adjacentShapesCount == 8)
             return CubeOperation.TurnIntoBomb;
         else if (adjacentShapesCount >= 9)
-            return CubeOperation.BasicExplosion;
+            return CubeOperation.TurnIntoDisco;
         else
             return CubeOperation.Fail;
     }
@@ -109,7 +123,7 @@ public class Cube : Shape
         else if (cubeOperation == CubeOperation.TurnIntoBomb)
             TurnIntoBombOperation();
         else if (cubeOperation == CubeOperation.TurnIntoDisco)
-            BasicExplosionOperation();
+            TurnIntoDiscoOperation();
         else
             FailOperation();
 
@@ -203,7 +217,6 @@ public class Cube : Shape
 
             });
         });
-
     }
 
     private void TurnIntoRocketOperation()
@@ -221,16 +234,27 @@ public class Cube : Shape
     private void TurnIntoDiscoOperation()
     {
         TurnIntoBooster();
-        StartCoroutine(TurnIntoDisco());
+
+        ShapeColor sc = ShapeColor.None;
+
+        if (_shapeData.ShapeColor == ShapeColor.Red)
+            sc = ShapeColor.Red;
+        else if(_shapeData.ShapeColor == ShapeColor.Blue)
+            sc = ShapeColor.Blue;
+        else if (_shapeData.ShapeColor == ShapeColor.Green)
+            sc = ShapeColor.Green;
+
+        StartCoroutine(TurnIntoDisco(ShapeType.Disco, sc));
     }
 
     private IEnumerator TurnIntoRocket()
     {
         yield return new WaitForSeconds(TimeToTurnIntoBooster);
         Rocket rocket = gameObject.AddComponent<Rocket>();
-        rocket.SetShapeData(BoardManager.Instance.GetShapeData(ShapeType.Rocket), _row, _col);
+        rocket.SetShapeData(BoardManager.Instance.GetShapeData(ShapeType.Rocket, ShapeColor.None), _row, _col);
         BoardManager.Instance.ReloadShapeToList(rocket, _row, _col);
         BoardManager.Instance.gameState = GameState.Ready;
+        Instantiate(BoardManager.Instance.RocketMergeEffect, transform.position, transform.rotation, transform.parent);
         Destroy(gameObject.GetComponent<Cube>());
     }
 
@@ -238,17 +262,21 @@ public class Cube : Shape
     {
         yield return new WaitForSeconds(TimeToTurnIntoBooster);
         Bomb bomb = gameObject.AddComponent<Bomb>();
-        bomb.SetShapeData(BoardManager.Instance.GetShapeData(ShapeType.Bomb), _row, _col);
+        bomb.SetShapeData(BoardManager.Instance.GetShapeData(ShapeType.Bomb, ShapeColor.None), _row, _col);
         BoardManager.Instance.ReloadShapeToList(bomb, _row, _col);
+        Instantiate(BoardManager.Instance.BombMergeEffect, transform.position, transform.rotation, transform.parent);
         BoardManager.Instance.gameState = GameState.Ready;
         Destroy(gameObject.GetComponent<Cube>());
     }
 
-    private IEnumerator TurnIntoDisco()
+    private IEnumerator TurnIntoDisco(ShapeType shapeType, ShapeColor shapeColor)
     {
         yield return new WaitForSeconds(TimeToTurnIntoBooster);
         Disco disco = gameObject.AddComponent<Disco>();
-        disco.SetShapeData(BoardManager.Instance.GetShapeData(ShapeType.Disco), _row, _col);
+        disco.SetShapeData(BoardManager.Instance.GetShapeData(shapeType, shapeColor), _row, _col);
+        BoardManager.Instance.ReloadShapeToList(disco, _row, _col);
+        Instantiate(BoardManager.Instance.DiscoMergeEffect, transform.position, transform.rotation, transform.parent);
+        BoardManager.Instance.gameState = GameState.Ready;
         Destroy(gameObject.GetComponent<Cube>());
     }
 }

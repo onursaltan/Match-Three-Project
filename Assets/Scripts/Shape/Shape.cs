@@ -78,7 +78,8 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
         if (temp < constraint && temp >= 0)
         {
             if (shapeMatrix[row, col] != null && !BoardManager.Instance.IsShapeCheckedBefore(adjacentShapes, shapeMatrix[row, col]) &&
-                shapeMatrix[row, col]._shapeData.ShapeType == _shapeData.ShapeType)
+                shapeMatrix[row, col]._shapeData.ShapeType == _shapeData.ShapeType && 
+                shapeMatrix[row, col]._shapeData.ShapeColor == _shapeData.ShapeColor)
             {
                 adjacentShapes.Add(shapeMatrix[row, col]);
                 shapeMatrix[row, col].FindAdjacentShapes(false, adjacentShapes);

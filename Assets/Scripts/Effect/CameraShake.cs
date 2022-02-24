@@ -13,15 +13,15 @@ public class CameraShake : MonoBehaviour
     /// Set it to true: The camera position is set in reference to the old position of the camera
     /// Set it to false: The camera position is set in absolute values or is fixed to an object
     /// </summary>
-    public bool DeltaMovement = true;
+    private bool DeltaMovement = true;
 
-    protected Camera Camera;
-    protected float time = 0;
-    protected Vector3 lastPos;
-    protected Vector3 nextPos;
-    protected float lastFoV;
-    protected float nextFoV;
-    protected bool destroyAfterPlay;
+    private Camera Camera;
+    private float time = 0;
+    private Vector3 lastPos;
+    private Vector3 nextPos;
+    private float lastFoV;
+    private float nextFoV;
+    private bool destroyAfterPlay;
 
     private void Awake()
     {

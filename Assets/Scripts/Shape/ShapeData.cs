@@ -4,7 +4,12 @@ using UnityEngine;
 
 public enum ShapeType
 {
-    BlueCube, RedCube, GreenCube, Bomb, Rocket, Disco
+    Cube, Bomb, Rocket, Disco
+}
+
+public enum ShapeColor
+{
+    Blue, Red, Green, None
 }
 
 [CreateAssetMenu(fileName = "New Shape", menuName = "Shape Data", order = 51)]
@@ -13,6 +18,9 @@ public class ShapeData : ScriptableObject
 {
     [SerializeField]
     private ShapeType _shapeType;
+
+    [SerializeField]
+    private ShapeColor _shapeColor;
 
     [SerializeField]
     private Sprite _sprite;
@@ -25,6 +33,14 @@ public class ShapeData : ScriptableObject
         get
         {
             return _shapeType;
+        }
+    }
+
+    public ShapeColor ShapeColor
+    {
+        get
+        {
+            return _shapeColor;
         }
     }
 
