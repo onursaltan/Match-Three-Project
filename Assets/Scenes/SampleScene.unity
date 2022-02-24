@@ -1252,9 +1252,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameState: 0
+  RocketMergeEffect: {fileID: 6066205973017403214, guid: 86eb87d0d6b4b1f4e9b182c346ad5226, type: 3}
+  BombMergeEffect: {fileID: 904858296582425039, guid: 41265a0832d4bd542b4c5ea63021c424, type: 3}
+  DiscoMergeEffect: {fileID: 6653701877214020759, guid: 176be645cd919d14db443d2cd1d63cf0, type: 3}
   shapeDatas:
   - {fileID: 11400000, guid: 828bc56eb85d3454ea2605a856b44dc4, type: 2}
   - {fileID: 11400000, guid: 90a62e9875c6eb241bd215fb7c9bed0b, type: 2}
+  - {fileID: 11400000, guid: 39c0eb89c75072646b356316d16c403f, type: 2}
+  - {fileID: 11400000, guid: 98ad03e0648f3774aaff915c82820e30, type: 2}
   - {fileID: 11400000, guid: 7470f50457f19344aa408a397e24fb7c, type: 2}
   mergeSprites:
   - {fileID: 21300000, guid: 30e3fc1bd21f44db7926806309c7ecf3, type: 3}

@@ -13,8 +13,8 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
 {
     private const float TimeShiftDown = 0.07f;
     private const float TimeRefillShiftDown = 0.07f;
-    private const float TimeBounce = 0.06f;
-    private const float BounceAmount = 0.015f;
+    private const float TimeBounce = 0.1f;
+    private const float BounceAmount = 0.02f;
 
     public ShapeData _shapeData;
     public ShapeState _shapeState;
@@ -25,10 +25,6 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
     protected List<Shape> _adjacentShapes;
     protected SpriteRenderer _spriteRenderer;
 
-    private Sprite _cubeRocketSprite;
-    private Sprite _cubeBombSprite;
-
-    private bool isThisClickedShape = false;
     private Sequence _shiftDownSequence;
 
     void Awake()
@@ -82,7 +78,8 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
         if (temp < constraint && temp >= 0)
         {
             if (shapeMatrix[row, col] != null && !BoardManager.Instance.IsShapeCheckedBefore(adjacentShapes, shapeMatrix[row, col]) &&
-                shapeMatrix[row, col]._shapeData.ShapeType == _shapeData.ShapeType)
+                shapeMatrix[row, col]._shapeData.ShapeType == _shapeData.ShapeType && 
+                shapeMatrix[row, col]._shapeData.ShapeColor == _shapeData.ShapeColor)
             {
                 adjacentShapes.Add(shapeMatrix[row, col]);
                 shapeMatrix[row, col].FindAdjacentShapes(false, adjacentShapes);
@@ -153,18 +150,13 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
         _shiftDownSequence = DOTween.Sequence();
         float shiftAmount = _row - rowToShift;
 
-        _shiftDownSequence.Append(transform.DOLocalMoveY(posToShift, shiftDownTime * shiftAmount).SetEase(Ease.InQuad)).OnComplete(() =>
+        _shiftDownSequence.Append(transform.DOLocalMoveY(posToShift, shiftDownTime * shiftAmount)
+                           .SetEase(Ease.InQuad))
+                           .Append(BounceShape(posToShift, shiftAmount))
+                           .OnComplete(() =>
         {
-            BounceShape(transform.position.y + BounceAmount * shiftAmount, posToShift);
             _shapeState = ShapeState.Waiting;
         });
-    }
-
-    private void FixPosition(float fixPos)
-    {
-        Vector3 fixVector = transform.localPosition;
-        fixVector.y = fixPos;
-        transform.localPosition = fixVector;
     }
 
     private int FindCurrentRow()
@@ -175,12 +167,9 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
         return currentRow;
     }
 
-    private void BounceShape(float pos, float realPos)
+    private Tween BounceShape(float posToShift, float shiftAmount)
     {
-        transform.DOMoveY(pos, TimeBounce).SetEase(Ease.OutQuad).SetLoops(2, LoopType.Yoyo).OnComplete(() => {
-            if (realPos != transform.localPosition.y)
-                FixPosition(realPos);
-        });
+        return transform.DOLocalMoveY(posToShift + BounceAmount * shiftAmount, TimeBounce).SetEase(Ease.OutQuad).SetLoops(2, LoopType.Yoyo);
     }
 
     public abstract void Explode();

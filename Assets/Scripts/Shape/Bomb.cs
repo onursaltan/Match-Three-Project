@@ -19,7 +19,7 @@ public class Bomb : Shape
             Explode3x3();
 
             Instantiate(_shapeData.ExplodeEffect, transform.position, transform.rotation, transform.parent);
-
+            CameraShake.Shake(0.5f, 5f);
             instantiatedShapes[_row, _col] = null;
             StartCoroutine(WaitStartShift());
         }

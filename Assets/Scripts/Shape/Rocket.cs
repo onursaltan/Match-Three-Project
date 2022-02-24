@@ -42,8 +42,8 @@ public class Rocket : Shape
 
         if (BoardManager.Instance.isMovesLeft() &&
             BoardManager.Instance.gameState == GameState.Ready &&
-            _shapeState == ShapeState.Waiting)
-        {
+            _shapeState == ShapeState.Waiting) 
+        { 
             BoardManager.Instance.IncreaseDistinctColumns(_col);
             Explode();
         }
@@ -109,7 +109,7 @@ public class Rocket : Shape
         int rowCount = BoardManager.Instance.GetRowCount();
         yield return new WaitForSeconds(TimeBetweenExplosions * rowCount);
         BoardManager.Instance.StartShiftDown();
-        BoardManager.Instance.GetExplodedRows().Clear();
+        BoardManager.Instance.GetExplodedRows().Clear(); 
         BoardManager.Instance.gameState = GameState.Ready;
         Destroy(gameObject, 0.75f);
     }
