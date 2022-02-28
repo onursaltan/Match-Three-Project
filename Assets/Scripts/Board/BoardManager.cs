@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 public enum GameState
 {
-    Ready, Merging, BoosterExplosion
+    Ready, Merging, RocketExplosion, DiscoExplosion, BombExplosion
 }
 
 public class BoardManager : MonoBehaviour
@@ -15,11 +15,12 @@ public class BoardManager : MonoBehaviour
     private static BoardManager _instance;
     private const int RefillStartPos = 5;
 
-    public GameState gameState;
-
+    //temp
     public GameObject RocketMergeEffect;
     public GameObject BombMergeEffect;
     public GameObject DiscoMergeEffect;
+    public GameObject LightBallCube;
+    //
 
     [SerializeField] private ShapeData[] shapeDatas;
     [SerializeField] private List<Sprite> mergeSprites;
@@ -37,11 +38,14 @@ public class BoardManager : MonoBehaviour
     [SerializeField] private float paddingHorizontal;
     [SerializeField] private float paddingBottom;
 
+    private GameState _gameState;
+
     private SpriteRenderer _shapeSpriteRenderer;
     private Shape[,] _instantiatedShapes;
     private List<int> _explodedRows;
     private List<Shape> _adjacentShapes;
     private Dictionary<int, int> _distinctColumns;
+    private bool _isMergesFound = false;
 
     public static BoardManager Instance
     {
@@ -70,7 +74,7 @@ public class BoardManager : MonoBehaviour
         SetShapeRect();
         CreateTiles();
         int.TryParse(moves.text, out remainingMoves);
-        gameState = GameState.Ready;
+        _gameState = GameState.Ready;
         FindMerges();
     }
 
@@ -145,7 +149,7 @@ public class BoardManager : MonoBehaviour
         GameObject instantiatedShape = Instantiate(shapePrefab, instantiateTransform, shapePrefab.transform.rotation, transform);
         Shape _shape = instantiatedShape.AddComponent<Cube>();
         _shape.SetShapeData(randomShape, i, j);
-        
+
         return _shape;
     }
 
@@ -171,15 +175,18 @@ public class BoardManager : MonoBehaviour
 
     public void StartShiftDown()
     {
-        FindDistinctColums();
+        if (_gameState == GameState.Ready)
+        {
+            FindDistinctColums();
 
-        foreach (int column in _distinctColumns.Keys)
-            for (int i = 0; i < rows; i++)
-                if (_instantiatedShapes[i, column] != null)
-                    _instantiatedShapes[i, column].GetComponent<Shape>().ShiftDown();
+            foreach (int column in _distinctColumns.Keys)
+                for (int i = 0; i < rows; i++)
+                    if (_instantiatedShapes[i, column] != null)
+                        _instantiatedShapes[i, column].GetComponent<Shape>().ShiftDown();
 
-        _adjacentShapes.Clear();
-        RefillBoard();
+            _adjacentShapes.Clear();
+            RefillBoard();
+        }
     }
 
     private void FindDistinctColums()
@@ -220,13 +227,12 @@ public class BoardManager : MonoBehaviour
 
     public void FindMerges()
     {
-        StartCoroutine(WaitFindMerges());
+        if(!_isMergesFound)
+            StartCoroutine(WaitFindMerges());
     }
 
     private IEnumerator WaitFindMerges()
     {
-        yield return new WaitForSeconds(0.6f);
-
         List<Shape> instantiatedShapes = Array2DToList(_instantiatedShapes);
         List<Shape> adjacentShapes = new List<Shape>();
 
@@ -240,6 +246,8 @@ public class BoardManager : MonoBehaviour
                 adjacentShapes.Clear();
             }
         }
+
+        yield return null;
     }
 
     private void RemoveIntersections(List<Shape> instantiatedShapes, List<Shape> adjacentShapes)
@@ -266,10 +274,10 @@ public class BoardManager : MonoBehaviour
                 shape.SetMergeSprite(adjacentShapes.Count);
     }
 
-    public void ReverseShapesSprite() 
+    public void ReverseShapesSprite()
     {
         foreach (Shape shape in _instantiatedShapes)
-            if(shape != null)
+            if (shape != null)
                 shape.ReverseShapeSprite();
     }
 
@@ -299,6 +307,25 @@ public class BoardManager : MonoBehaviour
         {
             StartCoroutine(RestartButtonWithDelay(1.2f));
         }
+    }
+
+    public void SetGameState(GameState gs, bool isComeFromDisco = false)
+    {
+        if (_gameState != GameState.DiscoExplosion)
+            _gameState = gs;
+        else
+            if (isComeFromDisco)
+                _gameState = gs;
+    }
+
+    public GameState GetGameState()
+    {
+        return _gameState;
+    }
+
+    public void SetIsMergesFound(bool b)
+    {
+        _isMergesFound = b;
     }
 
     public Dictionary<int, int> GetDistinctColumns()

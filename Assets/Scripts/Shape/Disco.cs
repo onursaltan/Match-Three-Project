@@ -6,26 +6,21 @@ using DG.Tweening;
 
 public class Disco : Shape
 {
+    private const float TimeToTrailWait = 1.0f;
+    private const float TimeToTrailReach = 0.6f;
     private GameObject Anticipation;
     private GameObject Explosion;
     private GameObject Trail;
     private List<Shape> toBeExploded = new List<Shape>();
     private List<GameObject> trailsInstantiated = new List<GameObject>();
-    private float trailWait = 0.5f;
-    private float trailMove = 1f;
-
-    
 
     public override void Explode()
     {
         if (_shapeState != ShapeState.Explode)
         {
             Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
-            BoardManager.Instance.gameState = GameState.BoosterExplosion;
-
+            BoardManager.Instance.SetGameState(GameState.DiscoExplosion);
             _shapeState = ShapeState.Explode;
-            
-
             StartCoroutine(DiscoExplode());
         }
     }
@@ -34,7 +29,7 @@ public class Disco : Shape
     {
         base.OnPointerDown(eventData);
 
-        if (BoardManager.Instance.isMovesLeft() && BoardManager.Instance.gameState == GameState.Ready)
+        if (BoardManager.Instance.isMovesLeft() && BoardManager.Instance.GetGameState() == GameState.Ready)
         {
             BoardManager.Instance.IncreaseDistinctColumns(_col);
             Explode();
@@ -64,9 +59,9 @@ public class Disco : Shape
     {
         int rowCount = BoardManager.Instance.GetRowCount();
         yield return new WaitForSeconds(0.05f * rowCount);
+        BoardManager.Instance.SetGameState(GameState.Ready, true);
         BoardManager.Instance.StartShiftDown();
         BoardManager.Instance.GetExplodedRows().Clear();
-        BoardManager.Instance.gameState = GameState.Ready;
         Destroy(gameObject, 0.75f);
     }
 
@@ -77,29 +72,30 @@ public class Disco : Shape
         Instantiate(Anticipation, transform.position, transform.rotation, transform.parent);
 
         //MOVING AND DESTROYING TRAILS
-        foreach (Shape shape in toBeExploded)
+        foreach (Cube shape in toBeExploded)
         {
             yield return new WaitForSeconds(0.1f);
-            GameObject trailInstance = Instantiate(Trail, transform.position, transform.rotation, transform.parent);
-            trailsInstantiated.Add(trailInstance);
-            trailInstance.transform.DOMove(shape.transform.position, trailMove);
-            BoardManager.Instance.IncreaseDistinctColumns(shape._col);
-            DestroyGameobjectAfterSeconds(trailInstance, trailMove + trailWait);
+            if (shape != null)
+            {
+                GameObject trailInstance = Instantiate(Trail, transform.position, transform.rotation, transform.parent);
+                trailsInstantiated.Add(trailInstance);
+                trailInstance.transform.DOMove(shape.transform.position, TimeToTrailReach);
+                BoardManager.Instance.IncreaseDistinctColumns(shape._col);
+                shape.DiscoExplosion(TimeToTrailReach + TimeToTrailWait);
+                DestroyGameobjectAfterSeconds(trailInstance, TimeToTrailReach + TimeToTrailWait);
+            }
         }
 
-        Anticipation.GetComponent<CubeExplosion>().TimeToDestroy = (toBeExploded.Count * 0.1f) + trailMove + trailWait;
+        Anticipation.GetComponent<CubeExplosion>().TimeToDestroy = (toBeExploded.Count * 0.1f) + TimeToTrailReach + TimeToTrailWait;
 
-        yield return new WaitForSeconds(trailMove + trailWait);
+        yield return new WaitForSeconds(TimeToTrailReach + TimeToTrailWait);
 
+        foreach (Cube shape in toBeExploded)
+            if (shape != null)
+                shape.Explode();
 
-        //DESTROYING CUBES
         Instantiate(Explosion, transform.position, transform.rotation, transform.parent);
         Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
-        foreach (Shape shape in toBeExploded)
-        {
-            shape.Explode();
-            BoardManager.Instance.IncreaseDistinctColumns(shape._col);
-        }
         _spriteRenderer.enabled = false;
         GetComponent<BoxCollider2D>().enabled = false;
         instantiatedShapes[_row, _col] = null;

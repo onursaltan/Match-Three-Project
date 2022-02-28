@@ -738,8 +738,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 647337398}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.0146, y: -0.7477, z: -2}
-  m_LocalScale: {x: 0.5026817, y: 0.56588006, z: 0.8845285}
+  m_LocalPosition: {x: -0.0146, y: -0.9508, z: -2}
+  m_LocalScale: {x: 0.5026817, y: 0.5210407, z: 0.8845285}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
@@ -1232,6 +1232,7 @@ GameObject:
   m_Component:
   - component: {fileID: 785137481}
   - component: {fileID: 785137480}
+  - component: {fileID: 785137482}
   m_Layer: 0
   m_Name: Board
   m_TagString: Untagged
@@ -1251,10 +1252,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 914b8f5b7b651844386fedb168f54c99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameState: 0
   RocketMergeEffect: {fileID: 6066205973017403214, guid: 86eb87d0d6b4b1f4e9b182c346ad5226, type: 3}
   BombMergeEffect: {fileID: 904858296582425039, guid: 41265a0832d4bd542b4c5ea63021c424, type: 3}
   DiscoMergeEffect: {fileID: 6653701877214020759, guid: 176be645cd919d14db443d2cd1d63cf0, type: 3}
+  LightBallCube: {fileID: 4635037346365102388, guid: 3ea226c1f7d74cb4197add0140e9d61a, type: 3}
   shapeDatas:
   - {fileID: 11400000, guid: 828bc56eb85d3454ea2605a856b44dc4, type: 2}
   - {fileID: 11400000, guid: 90a62e9875c6eb241bd215fb7c9bed0b, type: 2}
@@ -1298,6 +1299,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &785137482
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 785137479}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8203768910b6dd248a71356dd91bbc97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &795786519
 GameObject:
   m_ObjectHideFlags: 0

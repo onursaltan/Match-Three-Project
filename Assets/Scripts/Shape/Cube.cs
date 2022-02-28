@@ -28,6 +28,7 @@ public class Cube : Shape
 
     public override void Explode()
     {
+        BoardManager.Instance.ReverseShapesSprite();
         Instantiate(_shapeData.ExplodeEffect, transform.position, transform.rotation, transform.parent);
         BoardManager.Instance.GetInstantiatedShapes()[_row, _col] = null;
         Destroy(gameObject);
@@ -36,7 +37,7 @@ public class Cube : Shape
     public override void Merge()
     {
         _shapeState = ShapeState.Merging;
-        BoardManager.Instance.gameState = GameState.Merging;
+        BoardManager.Instance.SetGameState(GameState.Merging);
 
         foreach (Cube cube in BoardManager.Instance.GetAdjacentShapes())
         {
@@ -53,7 +54,7 @@ public class Cube : Shape
 
         if (_shapeData.ShapeColor == ShapeColor.Blue)
             color = "blue";
-        else if(_shapeData.ShapeColor == ShapeColor.Red)
+        else if (_shapeData.ShapeColor == ShapeColor.Red)
             color = "red";
         else if (_shapeData.ShapeColor == ShapeColor.Green)
             color = "green";
@@ -66,7 +67,7 @@ public class Cube : Shape
         base.OnPointerDown(eventData);
 
         if (BoardManager.Instance.isMovesLeft() &&
-            BoardManager.Instance.gameState == GameState.Ready &&
+            BoardManager.Instance.GetGameState() == GameState.Ready &&
             _shapeState == ShapeState.Waiting)
         {
             _adjacentShapes = new List<Shape>();
@@ -78,6 +79,12 @@ public class Cube : Shape
                 HandleCubeOperation();
             }
         }
+    }
+
+    public void DiscoExplosion(float ExplosionTime)
+    {
+        FailAnimation();
+        Instantiate(BoardManager.Instance.LightBallCube, transform);
     }
 
     private bool IsAllShapesStateWaiting(List<Shape> adjacentShapes)
@@ -157,6 +164,7 @@ public class Cube : Shape
     {
         yield return new WaitForSeconds(TimeToExpandIn + TimeToExpandOut);
         BoardManager.Instance.GetAdjacentShapes().Remove(this);
+        BoardManager.Instance.SetGameState(GameState.Ready);
         BoardManager.Instance.StartShiftDown();
     }
 
@@ -244,7 +252,7 @@ public class Cube : Shape
 
         if (_shapeData.ShapeColor == ShapeColor.Red)
             sc = ShapeColor.Red;
-        else if(_shapeData.ShapeColor == ShapeColor.Blue)
+        else if (_shapeData.ShapeColor == ShapeColor.Blue)
             sc = ShapeColor.Blue;
         else if (_shapeData.ShapeColor == ShapeColor.Green)
             sc = ShapeColor.Green;
@@ -258,7 +266,7 @@ public class Cube : Shape
         Rocket rocket = gameObject.AddComponent<Rocket>();
         rocket.SetShapeData(BoardManager.Instance.GetShapeData(ShapeType.Rocket, ShapeColor.None), _row, _col);
         BoardManager.Instance.ReloadShapeToList(rocket, _row, _col);
-        BoardManager.Instance.gameState = GameState.Ready;
+        BoardManager.Instance.SetGameState(GameState.Ready);
         Instantiate(BoardManager.Instance.RocketMergeEffect, transform.position, transform.rotation, transform.parent);
         Destroy(gameObject.GetComponent<Cube>());
     }
@@ -270,7 +278,7 @@ public class Cube : Shape
         bomb.SetShapeData(BoardManager.Instance.GetShapeData(ShapeType.Bomb, ShapeColor.None), _row, _col);
         BoardManager.Instance.ReloadShapeToList(bomb, _row, _col);
         Instantiate(BoardManager.Instance.BombMergeEffect, transform.position, transform.rotation, transform.parent);
-        BoardManager.Instance.gameState = GameState.Ready;
+        BoardManager.Instance.SetGameState(GameState.Ready);
         Destroy(gameObject.GetComponent<Cube>());
     }
 
@@ -281,7 +289,7 @@ public class Cube : Shape
         disco.SetShapeData(BoardManager.Instance.GetShapeData(shapeType, shapeColor), _row, _col);
         BoardManager.Instance.ReloadShapeToList(disco, _row, _col);
         Instantiate(BoardManager.Instance.DiscoMergeEffect, transform.position, transform.rotation, transform.parent);
-        BoardManager.Instance.gameState = GameState.Ready;
+        BoardManager.Instance.SetGameState(GameState.Ready);
         Destroy(gameObject.GetComponent<Cube>());
     }
 }

@@ -15,7 +15,7 @@ public class Rocket : Shape
         if (_shapeState != ShapeState.Explode)
         {
             Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
-            BoardManager.Instance.gameState = GameState.BoosterExplosion;
+            BoardManager.Instance.SetGameState(GameState.RocketExplosion);
 
             _spriteRenderer.enabled = false;
             GetComponent<BoxCollider2D>().enabled = false;
@@ -41,7 +41,7 @@ public class Rocket : Shape
         base.OnPointerDown(eventData);
 
         if (BoardManager.Instance.isMovesLeft() &&
-            BoardManager.Instance.gameState == GameState.Ready &&
+            BoardManager.Instance.GetGameState() == GameState.Ready &&
             _shapeState == ShapeState.Waiting) 
         { 
             BoardManager.Instance.IncreaseDistinctColumns(_col);
@@ -109,9 +109,9 @@ public class Rocket : Shape
     {
         int rowCount = BoardManager.Instance.GetRowCount();
         yield return new WaitForSeconds(TimeBetweenExplosions * rowCount);
+        BoardManager.Instance.SetGameState(GameState.Ready);
         BoardManager.Instance.StartShiftDown();
-        BoardManager.Instance.GetExplodedRows().Clear(); 
-        BoardManager.Instance.gameState = GameState.Ready;
+        BoardManager.Instance.GetExplodedRows().Clear();
         Destroy(gameObject, 0.75f);
     }
 

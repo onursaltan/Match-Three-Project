@@ -11,7 +11,7 @@ public class Bomb : Shape
         if (_shapeState != ShapeState.Explode)
         {
             Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
-            BoardManager.Instance.gameState = GameState.BoosterExplosion;
+            BoardManager.Instance.SetGameState(GameState.BombExplosion);
 
             _shapeState = ShapeState.Explode;
             _spriteRenderer.enabled = false;
@@ -35,7 +35,7 @@ public class Bomb : Shape
     {
         base.OnPointerDown(eventData);
 
-        if (BoardManager.Instance.isMovesLeft() && BoardManager.Instance.gameState == GameState.Ready)
+        if (BoardManager.Instance.isMovesLeft() && BoardManager.Instance.GetGameState() == GameState.Ready)
         {
             BoardManager.Instance.IncreaseDistinctColumns(_col);
             Explode();
@@ -51,8 +51,8 @@ public class Bomb : Shape
     {
         int rowCount = BoardManager.Instance.GetRowCount();
         yield return new WaitForSeconds(0.05f * rowCount);
-        BoardManager.Instance.StartShiftDown(); 
-        BoardManager.Instance.gameState = GameState.Ready;
+        BoardManager.Instance.SetGameState(GameState.Ready);
+        BoardManager.Instance.StartShiftDown();
         Destroy(gameObject, 0.75f);
     }
 

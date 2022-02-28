@@ -35,8 +35,7 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
 
     public virtual void OnPointerDown(PointerEventData eventData)
     {
-        BoardManager.Instance.ReverseShapesSprite();
-        BoardManager.Instance.FindMerges();
+        BoardManager.Instance.SetIsMergesFound(false);
     }
 
     public virtual void SetShapeData(ShapeData shapeData, int row, int col)
@@ -137,9 +136,6 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
         }
 
         Vector2 offset = _spriteRenderer.bounds.size;
-
-        Debug.Log(_row + " " + rowToShift);
-
        
         float posToShift = offset.y * rowToShift - (rowToShift * 0.08f);
 
@@ -160,6 +156,7 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
                            .OnComplete(() =>
         {
             _shapeState = ShapeState.Waiting;
+            BoardManager.Instance.FindMerges();
         });
     }
 
