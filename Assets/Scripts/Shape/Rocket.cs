@@ -141,7 +141,7 @@ public class Rocket : Booster
         StartCoroutine(WaitStartShift());
     }
 
-    private IEnumerator WaitForExplodeRocketWithBomb()
+    public IEnumerator WaitForExplodeRocketWithBomb()
     {
         yield return new WaitForSeconds(TimeToExpandIn + TimeToExpandOut);
         ExplodeRocketWithBomb();

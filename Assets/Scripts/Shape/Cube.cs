@@ -16,12 +16,7 @@ public enum CubeOperation
 
 public class Cube : Shape
 {
-    private const float TimeToWaitTurn = 0.03f;
-    private const float TimeToExpandOut = 0.2f;
-    private const float TimeToExpandIn = 0.1f;
     private const float TimeToTurnIntoBooster = 0.33f;
-    private const float ExpandRateScale = 1.08f;
-    private const float ExpandRatePosition = 0.2f;
 
     protected bool _isCubeCheckedBefore = false;
     private CubeState _cubeState;
@@ -166,44 +161,6 @@ public class Cube : Shape
         BoardManager.Instance.SetGameState(GameState.Ready);
         BoardManager.Instance.StartShiftDown();
     }
-
-  /*  private void MoveToMergePoint(int row, int col)
-    {
-        Vector2 offset = _spriteRenderer.bounds.size;
-        _shapeState = ShapeState.Merging;
-        _spriteRenderer.sortingOrder = 98;
-
-        int directionX = col - _col;
-        int directionY = row - _row;
-
-        float posX = transform.position.x + directionX * offset.x;
-        float posY = transform.position.y + directionY * offset.y;
-
-        float expandX = transform.position.x + ExpandRatePosition * offset.x * -1 * directionX;
-        float expandY = transform.position.y + ExpandRatePosition * offset.y * -1 * directionY;
-
-        float localScaleX = transform.localScale.x;
-        float localScaleY = transform.localScale.y;
-
-        transform.DOMove(new Vector3(expandX, expandY), TimeToExpandOut).
-            SetEase(Ease.OutSine).
-            OnComplete(() =>
-            {
-                transform.DOMove(new Vector3(posX, posY), TimeToExpandIn).OnComplete(() =>
-                {
-                    if (!(row == _row && col == _col))  // Bura de?i?cek
-                        BoardManager.Instance.DestroyShape(this);
-
-                    _shapeState = ShapeState.Waiting;
-                });
-            });
-
-        transform.DOScale(new Vector3(transform.localScale.x * ExpandRateScale, transform.localScale.y * ExpandRateScale), TimeToExpandOut).SetEase(Ease.OutSine).OnComplete(() =>
-        {
-            transform.DOScale(new Vector3(localScaleX, localScaleY), TimeToExpandIn);
-        });
-    }*/
-
     private void FailAnimation()
     {
         transform.DORotate(new Vector3(0, 0, 10), 0.05f).OnComplete(() =>

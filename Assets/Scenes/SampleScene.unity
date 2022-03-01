@@ -1256,6 +1256,7 @@ MonoBehaviour:
   BombMergeEffect: {fileID: 904858296582425039, guid: 41265a0832d4bd542b4c5ea63021c424, type: 3}
   DiscoMergeEffect: {fileID: 6653701877214020759, guid: 176be645cd919d14db443d2cd1d63cf0, type: 3}
   LightBallCube: {fileID: 4635037346365102388, guid: 3ea226c1f7d74cb4197add0140e9d61a, type: 3}
+  BigBombEffect: {fileID: 6174443465438293769, guid: 80e1238162cead54f9f8a50f2d4f43ec, type: 3}
   shapeDatas:
   - {fileID: 11400000, guid: 828bc56eb85d3454ea2605a856b44dc4, type: 2}
   - {fileID: 11400000, guid: 90a62e9875c6eb241bd215fb7c9bed0b, type: 2}

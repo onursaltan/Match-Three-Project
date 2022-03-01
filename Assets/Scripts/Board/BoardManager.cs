@@ -20,6 +20,7 @@ public class BoardManager : MonoBehaviour
     public GameObject BombMergeEffect;
     public GameObject DiscoMergeEffect;
     public GameObject LightBallCube;
+    public GameObject BigBombEffect;
     //
 
     [SerializeField] private ShapeData[] shapeDatas;

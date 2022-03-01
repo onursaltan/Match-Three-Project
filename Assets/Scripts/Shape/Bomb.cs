@@ -27,7 +27,33 @@ public class Bomb : Booster
 
     public override void Merge()
     {
-        throw new System.NotImplementedException();
+        if (_boosterMerge == BoosterMerge.None)
+        {
+            BoardManager.Instance.IncreaseDistinctColumns(_col);
+            Explode();
+        }
+        else if (_boosterMerge == BoosterMerge.BombWithRocket)
+        {
+            foreach (Shape shape in _adjacentBoosters)
+            {
+                BoardManager.Instance.IncreaseDistinctColumns(shape._col);
+                shape.MoveToMergePoint(_row, _col);
+            }
+
+            Rocket rocket = gameObject.AddComponent<Rocket>();
+            rocket.SetShapeData(BoardManager.Instance.GetShapeData(ShapeType.Rocket, ShapeColor.None), _row, _col);
+            StartCoroutine(rocket.WaitForExplodeRocketWithBomb());
+        }
+        else if (_boosterMerge == BoosterMerge.BigBomb)
+        {
+            foreach (Shape shape in _adjacentBoosters)
+            {
+                BoardManager.Instance.IncreaseDistinctColumns(shape._col);
+                shape.MoveToMergePoint(_row, _col);
+            }
+
+            StartCoroutine(WaitForExplode5x5());
+        }
     }
 
     public override void OnPointerDown(PointerEventData eventData)
@@ -73,6 +99,45 @@ public class Bomb : Booster
                 }
             }
         }
+    }
+
+    private IEnumerator WaitForExplode5x5()
+    {
+        yield return new WaitForSeconds(TimeToExpandIn + TimeToExpandOut);
+        Explode5x5();
+    }
+
+    private void Explode5x5()
+    {
+        Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
+
+        for (int i = -2; i < 3; i++)
+        {
+            for (int j = -2; j < 3; j++)
+            {
+                if (!(i == 0 && j == 0) && !(_row + i < 0 || _col + j < 0 || _row + i > BoardManager.Instance.rows - 1 || _col + j > BoardManager.Instance.columns - 1))
+                {
+                    if (instantiatedShapes[_row + i, _col + j] != null)
+                    {
+                        instantiatedShapes[_row + i, _col + j].Explode();
+                        BoardManager.Instance.IncreaseDistinctColumns(_col + j);
+                    }
+                }
+            }
+        }
+
+        BoardManager.Instance.SetGameState(GameState.BombExplosion);
+
+        _shapeState = ShapeState.Explode;
+        _spriteRenderer.enabled = false;
+        GetComponent<BoxCollider2D>().enabled = false;
+
+
+        Instantiate(BoardManager.Instance.BigBombEffect, transform.position, transform.rotation, transform.parent);
+
+        CameraShake.Shake(1.25f, 12f);
+        instantiatedShapes[_row, _col] = null;
+        StartCoroutine(WaitStartShift());
     }
 
     public override void SetMergeSprite(int count)
