@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.EventSystems;
 
 public enum BoosterMerge
 {
@@ -12,6 +13,55 @@ public abstract class Booster : Shape
 {
     protected BoosterMerge _boosterMerge = BoosterMerge.None;
     protected List<Shape> _adjacentBoosters;
+
+    public override void OnPointerDown(PointerEventData eventData)
+    {
+        base.OnPointerDown(eventData);
+        if (BoardManager.Instance.isMovesLeft() &&
+            BoardManager.Instance.GetGameState() == GameState.Ready &&
+            _shapeState == ShapeState.Waiting)
+        {
+            BoardManager.Instance.DecreaseRemainingMoves();
+            BoardManager.Instance.IncreaseDistinctColumns(_col);
+            _boosterMerge = GetBoosterMerge();
+            HandleBoosterExplosion();
+        }
+
+    }
+
+    private void HandleBoosterExplosion()
+    {
+        switch (_boosterMerge)
+        {
+            case BoosterMerge.BigLightBall:
+                HandleBigLightBall();
+                break;
+            case BoosterMerge.LightBallWithBomb:
+                HandleLightBallWithBomb();
+                break;
+            case BoosterMerge.LightBallWithRocket:
+                HandleLightBallWithRocket();
+                break;
+            case BoosterMerge.BigBomb:
+                HandleBigBomb();
+                break;
+            case BoosterMerge.BombWithRocket:
+                HandleBombWithRocket();
+                break;
+            case BoosterMerge.DoubleRocket:
+                HandleDoubleRocket();
+                break;
+            case BoosterMerge.None:
+                Explode();
+                break;
+        }
+
+    }
+
+    private void SetAdjacentBoosters(List<Shape> adjacentBoosters)
+    {
+        _adjacentBoosters = adjacentBoosters;
+    }
 
     public override void FindAdjacentShapes(bool isThisClickedShape, List<Shape> adjacentShapes)
     {
@@ -55,7 +105,7 @@ public abstract class Booster : Shape
         else if (GetIsBoosterExist(ShapeType.Disco) && GetIsBoosterExist(ShapeType.Rocket))
             return BoosterMerge.LightBallWithRocket;
         else if (GetSpecificBoosterCount(ShapeType.Bomb) > 1)
-            return BoosterMerge.BigBomb;  
+            return BoosterMerge.BigBomb;
         else if (GetIsBoosterExist(ShapeType.Bomb) && GetIsBoosterExist(ShapeType.Rocket))
             return BoosterMerge.BombWithRocket;
         else if (GetSpecificBoosterCount(ShapeType.Rocket) > 1)
@@ -72,5 +122,97 @@ public abstract class Booster : Shape
     private int GetSpecificBoosterCount(ShapeType shapeType)
     {
         return _adjacentBoosters.Count(booster => booster._shapeData.ShapeType == shapeType);
+    }
+
+    private void HandleBigLightBall()
+    {
+        Disco disco;
+        if (GetType() != typeof(Disco))
+        {
+            disco = gameObject.AddComponent<Disco>();
+            disco.SetAdjacentBoosters(_adjacentBoosters);
+            disco.SetShapeData(BoardManager.Instance.GetShapeData(ShapeType.Disco, ShapeColor.Blue), _row, _col);
+        }
+        else
+            disco = (Disco)this;
+
+        disco.Merge();
+        StartCoroutine(disco.WaitForBigLightBall());
+    }
+    private void HandleLightBallWithBomb()
+    {
+        /*Disco disco;
+
+        if (GetType() != typeof(Bomb))
+        {
+            disco = gameObject.AddComponent<Disco>();
+            disco.SetAdjacentBoosters(_adjacentBoosters);
+            disco.SetShapeData(BoardManager.Instance.GetShapeData(ShapeType.Disco, ShapeColor.Blue), _row, _col);
+        }
+        else
+            disco = (Disco)this;
+
+        disco.Merge();
+        StartCoroutine(disco.WaitForLightBallWithBomb());
+        */
+        throw new System.NotImplementedException();
+
+    }
+    private void HandleLightBallWithRocket()
+    {
+        /* Disco disco;
+
+         if (GetType() != typeof(Bomb))
+         {
+             disco = gameObject.AddComponent<Disco>();
+             disco.SetAdjacentBoosters(_adjacentBoosters);
+             disco.SetShapeData(BoardManager.Instance.GetShapeData(ShapeType.Disco, ShapeColor.Blue), _row, _col);
+         }
+         else
+             disco = (Disco)this;
+
+         disco.Merge();
+         StartCoroutine(disco.WaitForBigLightBall());*/
+
+        throw new System.NotImplementedException();
+    }
+
+    private void HandleBigBomb()
+    {
+        Bomb bomb;
+        if (GetType() != typeof(Bomb))
+        {
+            bomb = gameObject.AddComponent<Bomb>();
+            bomb.SetAdjacentBoosters(_adjacentBoosters);
+            bomb.SetShapeData(BoardManager.Instance.GetShapeData(ShapeType.Bomb, ShapeColor.None), _row, _col);
+        }
+        else
+            bomb = (Bomb)this;
+
+        bomb.Merge();
+        StartCoroutine(bomb.WaitForExplode5x5());
+    }
+
+    private void HandleBombWithRocket()
+    {
+        Rocket rocket;
+        if (GetType() != typeof(Rocket))
+        {
+            rocket = gameObject.AddComponent<Rocket>();
+            rocket.SetAdjacentBoosters(_adjacentBoosters);
+            rocket.SetShapeData(BoardManager.Instance.GetShapeData(ShapeType.Rocket, ShapeColor.None), _row, _col);
+        }
+        else
+            rocket = (Rocket)this;
+
+        rocket.Merge();
+        StartCoroutine(rocket.WaitForExplodeRocketWithBomb());
+    }
+
+    private void HandleDoubleRocket()
+    {
+        Rocket rocket = (Rocket)this;
+        rocket.Merge();
+        StartCoroutine(rocket.WaitForExplodeDoubleRocket());
     }
 }

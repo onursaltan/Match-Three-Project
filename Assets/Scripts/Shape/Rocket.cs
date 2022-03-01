@@ -32,44 +32,10 @@ public class Rocket : Booster
 
     public override void Merge()
     {
-        if (_boosterMerge == BoosterMerge.None)
+        foreach (Shape shape in _adjacentBoosters)
         {
-            BoardManager.Instance.IncreaseDistinctColumns(_col);
-            Explode();
-        }
-        else if (_boosterMerge == BoosterMerge.DoubleRocket)
-        {
-            foreach (Shape shape in _adjacentBoosters)
-            {
-                BoardManager.Instance.IncreaseDistinctColumns(shape._col);
-                shape.MoveToMergePoint(_row, _col);
-            }
-
-            StartCoroutine(WaitForExplodeDoubleRocket());
-        }
-        else if (_boosterMerge == BoosterMerge.BombWithRocket)
-        {
-            foreach (Shape shape in _adjacentBoosters)
-            {
-                BoardManager.Instance.IncreaseDistinctColumns(shape._col);
-                shape.MoveToMergePoint(_row, _col);
-            }
-
-            StartCoroutine(WaitForExplodeRocketWithBomb());
-        }
-    }
-
-    public override void OnPointerDown(PointerEventData eventData)
-    {
-        base.OnPointerDown(eventData);
-
-        if (BoardManager.Instance.isMovesLeft() &&
-            BoardManager.Instance.GetGameState() == GameState.Ready &&
-            _shapeState == ShapeState.Waiting)
-        {
-            BoardManager.Instance.DecreaseRemainingMoves();
-            _boosterMerge = GetBoosterMerge();
-            Merge();
+            BoardManager.Instance.IncreaseDistinctColumns(shape._col);
+            shape.MoveToMergePoint(_row, _col);
         }
     }
 
@@ -119,7 +85,7 @@ public class Rocket : Booster
             StartCoroutine(WaitExplodeShape(instantiatedShapes[row, i], index++));
     }
 
-    private IEnumerator WaitForExplodeDoubleRocket()
+    public IEnumerator WaitForExplodeDoubleRocket()
     {
         yield return new WaitForSeconds(TimeToExpandIn + TimeToExpandOut);
         ExplodeDoubleRocket();
@@ -222,10 +188,5 @@ public class Rocket : Booster
 
         s.transform.DOMove(point1, 1.1f);
         s1.transform.DOMove(point2, 1.1f);
-    }
-
-    public override void SetMergeSprite(int count)
-    {
-        throw new System.NotImplementedException();
     }
 }

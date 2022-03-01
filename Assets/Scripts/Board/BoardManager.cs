@@ -296,6 +296,14 @@ public class BoardManager : MonoBehaviour
             _distinctColumns[col] += 1;
     }
 
+    public void FullFillDistinctColumns()
+    {
+        _distinctColumns.Clear();
+
+        for (int i = 0; i < columns; i++)
+            _distinctColumns.Add(i, rows);
+    }
+
     public void DecreaseRemainingMoves()
     {
         if (remainingMoves > 0)

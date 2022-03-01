@@ -184,6 +184,12 @@ public class Cube : Shape
         });
     }
 
+    public void ChangeShapeTypeToRocket()
+    {
+        Rocket rocket = gameObject.AddComponent<Rocket>();
+        //rocket.SetShapeData(BoardManager.Instance.get)
+    }
+
     private void TurnIntoRocketOperation()
     {
         BoardManager.Instance.DecreaseRemainingMoves();

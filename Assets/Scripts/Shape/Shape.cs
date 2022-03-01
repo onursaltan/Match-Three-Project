@@ -63,7 +63,8 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
         _spriteRenderer.sprite = _shapeData.Sprite;
     }
 
-    public abstract void SetMergeSprite(int count);
+    public virtual void SetMergeSprite(int count) { }
+    
 
     public virtual void FindAdjacentShapes(bool isThisClickedShape, List<Shape> adjacentShapes)
     {

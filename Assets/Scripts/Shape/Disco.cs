@@ -4,10 +4,11 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using DG.Tweening;
 
-public class Disco : Shape
+public class Disco : Booster
 {
     private const float TimeToTrailWait = 1.0f;
     private const float TimeToTrailReach = 0.6f;
+
     private GameObject Anticipation;
     private GameObject Explosion;
     private GameObject Trail;
@@ -24,18 +25,6 @@ public class Disco : Shape
         }
     }
 
-    public override void OnPointerDown(PointerEventData eventData)
-    {
-        base.OnPointerDown(eventData);
-
-        if (BoardManager.Instance.isMovesLeft() && BoardManager.Instance.GetGameState() == GameState.Ready)
-        {
-            BoardManager.Instance.IncreaseDistinctColumns(_col);
-            Explode();
-            BoardManager.Instance.DecreaseRemainingMoves();
-        }
-    }
-
     public override void SetShapeData(ShapeData shapeData, int row, int col)
     {
         base.SetShapeData(shapeData, row, col);
@@ -46,12 +35,60 @@ public class Disco : Shape
 
     public override void Merge()
     {
-        throw new System.NotImplementedException();
+        foreach (Shape shape in _adjacentBoosters)
+        {
+            BoardManager.Instance.IncreaseDistinctColumns(shape._col);
+            shape.MoveToMergePoint(_row, _col);
+        }
     }
 
-    public override void SetMergeSprite(int count)
+    public IEnumerator WaitForBigLightBall()
     {
-        throw new System.NotImplementedException();
+        yield return new WaitForSeconds(TimeToExpandIn + TimeToExpandOut);
+        BigLightBall();
+    }
+    private void BigLightBall()
+    {
+        Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
+
+        foreach(Shape shape in instantiatedShapes)
+        {
+            if(shape != null)
+            {
+                if (shape.GetType() == typeof(Cube))
+                    shape.Explode();
+                else
+                    if(shape != this)
+                        BoardManager.Instance.DestroyShape(shape);
+            }
+        }
+        _spriteRenderer.enabled = false;
+        instantiatedShapes[_row, _col] = null;
+        BoardManager.Instance.FullFillDistinctColumns();
+        StartCoroutine(WaitStartShift());
+    }
+
+    public IEnumerator WaitForLightBallWithBomb()
+    {
+        yield return new WaitForSeconds(TimeToExpandIn + TimeToExpandOut);
+        LightBallWithBomb();
+    }
+
+    private void LightBallWithBomb()
+    {
+        Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
+
+        foreach(Shape shape in instantiatedShapes)
+        {
+            if(shape._shapeData.ShapeType == ShapeType.Cube && shape._shapeData.ShapeColor == _shapeData.ShapeColor)
+            {
+               // (Cube) shape.
+            }
+        }
+    }
+    public void Discoroket()
+    {
+        Debug.Log("dsco roket patlama");
     }
 
     private IEnumerator WaitStartShift()
@@ -123,5 +160,4 @@ public class Disco : Shape
     {
         StartCoroutine(_DestroyGameobjectAfterSeconds(gameObject, seconds));
     }
-
 }

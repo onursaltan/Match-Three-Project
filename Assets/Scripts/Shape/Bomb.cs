@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 
 public class Bomb : Booster
 {
+
     public override void Explode()
     {
         if (_shapeState != ShapeState.Explode)
@@ -27,46 +28,13 @@ public class Bomb : Booster
 
     public override void Merge()
     {
-        if (_boosterMerge == BoosterMerge.None)
+        foreach (Shape shape in _adjacentBoosters)
         {
-            BoardManager.Instance.IncreaseDistinctColumns(_col);
-            Explode();
-        }
-        else if (_boosterMerge == BoosterMerge.BombWithRocket)
-        {
-            foreach (Shape shape in _adjacentBoosters)
-            {
-                BoardManager.Instance.IncreaseDistinctColumns(shape._col);
-                shape.MoveToMergePoint(_row, _col);
-            }
-
-            Rocket rocket = gameObject.AddComponent<Rocket>();
-            rocket.SetShapeData(BoardManager.Instance.GetShapeData(ShapeType.Rocket, ShapeColor.None), _row, _col);
-            StartCoroutine(rocket.WaitForExplodeRocketWithBomb());
-        }
-        else if (_boosterMerge == BoosterMerge.BigBomb)
-        {
-            foreach (Shape shape in _adjacentBoosters)
-            {
-                BoardManager.Instance.IncreaseDistinctColumns(shape._col);
-                shape.MoveToMergePoint(_row, _col);
-            }
-
-            StartCoroutine(WaitForExplode5x5());
+            BoardManager.Instance.IncreaseDistinctColumns(shape._col);
+            shape.MoveToMergePoint(_row, _col);
         }
     }
 
-    public override void OnPointerDown(PointerEventData eventData)
-    {
-        base.OnPointerDown(eventData);
-
-        if (BoardManager.Instance.isMovesLeft() && BoardManager.Instance.GetGameState() == GameState.Ready)
-        {
-            BoardManager.Instance.DecreaseRemainingMoves();
-            _boosterMerge = GetBoosterMerge();
-            Merge();
-        }
-    }
     public override void SetShapeData(ShapeData shapeData, int row, int col)
     {
         base.SetShapeData(shapeData, row, col);
@@ -101,7 +69,7 @@ public class Bomb : Booster
         }
     }
 
-    private IEnumerator WaitForExplode5x5()
+    public IEnumerator WaitForExplode5x5()
     {
         yield return new WaitForSeconds(TimeToExpandIn + TimeToExpandOut);
         Explode5x5();
@@ -135,13 +103,8 @@ public class Bomb : Booster
 
         Instantiate(BoardManager.Instance.BigBombEffect, transform.position, transform.rotation, transform.parent);
 
-        CameraShake.Shake(1.25f, 12f);
+        CameraShake.Shake(1.25f, 6f);
         instantiatedShapes[_row, _col] = null;
         StartCoroutine(WaitStartShift());
-    }
-
-    public override void SetMergeSprite(int count)
-    {
-        throw new System.NotImplementedException();
     }
 }
