@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 6174443464387021639}
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_LocalScale: {x: 3.5, y: 3.5, z: 1.5}
   m_Children: []
   m_Father: {fileID: 6174443465438293782}
   m_RootOrder: 2
@@ -40,7 +40,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6174443464387021639}
   serializedVersion: 8
-  lengthInSec: 5
+  lengthInSec: 7
   simulationSpeed: 2
   stopAction: 0
   cullingMode: 0
@@ -4891,7 +4891,7 @@ Transform:
   m_GameObject: {fileID: 6174443464434253299}
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_LocalScale: {x: 3.5, y: 3.5, z: 1.5}
   m_Children: []
   m_Father: {fileID: 6174443465438293782}
   m_RootOrder: 1
@@ -4904,7 +4904,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6174443464434253299}
   serializedVersion: 8
-  lengthInSec: 5
+  lengthInSec: 7
   simulationSpeed: 2
   stopAction: 0
   cullingMode: 0
@@ -9755,7 +9755,7 @@ Transform:
   m_GameObject: {fileID: 6174443464841790011}
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_LocalScale: {x: 3.5, y: 3.5, z: 1.5}
   m_Children: []
   m_Father: {fileID: 6174443465438293782}
   m_RootOrder: 5
@@ -9768,7 +9768,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6174443464841790011}
   serializedVersion: 8
-  lengthInSec: 5
+  lengthInSec: 7
   simulationSpeed: 2
   stopAction: 0
   cullingMode: 0
@@ -14603,7 +14603,7 @@ GameObject:
   - component: {fileID: 6174443465438293782}
   - component: {fileID: 6108450520622374968}
   m_Layer: 0
-  m_Name: Bomb
+  m_Name: BigBomb
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14670,7 +14670,7 @@ Transform:
   m_GameObject: {fileID: 6174443465618088604}
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_LocalScale: {x: 3.5, y: 3.5, z: 1.5}
   m_Children: []
   m_Father: {fileID: 6174443465438293782}
   m_RootOrder: 0
@@ -14683,7 +14683,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6174443465618088604}
   serializedVersion: 8
-  lengthInSec: 5
+  lengthInSec: 7
   simulationSpeed: 2
   stopAction: 0
   cullingMode: 0
@@ -19534,7 +19534,7 @@ Transform:
   m_GameObject: {fileID: 6174443465855313293}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_LocalScale: {x: 3.5, y: 3.5, z: 1.5}
   m_Children: []
   m_Father: {fileID: 6174443465438293782}
   m_RootOrder: 4
@@ -19547,7 +19547,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6174443465855313293}
   serializedVersion: 8
-  lengthInSec: 5
+  lengthInSec: 7
   simulationSpeed: 2
   stopAction: 0
   cullingMode: 0
@@ -24398,7 +24398,7 @@ Transform:
   m_GameObject: {fileID: 6174443466094227327}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_LocalScale: {x: 3.5, y: 3.5, z: 1.5}
   m_Children: []
   m_Father: {fileID: 6174443465438293782}
   m_RootOrder: 3
@@ -24411,7 +24411,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6174443466094227327}
   serializedVersion: 8
-  lengthInSec: 3
+  lengthInSec: 5
   simulationSpeed: 2
   stopAction: 0
   cullingMode: 0
@@ -29262,7 +29262,7 @@ Transform:
   m_GameObject: {fileID: 8985401496721726455}
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_LocalScale: {x: 3.5, y: 3.5, z: 1.5}
   m_Children: []
   m_Father: {fileID: 6174443465438293782}
   m_RootOrder: 6
@@ -29275,7 +29275,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8985401496721726455}
   serializedVersion: 8
-  lengthInSec: 5
+  lengthInSec: 7
   simulationSpeed: 2
   stopAction: 0
   cullingMode: 1

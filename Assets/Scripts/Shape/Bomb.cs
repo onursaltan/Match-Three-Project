@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class Bomb : Shape
+public class Bomb : Booster
 {
 
     public override void Explode()
@@ -11,7 +11,7 @@ public class Bomb : Shape
         if (_shapeState != ShapeState.Explode)
         {
             Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
-            BoardManager.Instance.gameState = GameState.BoosterExplosion;
+            BoardManager.Instance.SetGameState(GameState.BombExplosion);
 
             _shapeState = ShapeState.Explode;
             _spriteRenderer.enabled = false;
@@ -28,20 +28,13 @@ public class Bomb : Shape
 
     public override void Merge()
     {
-        throw new System.NotImplementedException();
-    }
-
-    public override void OnPointerDown(PointerEventData eventData)
-    {
-        base.OnPointerDown(eventData);
-
-        if (BoardManager.Instance.isMovesLeft() && BoardManager.Instance.gameState == GameState.Ready)
+        foreach (Shape shape in _adjacentBoosters)
         {
-            BoardManager.Instance.IncreaseDistinctColumns(_col);
-            Explode();
-            BoardManager.Instance.DecreaseRemainingMoves();
+            BoardManager.Instance.IncreaseDistinctColumns(shape._col);
+            shape.MoveToMergePoint(_row, _col);
         }
     }
+
     public override void SetShapeData(ShapeData shapeData, int row, int col)
     {
         base.SetShapeData(shapeData, row, col);
@@ -51,8 +44,8 @@ public class Bomb : Shape
     {
         int rowCount = BoardManager.Instance.GetRowCount();
         yield return new WaitForSeconds(0.05f * rowCount);
-        BoardManager.Instance.StartShiftDown(); 
-        BoardManager.Instance.gameState = GameState.Ready;
+        BoardManager.Instance.SetGameState(GameState.Ready);
+        BoardManager.Instance.StartShiftDown();
         Destroy(gameObject, 0.75f);
     }
 
@@ -76,8 +69,42 @@ public class Bomb : Shape
         }
     }
 
-    public override void SetMergeSprite(int count)
+    public IEnumerator WaitForExplode5x5()
     {
-        throw new System.NotImplementedException();
+        yield return new WaitForSeconds(TimeToExpandIn + TimeToExpandOut);
+        Explode5x5();
+    }
+
+    private void Explode5x5()
+    {
+        Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
+
+        for (int i = -2; i < 3; i++)
+        {
+            for (int j = -2; j < 3; j++)
+            {
+                if (!(i == 0 && j == 0) && !(_row + i < 0 || _col + j < 0 || _row + i > BoardManager.Instance.rows - 1 || _col + j > BoardManager.Instance.columns - 1))
+                {
+                    if (instantiatedShapes[_row + i, _col + j] != null)
+                    {
+                        instantiatedShapes[_row + i, _col + j].Explode();
+                        BoardManager.Instance.IncreaseDistinctColumns(_col + j);
+                    }
+                }
+            }
+        }
+
+        BoardManager.Instance.SetGameState(GameState.BombExplosion);
+
+        _shapeState = ShapeState.Explode;
+        _spriteRenderer.enabled = false;
+        GetComponent<BoxCollider2D>().enabled = false;
+
+
+        Instantiate(BoardManager.Instance.BigBombEffect, transform.position, transform.rotation, transform.parent);
+
+        CameraShake.Shake(1.25f, 6f);
+        instantiatedShapes[_row, _col] = null;
+        StartCoroutine(WaitStartShift());
     }
 }

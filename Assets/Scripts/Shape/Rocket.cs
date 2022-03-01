@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using DG.Tweening;
 
-public class Rocket : Shape
+public class Rocket : Booster
 {
     private const float TimeBetweenExplosions = 0.05f;
 
@@ -15,38 +15,27 @@ public class Rocket : Shape
         if (_shapeState != ShapeState.Explode)
         {
             Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
-            BoardManager.Instance.gameState = GameState.BoosterExplosion;
+            BoardManager.Instance.SetGameState(GameState.RocketExplosion);
 
             _spriteRenderer.enabled = false;
             GetComponent<BoxCollider2D>().enabled = false;
 
             if (_isDirectionVertical)
-                ExplodeAllColumn();
+                ExplodeAllColumn(_col, transform.position);
             else
-                ExplodeAllRow();
+                ExplodeAllRow(_row, transform.position);
 
             instantiatedShapes[_row, _col] = null;
-            ExplosionAnimation();
             StartCoroutine(WaitStartShift());
         }
     }
 
     public override void Merge()
     {
-        throw new System.NotImplementedException();
-    }
-
-    public override void OnPointerDown(PointerEventData eventData)
-    {
-        base.OnPointerDown(eventData);
-
-        if (BoardManager.Instance.isMovesLeft() &&
-            BoardManager.Instance.gameState == GameState.Ready &&
-            _shapeState == ShapeState.Waiting) 
-        { 
-            BoardManager.Instance.IncreaseDistinctColumns(_col);
-            Explode();
-            BoardManager.Instance.DecreaseRemainingMoves();
+        foreach (Shape shape in _adjacentBoosters)
+        {
+            BoardManager.Instance.IncreaseDistinctColumns(shape._col);
+            shape.MoveToMergePoint(_row, _col);
         }
     }
 
@@ -64,34 +53,97 @@ public class Rocket : Shape
         return Random.Range(0, 2) == 1;
     }
 
-    private void ExplodeAllColumn()
+    private void ExplodeAllColumn(int col, Vector3 position)
     {
         Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
+        ExplosionAnimation(true, position);
 
         int index = 0;
 
         for (int i = _row + 1; i < BoardManager.Instance.GetRowCount(); i++)
-            StartCoroutine(WaitExplodeShape(instantiatedShapes[i, _col], index++));
+            StartCoroutine(WaitExplodeShape(instantiatedShapes[i, col], index++));
 
         index = 0;
 
         for (int i = _row - 1; i >= 0; i--)
-            StartCoroutine(WaitExplodeShape(instantiatedShapes[i, _col], index++));
+            StartCoroutine(WaitExplodeShape(instantiatedShapes[i, col], index++));
     }
 
-    private void ExplodeAllRow()
+    private void ExplodeAllRow(int row, Vector3 position)
     {
         Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
+        ExplosionAnimation(false, position);
 
         int index = 0;
 
         for (int i = _col + 1; i < BoardManager.Instance.GetColumnCount(); i++)
-            StartCoroutine(WaitExplodeShape(instantiatedShapes[_row, i], index++));
+            StartCoroutine(WaitExplodeShape(instantiatedShapes[row, i], index++));
 
         index = 0;
 
         for (int i = _col - 1; i >= 0; i--)
-            StartCoroutine(WaitExplodeShape(instantiatedShapes[_row, i], index++));
+            StartCoroutine(WaitExplodeShape(instantiatedShapes[row, i], index++));
+    }
+
+    public IEnumerator WaitForExplodeDoubleRocket()
+    {
+        yield return new WaitForSeconds(TimeToExpandIn + TimeToExpandOut);
+        ExplodeDoubleRocket();
+    }
+
+    private void ExplodeDoubleRocket()
+    {
+        Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
+        BoardManager.Instance.SetGameState(GameState.RocketExplosion);
+
+        _spriteRenderer.enabled = false;
+        GetComponent<BoxCollider2D>().enabled = false;
+
+        instantiatedShapes[_row, _col] = null;
+
+        ExplodeAllColumn(_col, transform.position);
+        ExplodeAllRow(_row, transform.position);
+
+        StartCoroutine(WaitStartShift());
+    }
+
+    public IEnumerator WaitForExplodeRocketWithBomb()
+    {
+        yield return new WaitForSeconds(TimeToExpandIn + TimeToExpandOut);
+        ExplodeRocketWithBomb();
+    }
+
+    private void ExplodeRocketWithBomb()
+    {
+        Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
+        BoardManager.Instance.SetGameState(GameState.RocketExplosion);
+
+        _spriteRenderer.enabled = false;
+        GetComponent<BoxCollider2D>().enabled = false;
+
+        instantiatedShapes[_row, _col] = null;
+
+        Vector2 offset = _spriteRenderer.bounds.size;
+        Vector3 newPosHorizontal;
+        Vector3 newPosVertical;
+
+        for (int i = -1; i < 2; i++)
+        {
+            if(_col + i >= 0 && _col + i < BoardManager.Instance.GetColumnCount())
+            {
+                newPosVertical = transform.position;
+                newPosVertical.x += offset.x * i;
+                ExplodeAllColumn(_col + i, newPosVertical);
+            }
+            if (_row + i >= 0 && _row + i < BoardManager.Instance.GetRowCount())
+            {
+                newPosHorizontal = transform.position;
+                newPosHorizontal.y += offset.y * i;
+                ExplodeAllRow(_row + i, newPosHorizontal);
+            }
+        }
+
+        StartCoroutine(WaitStartShift());
     }
 
     private IEnumerator WaitExplodeShape(Shape shape, int index)
@@ -109,21 +161,21 @@ public class Rocket : Shape
     {
         int rowCount = BoardManager.Instance.GetRowCount();
         yield return new WaitForSeconds(TimeBetweenExplosions * rowCount);
+        BoardManager.Instance.SetGameState(GameState.Ready);
         BoardManager.Instance.StartShiftDown();
-        BoardManager.Instance.GetExplodedRows().Clear(); 
-        BoardManager.Instance.gameState = GameState.Ready;
+        BoardManager.Instance.GetExplodedRows().Clear();
         Destroy(gameObject, 0.75f);
     }
 
-    private void ExplosionAnimation()
+    private void ExplosionAnimation(bool isDirectionVertical, Vector3 position)
     {
-        Vector3 point1 = transform.position;
-        Vector3 point2 = transform.position;
+        Vector3 point1 = position;
+        Vector3 point2 = position;
 
-        GameObject s = Instantiate(_shapeData.ExplodeEffect, transform.position, transform.rotation, transform.parent);
-        GameObject s1 = Instantiate(_shapeData.ExplodeEffect, transform.position, transform.rotation, transform.parent);
+        GameObject s = Instantiate(_shapeData.ExplodeEffect, position, transform.rotation, transform.parent);
+        GameObject s1 = Instantiate(_shapeData.ExplodeEffect, position, transform.rotation, transform.parent);
 
-        if (_isDirectionVertical)
+        if (isDirectionVertical)
         {
             point1.y += 6;
             point2.y -= 6;
@@ -136,10 +188,5 @@ public class Rocket : Shape
 
         s.transform.DOMove(point1, 1.1f);
         s1.transform.DOMove(point2, 1.1f);
-    }
-
-    public override void SetMergeSprite(int count)
-    {
-        throw new System.NotImplementedException();
     }
 }
