@@ -21,10 +21,10 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _Amplitude: 0.59130955
-    - _Radius: 0.18480003
+    - _Amplitude: -0.008137226
+    - _Radius: 0.38960007
     - _ScreenRatio: 10.51
     - _UseDepth: 1
-    - _WaveSize: 0.1807
+    - _WaveSize: 0.100298926
     m_Colors: []
   m_BuildTextureStacks: []
