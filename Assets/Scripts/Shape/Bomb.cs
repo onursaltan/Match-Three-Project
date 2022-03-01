@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class Bomb : Shape
+public class Bomb : Booster
 {
-
     public override void Explode()
     {
         if (_shapeState != ShapeState.Explode)
@@ -37,9 +36,9 @@ public class Bomb : Shape
 
         if (BoardManager.Instance.isMovesLeft() && BoardManager.Instance.GetGameState() == GameState.Ready)
         {
-            BoardManager.Instance.IncreaseDistinctColumns(_col);
-            Explode();
             BoardManager.Instance.DecreaseRemainingMoves();
+            _boosterMerge = GetBoosterMerge();
+            Merge();
         }
     }
     public override void SetShapeData(ShapeData shapeData, int row, int col)

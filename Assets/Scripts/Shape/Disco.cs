@@ -18,7 +18,6 @@ public class Disco : Shape
     {
         if (_shapeState != ShapeState.Explode)
         {
-            Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
             BoardManager.Instance.SetGameState(GameState.DiscoExplosion);
             _shapeState = ShapeState.Explode;
             StartCoroutine(DiscoExplode());

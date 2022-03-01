@@ -89,7 +89,6 @@ public class Cube : Shape
 
     private bool IsAllShapesStateWaiting(List<Shape> adjacentShapes)
     {
-
         foreach (Shape shape in adjacentShapes)
             if (shape._shapeState != ShapeState.Waiting)
                 return false;
@@ -168,7 +167,7 @@ public class Cube : Shape
         BoardManager.Instance.StartShiftDown();
     }
 
-    private void MoveToMergePoint(int row, int col)
+  /*  private void MoveToMergePoint(int row, int col)
     {
         Vector2 offset = _spriteRenderer.bounds.size;
         _shapeState = ShapeState.Merging;
@@ -203,7 +202,7 @@ public class Cube : Shape
         {
             transform.DOScale(new Vector3(localScaleX, localScaleY), TimeToExpandIn);
         });
-    }
+    }*/
 
     private void FailAnimation()
     {
