@@ -134,6 +134,8 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
         });
     }
 
+    #region Shift Down
+
     public void ShiftDown(bool isForRefill = false)
     {
             int rowToShift = isForRefill ?
@@ -220,4 +222,7 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
     {
         return transform.DOLocalMoveY(posToShift + BounceAmount * shiftAmount, TimeBounce).SetEase(Ease.OutQuad).SetLoops(2, LoopType.Yoyo);
     }
+
+    #endregion
+
 }

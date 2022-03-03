@@ -93,6 +93,7 @@ public abstract class Booster : Shape
             }
         }
     }
+
     public BoosterMerge GetBoosterMerge()
     {
         _adjacentBoosters = new List<Shape>();
@@ -124,6 +125,8 @@ public abstract class Booster : Shape
         return _adjacentBoosters.Count(booster => booster._shapeData.ShapeType == shapeType);
     }
 
+    #region Handle Booster Operations
+
     private void HandleBigLightBall()
     {
         Disco disco;
@@ -139,11 +142,12 @@ public abstract class Booster : Shape
         disco.Merge();
         StartCoroutine(disco.WaitForBigLightBall());
     }
+
     private void HandleLightBallWithBomb()
     {
-        /*Disco disco;
+        Disco disco;
 
-        if (GetType() != typeof(Bomb))
+        if (GetType() != typeof(Disco))
         {
             disco = gameObject.AddComponent<Disco>();
             disco.SetAdjacentBoosters(_adjacentBoosters);
@@ -154,27 +158,23 @@ public abstract class Booster : Shape
 
         disco.Merge();
         StartCoroutine(disco.WaitForLightBallWithBomb());
-        */
-        throw new System.NotImplementedException();
-
     }
+
     private void HandleLightBallWithRocket()
     {
-        /* Disco disco;
+        Disco disco;
 
-         if (GetType() != typeof(Bomb))
-         {
-             disco = gameObject.AddComponent<Disco>();
-             disco.SetAdjacentBoosters(_adjacentBoosters);
-             disco.SetShapeData(BoardManager.Instance.GetShapeData(ShapeType.Disco, ShapeColor.Blue), _row, _col);
-         }
-         else
-             disco = (Disco)this;
+        if (GetType() != typeof(Disco))
+        {
+            disco = gameObject.AddComponent<Disco>();
+            disco.SetAdjacentBoosters(_adjacentBoosters);
+            disco.SetShapeData(BoardManager.Instance.GetShapeData(ShapeType.Disco, ShapeColor.Blue), _row, _col);
+        }
+        else
+            disco = (Disco)this;
 
-         disco.Merge();
-         StartCoroutine(disco.WaitForBigLightBall());*/
-
-        throw new System.NotImplementedException();
+        disco.Merge();
+        StartCoroutine(disco.WaitForLightBallWithRocket());
     }
 
     private void HandleBigBomb()
@@ -216,3 +216,4 @@ public abstract class Booster : Shape
         StartCoroutine(rocket.WaitForExplodeDoubleRocket());
     }
 }
+    #endregion

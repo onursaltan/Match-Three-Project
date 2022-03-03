@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using DG.Tweening;
+using System;
 
 public class Disco : Booster
 {
@@ -47,24 +48,25 @@ public class Disco : Booster
         yield return new WaitForSeconds(TimeToExpandIn + TimeToExpandOut);
         BigLightBall();
     }
+
     private void BigLightBall()
     {
         Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
+        BoardManager.Instance.FullFillDistinctColumns(1.5f);
 
-        foreach(Shape shape in instantiatedShapes)
+        foreach (Shape shape in instantiatedShapes)
         {
-            if(shape != null)
+            if (shape != null)
             {
                 if (shape.GetType() == typeof(Cube))
                     shape.Explode();
                 else
-                    if(shape != this)
+                    if (shape != this)
                         BoardManager.Instance.DestroyShape(shape);
             }
         }
         _spriteRenderer.enabled = false;
         instantiatedShapes[_row, _col] = null;
-        BoardManager.Instance.FullFillDistinctColumns();
         StartCoroutine(WaitStartShift());
     }
 
@@ -76,19 +78,29 @@ public class Disco : Booster
 
     private void LightBallWithBomb()
     {
-        Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
+        List<Shape> instantiatedShapes = BoardManager.Instance.Array2DToList(BoardManager.Instance.GetInstantiatedShapes());
+        List<Shape> cubes = instantiatedShapes.FindAll(shape => shape != null && shape._shapeData.ShapeType == ShapeType.Cube && shape._shapeData.ShapeColor == _shapeData.ShapeColor);
 
-        foreach(Shape shape in instantiatedShapes)
-        {
-            if(shape._shapeData.ShapeType == ShapeType.Cube && shape._shapeData.ShapeColor == _shapeData.ShapeColor)
-            {
-               // (Cube) shape.
-            }
-        }
+        foreach (Cube cube in cubes)
+            cube.ConvertCubeToBomb();
     }
-    public void Discoroket()
+
+    public IEnumerator WaitForLightBallWithRocket()
     {
-        Debug.Log("dsco roket patlama");
+        yield return new WaitForSeconds(TimeToExpandIn + TimeToExpandOut);
+        LightBallWithRocket();
+    }
+
+    private void LightBallWithRocket()
+    {
+        List<Shape> instantiatedShapes = BoardManager.Instance.Array2DToList(BoardManager.Instance.GetInstantiatedShapes());
+        List<Shape> cubes = instantiatedShapes.FindAll(shape => shape != null && shape._shapeData.ShapeType == ShapeType.Cube && shape._shapeData.ShapeColor == _shapeData.ShapeColor);
+
+        foreach (Cube cube in cubes)
+        {
+            StartCoroutine(MakeMoveTrails(cubes));
+           // cube.ConvertCubeToRocket();
+        }
     }
 
     private IEnumerator WaitStartShift()
@@ -111,15 +123,9 @@ public class Disco : Booster
         foreach (Cube shape in toBeExploded)
         {
             yield return new WaitForSeconds(0.1f);
+
             if (shape != null)
-            {
-                GameObject trailInstance = Instantiate(Trail, transform.position, transform.rotation, transform.parent);
-                trailsInstantiated.Add(trailInstance);
-                trailInstance.transform.DOMove(shape.transform.position, TimeToTrailReach);
-                BoardManager.Instance.IncreaseDistinctColumns(shape._col);
-                StartCoroutine(shape.DiscoExplosion(TimeToTrailReach));
-                DestroyGameobjectAfterSeconds(trailInstance, TimeToTrailReach + TimeToTrailWait);
-            }
+                MoveTrailToTarget(shape);
         }
 
         Anticipation.GetComponent<CubeExplosion>().TimeToDestroy = (toBeExploded.Count * 0.1f) + TimeToTrailReach + TimeToTrailWait;
@@ -136,6 +142,27 @@ public class Disco : Booster
         GetComponent<BoxCollider2D>().enabled = false;
         instantiatedShapes[_row, _col] = null;
         StartCoroutine(WaitStartShift());
+    }
+
+    private IEnumerator MakeMoveTrails(List<Shape> trailTargets)
+    {
+        foreach (Cube shape in trailTargets)
+        {
+            yield return new WaitForSeconds(0.1f);
+
+            if (shape != null)
+                MoveTrailToTarget(shape);
+        }
+    }
+
+    private void MoveTrailToTarget(Cube shape)
+    {
+        GameObject trailInstance = Instantiate(Trail, transform.position, transform.rotation, transform.parent);
+        trailsInstantiated.Add(trailInstance);
+        trailInstance.transform.DOMove(shape.transform.position, TimeToTrailReach);
+        BoardManager.Instance.IncreaseDistinctColumns(shape._col);
+        StartCoroutine(shape.DiscoExplosion(TimeToTrailReach));
+        DestroyGameobjectAfterSeconds(trailInstance, TimeToTrailReach + TimeToTrailWait);
     }
 
     private void FindSameColor(ShapeColor color)
