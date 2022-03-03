@@ -85,6 +85,7 @@ public class BoardManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            Debug.Log("sea");
         }
     }
 
@@ -179,18 +180,25 @@ public class BoardManager : MonoBehaviour
 
     public void StartShiftDown()
     {
+        FindEmptyCells();
+
         if (_gameState == GameState.Ready)
         {
-            FindDistinctColums();
-
             foreach (int column in _distinctColumns.Keys)
                 for (int i = 0; i < rows; i++)
                     if (_instantiatedShapes[i, column] != null)
                         _instantiatedShapes[i, column].GetComponent<Shape>().ShiftDown();
 
-            _adjacentShapes.Clear();
             RefillBoard();
         }
+    }
+
+    private void FindEmptyCells()
+    {
+        for (int i = 0; i < rows; i++)
+            for (int j = 0; j < columns; j++)
+                if (_instantiatedShapes[i, j] == null)
+                    IncreaseDistinctColumns(j);
     }
 
     private void FindDistinctColums()
@@ -231,7 +239,7 @@ public class BoardManager : MonoBehaviour
 
     public void FindMerges()
     {
-        if(!_isMergesFound)
+        if (!_isMergesFound)
             StartCoroutine(WaitFindMerges());
     }
 
@@ -331,11 +339,16 @@ public class BoardManager : MonoBehaviour
 
     public void SetGameState(GameState gs, bool isComeFromDisco = false)
     {
-        if (_gameState != GameState.DiscoExplosion)
-            _gameState = gs;
-        else
-            if (isComeFromDisco)
-                _gameState = gs;
+        /* if (_gameState != GameState.DiscoExplosion)
+             _gameState = gs;
+         else
+         {
+             if (isComeFromDisco)
+             {
+                 _gameState = gs;
+             }
+         }*/
+        _gameState = gs;
     }
 
     public GameState GetGameState()

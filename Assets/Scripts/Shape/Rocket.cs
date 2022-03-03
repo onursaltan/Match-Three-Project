@@ -26,7 +26,6 @@ public class Rocket : Booster
                 ExplodeAllRow(_row, transform.position);
 
             instantiatedShapes[_row, _col] = null;
-            StartCoroutine(WaitStartShift());
         }
     }
 
@@ -34,7 +33,6 @@ public class Rocket : Booster
     {
         foreach (Shape shape in _adjacentBoosters)
         {
-            BoardManager.Instance.IncreaseDistinctColumns(shape._col);
             shape.MoveToMergePoint(_row, _col);
         }
     }
@@ -46,6 +44,17 @@ public class Rocket : Booster
 
         if (!_isDirectionVertical)
             transform.Rotate(new Vector3(0f, 0f, 90f));
+    }
+
+    public void ExplodeAfterWait(float timeToWait)
+    {
+        StartCoroutine(WaitForExplode(timeToWait));
+    }
+
+    private IEnumerator WaitForExplode(float timeToWait)
+    {
+        yield return new WaitForSeconds(timeToWait);
+        Explode();
     }
 
     private bool GetRandomBool()
@@ -103,8 +112,6 @@ public class Rocket : Booster
 
         ExplodeAllColumn(_col, transform.position);
         ExplodeAllRow(_row, transform.position);
-
-        StartCoroutine(WaitStartShift());
     }
 
     public IEnumerator WaitForExplodeRocketWithBomb()
@@ -142,8 +149,6 @@ public class Rocket : Booster
                 ExplodeAllRow(_row + i, newPosHorizontal);
             }
         }
-
-        StartCoroutine(WaitStartShift());
     }
 
     private IEnumerator WaitExplodeShape(Shape shape, int index)
@@ -153,19 +158,9 @@ public class Rocket : Booster
         if (shape != null)
         {
             shape.Explode();
-            BoardManager.Instance.IncreaseDistinctColumns(shape._col);
         }
     }
 
-    private IEnumerator WaitStartShift()
-    {
-        int rowCount = BoardManager.Instance.GetRowCount();
-        yield return new WaitForSeconds(TimeBetweenExplosions * rowCount);
-        BoardManager.Instance.SetGameState(GameState.Ready);
-        BoardManager.Instance.StartShiftDown();
-        BoardManager.Instance.GetExplodedRows().Clear();
-        Destroy(gameObject, 0.75f);
-    }
 
     private void ExplosionAnimation(bool isDirectionVertical, Vector3 position)
     {

@@ -133,8 +133,6 @@ public class Cube : Shape
 
         if (cubeOperation == CubeOperation.BasicExplosion)
             BasicExplosionOperation();
-        else if (cubeOperation == CubeOperation.BasicExplosion)
-            BasicExplosionOperation();
         else if (cubeOperation == CubeOperation.TurnIntoRocket)
             TurnIntoRocketOperation();
         else if (cubeOperation == CubeOperation.TurnIntoBomb)
@@ -193,25 +191,45 @@ public class Cube : Shape
 
                         });
                     });
-
                 });
-
             });
         });
     }
 
-    public void ConvertCubeToRocket()
+    public void ConvertCubeToRocket(float timeToConvert, List<Rocket> rockets)
     {
+        StartCoroutine(WaitForConvertToRocket(timeToConvert, rockets));
+    }
+
+    private IEnumerator WaitForConvertToRocket(float timeToConvert, List<Rocket> rockets = null)
+    {
+        yield return new WaitForSeconds(timeToConvert);
+        Instantiate(BoardManager.Instance.DiscoMergeEffect, transform.position, transform.rotation, transform.parent);
         Rocket rocket = gameObject.AddComponent<Rocket>();
         rocket.SetShapeData(BoardManager.Instance.GetShapeData(ShapeType.Rocket), _row, _col);
         BoardManager.Instance.ReloadShapeToList(rocket, _row, _col);
+
+        if(rockets != null)
+            rockets.Add(rocket);
+
         Destroy(this);
     }
-    public void ConvertCubeToBomb()
+
+    public void ConvertCubeToBomb(float timeToConvert, List<Bomb> bombs)
     {
+        StartCoroutine(WaitForConvertToBomb(timeToConvert, bombs));
+    }
+    private IEnumerator WaitForConvertToBomb(float timeToConvert, List<Bomb> bombs = null)
+    {
+        yield return new WaitForSeconds(timeToConvert);
+        Instantiate(BoardManager.Instance.DiscoMergeEffect, transform.position, transform.rotation, transform.parent);
         Bomb bomb = gameObject.AddComponent<Bomb>();
         bomb.SetShapeData(BoardManager.Instance.GetShapeData(ShapeType.Bomb), _row, _col);
         BoardManager.Instance.ReloadShapeToList(bomb, _row, _col);
+
+        if (bombs != null)
+            bombs.Add(bomb);
+
         Destroy(this);
     }
 

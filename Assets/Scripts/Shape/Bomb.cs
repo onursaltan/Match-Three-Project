@@ -22,17 +22,13 @@ public class Bomb : Booster
             Instantiate(_shapeData.ExplodeEffect, transform.position, transform.rotation, transform.parent);
             CameraShake.Shake(0.5f, 5f);
             instantiatedShapes[_row, _col] = null;
-            StartCoroutine(WaitStartShift());
         }
     }
 
     public override void Merge()
     {
         foreach (Shape shape in _adjacentBoosters)
-        {
-            BoardManager.Instance.IncreaseDistinctColumns(shape._col);
             shape.MoveToMergePoint(_row, _col);
-        }
     }
 
     public override void SetShapeData(ShapeData shapeData, int row, int col)
@@ -40,15 +36,7 @@ public class Bomb : Booster
         base.SetShapeData(shapeData, row, col);
     }
 
-    private IEnumerator WaitStartShift()
-    {
-        int rowCount = BoardManager.Instance.GetRowCount();
-        yield return new WaitForSeconds(0.05f * rowCount);
-        BoardManager.Instance.SetGameState(GameState.Ready);
-        BoardManager.Instance.StartShiftDown();
-        Destroy(gameObject, 0.75f);
-    }
-
+ 
     private void Explode3x3()
     {
         Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
@@ -62,7 +50,6 @@ public class Bomb : Booster
                     if (instantiatedShapes[_row + i, _col + j] != null)
                     {
                         instantiatedShapes[_row + i, _col + j].Explode();
-                        BoardManager.Instance.IncreaseDistinctColumns(_col + j);
                     }
                 }
             }
@@ -88,7 +75,6 @@ public class Bomb : Booster
                     if (instantiatedShapes[_row + i, _col + j] != null)
                     {
                         instantiatedShapes[_row + i, _col + j].Explode();
-                        BoardManager.Instance.IncreaseDistinctColumns(_col + j);
                     }
                 }
             }
@@ -105,6 +91,5 @@ public class Bomb : Booster
 
         CameraShake.Shake(1.25f, 6f);
         instantiatedShapes[_row, _col] = null;
-        StartCoroutine(WaitStartShift());
     }
 }
