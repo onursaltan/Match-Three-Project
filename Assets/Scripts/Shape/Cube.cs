@@ -197,10 +197,19 @@ public class Cube : Shape
         });
     }
 
-    public void ChangeShapeTypeToRocket()
+    public void ConvertCubeToRocket()
     {
         Rocket rocket = gameObject.AddComponent<Rocket>();
-        //rocket.SetShapeData(BoardManager.Instance.get)
+        rocket.SetShapeData(BoardManager.Instance.GetShapeData(ShapeType.Rocket), _row, _col);
+        BoardManager.Instance.ReloadShapeToList(rocket, _row, _col);
+        Destroy(this);
+    }
+    public void ConvertCubeToBomb()
+    {
+        Bomb bomb = gameObject.AddComponent<Bomb>();
+        bomb.SetShapeData(BoardManager.Instance.GetShapeData(ShapeType.Bomb), _row, _col);
+        BoardManager.Instance.ReloadShapeToList(bomb, _row, _col);
+        Destroy(this);
     }
 
     private void TurnIntoRocketOperation()

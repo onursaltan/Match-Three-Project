@@ -117,7 +117,8 @@ public class BoardManager : MonoBehaviour
         float height = Camera.main.orthographicSize * 2;
         float width = height * Screen.width / Screen.height;
 
-        float shapeRect = _shapeSpriteRenderer.sprite.textureRect.width / _shapeSpriteRenderer.sprite.pixelsPerUnit * columns;
+        float shapeRect = columns;
+
         shapeRect += (paddingHorizontal / 10) * 2;
         _shapeSpriteRenderer.transform.localScale = new Vector3(width / shapeRect, width / shapeRect);
     }
@@ -258,14 +259,14 @@ public class BoardManager : MonoBehaviour
                 instantiatedShapes.Remove(shape);
     }
 
-    private List<Shape> Array2DToList(Shape[,] arr)
+    public List<Shape> Array2DToList(Shape[,] arr)
     {
-        List<Shape> shapeList = new List<Shape>();
+        List<Shape> arrayList = new List<Shape>();
 
         foreach (Shape shape in arr)
-            shapeList.Add(shape);
+            arrayList.Add(shape);
 
-        return shapeList;
+        return arrayList;
     }
 
     private void SetMergesSprite(List<Shape> adjacentShapes)
@@ -296,12 +297,20 @@ public class BoardManager : MonoBehaviour
             _distinctColumns[col] += 1;
     }
 
-    public void FullFillDistinctColumns()
+    public void FullFillDistinctColumns(float waitFullFill)
     {
         _distinctColumns.Clear();
 
         for (int i = 0; i < columns; i++)
             _distinctColumns.Add(i, rows);
+
+        StartCoroutine(StartFullFill(waitFullFill));
+    }
+
+    private IEnumerator StartFullFill(float waitFullFill)
+    {
+        yield return new WaitForSeconds(waitFullFill);
+        StartShiftDown();
     }
 
     public void DecreaseRemainingMoves()
@@ -372,7 +381,7 @@ public class BoardManager : MonoBehaviour
         return _instantiatedShapes;
     }
 
-    public ShapeData GetShapeData(ShapeType shapeType, ShapeColor shapeColor)
+    public ShapeData GetShapeData(ShapeType shapeType, ShapeColor shapeColor = ShapeColor.None)
     {
         foreach (ShapeData shapeData in shapeDatas)
             if (shapeData.ShapeType == shapeType && shapeData.ShapeColor == shapeColor)
