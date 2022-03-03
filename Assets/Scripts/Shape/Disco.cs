@@ -117,7 +117,7 @@ public class Disco : Booster
                 trailsInstantiated.Add(trailInstance);
                 trailInstance.transform.DOMove(shape.transform.position, TimeToTrailReach);
                 BoardManager.Instance.IncreaseDistinctColumns(shape._col);
-                shape.DiscoExplosion(TimeToTrailReach + TimeToTrailWait);
+                StartCoroutine(shape.DiscoExplosion(TimeToTrailReach));
                 DestroyGameobjectAfterSeconds(trailInstance, TimeToTrailReach + TimeToTrailWait);
             }
         }

@@ -16,6 +16,8 @@ public enum CubeOperation
 
 public class Cube : Shape
 {
+    private Sequence DiscoExplosionSequence;
+
     private const float TimeToTurnIntoBooster = 0.33f;
 
     protected bool _isCubeCheckedBefore = false;
@@ -76,9 +78,20 @@ public class Cube : Shape
         }
     }
 
-    public void DiscoExplosion(float ExplosionTime)
+    public IEnumerator DiscoExplosion(float WaitForTrail)
     {
-        FailAnimation();
+        yield return new WaitForSeconds(WaitForTrail);
+        DiscoExplosionSequence = DOTween.Sequence();
+
+        DiscoExplosionSequence.Append(transform.DORotate(new Vector3(0, 0, 6), 0.07f)
+                           .SetEase(Ease.InQuad))
+                           .Append(transform.DORotate(new Vector3(0, 0, -6), 0.14f)
+                           .SetEase(Ease.InQuad))
+                           .Append(transform.DORotate(new Vector3(0, 0, 0), 0.07f)
+                           .SetEase(Ease.InQuad));
+        DiscoExplosionSequence.SetLoops(-1, LoopType.Restart);
+
+                         
         Instantiate(BoardManager.Instance.LightBallCube, transform);
     }
 
