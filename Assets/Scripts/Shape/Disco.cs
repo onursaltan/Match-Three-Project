@@ -13,6 +13,7 @@ public class Disco : Booster
     private GameObject Anticipation;
     private GameObject Explosion;
     private GameObject Trail;
+    private GameObject BigExplosion;
     private List<Shape> toBeExploded = new List<Shape>();
     private List<GameObject> trailsInstantiated = new List<GameObject>();
 
@@ -65,6 +66,10 @@ public class Disco : Booster
                         BoardManager.Instance.DestroyShape(shape);
             }
         }
+
+        GameObject BigBombInstance = Instantiate(BoardManager.Instance.GreatBombEffect, new Vector3(-0.0146000003f, -0.950800002f, 0f), transform.rotation, transform.parent);
+
+        CameraShake.Shake();
         _spriteRenderer.enabled = false;
         instantiatedShapes[_row, _col] = null;
         StartCoroutine(WaitStartShift());
@@ -117,7 +122,7 @@ public class Disco : Booster
     {
         _spriteRenderer.sortingOrder = 99;
         FindSameColor(this._shapeData.ShapeColor);
-        Instantiate(Anticipation, transform.position, transform.rotation, transform.parent);
+        GameObject anticipationInstance = Instantiate(Anticipation, transform.position, transform.rotation, transform.parent);
 
         //MOVING AND DESTROYING TRAILS
         foreach (Cube shape in toBeExploded)
@@ -128,7 +133,7 @@ public class Disco : Booster
                 MoveTrailToTarget(shape);
         }
 
-        Anticipation.GetComponent<CubeExplosion>().TimeToDestroy = (toBeExploded.Count * 0.1f) + TimeToTrailReach + TimeToTrailWait;
+        //Anticipation.GetComponent<CubeExplosion>().TimeToDestroy = (toBeExploded.Count * 0.1f) + TimeToTrailReach + TimeToTrailWait;
 
         yield return new WaitForSeconds(TimeToTrailReach + TimeToTrailWait);
 
@@ -136,12 +141,22 @@ public class Disco : Booster
             if (shape != null)
                 shape.Explode();
 
-        Instantiate(Explosion, transform.position, transform.rotation, transform.parent);
+        StartCoroutine(DiscoPopEffect(anticipationInstance));
+        
         Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
         _spriteRenderer.enabled = false;
         GetComponent<BoxCollider2D>().enabled = false;
         instantiatedShapes[_row, _col] = null;
         StartCoroutine(WaitStartShift());
+    }
+
+
+    private IEnumerator DiscoPopEffect(GameObject antInstance)
+    {
+        Destroy(antInstance);
+        GameObject explosionInstance = Instantiate(Explosion, transform.position, transform.rotation, transform.parent);
+        yield return new WaitForSeconds(1f);
+        Destroy(explosionInstance);
     }
 
     private IEnumerator MakeMoveTrails(List<Shape> trailTargets)
