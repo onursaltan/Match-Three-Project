@@ -81,6 +81,9 @@ public class Cube : Shape
     public IEnumerator DiscoExplosion(float WaitForTrail)
     {
         yield return new WaitForSeconds(WaitForTrail);
+        //CUBE HIGHLIGHT
+        //GameObject InstantiatedHighlight = Instantiate(BoardManager.Instance.DiscoHighlight, transform.position, transform.rotation, transform);
+        //GetComponent<SpriteRenderer>().sortingOrder = GetComponent<SpriteRenderer>().sortingOrder + 10;
         DiscoExplosionSequence = DOTween.Sequence();
 
         DiscoExplosionSequence.Append(transform.DORotate(new Vector3(0, 0, 6), 0.07f)

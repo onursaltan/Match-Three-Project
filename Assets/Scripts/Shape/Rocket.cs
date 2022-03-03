@@ -175,13 +175,20 @@ public class Rocket : Booster
         GameObject s = Instantiate(_shapeData.ExplodeEffect, position, transform.rotation, transform.parent);
         GameObject s1 = Instantiate(_shapeData.ExplodeEffect, position, transform.rotation, transform.parent);
 
+        GameObject halfRocket1 = s.gameObject.transform.Find("Half Rocket").gameObject;
+        GameObject halfRocket2 = s1.gameObject.transform.Find("Half Rocket").gameObject;
+
         if (isDirectionVertical)
         {
+            halfRocket1.transform.Rotate(0f, 0f, 180f);
+            halfRocket2.transform.Rotate(0f, 0f, 0f);
             point1.y += 6;
             point2.y -= 6;
         }
         else
         {
+            halfRocket1.transform.Rotate(0f, 0f, 0f);
+            halfRocket2.transform.Rotate(0f, 0f, 180f);
             point1.x += 6;
             point2.x -= 6;
         }

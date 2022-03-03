@@ -1257,6 +1257,8 @@ MonoBehaviour:
   DiscoMergeEffect: {fileID: 6653701877214020759, guid: 176be645cd919d14db443d2cd1d63cf0, type: 3}
   LightBallCube: {fileID: 4635037346365102388, guid: 3ea226c1f7d74cb4197add0140e9d61a, type: 3}
   BigBombEffect: {fileID: 6174443465438293769, guid: 80e1238162cead54f9f8a50f2d4f43ec, type: 3}
+  GreatBombEffect: {fileID: 6174443465438293769, guid: 0517f0db0f61740e1b5d52cf965b0a2f, type: 3}
+  DiscoHighlight: {fileID: 6712850630878149599, guid: ac2da03ab298d49149ade779fb6def58, type: 3}
   shapeDatas:
   - {fileID: 11400000, guid: 828bc56eb85d3454ea2605a856b44dc4, type: 2}
   - {fileID: 11400000, guid: 90a62e9875c6eb241bd215fb7c9bed0b, type: 2}
@@ -1492,6 +1494,10 @@ PrefabInstance:
     - target: {fileID: 1551183448316828, guid: 0984513dbdb744e63b572bca0e593431, type: 3}
       propertyPath: m_Name
       value: ShockWave(WorldSpace)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1551183448316828, guid: 0984513dbdb744e63b572bca0e593431, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4389074987425334, guid: 0984513dbdb744e63b572bca0e593431, type: 3}
       propertyPath: m_RootOrder
