@@ -38,15 +38,15 @@ public abstract class Booster : Shape
         {
             case BoosterMerge.BigLightBall:
                 HandleBigLightBall();
-                StartCoroutine(WaitStartShift(1f));
+                StartCoroutine(WaitStartShift(0.7f + TimeToExpandIn + TimeToExpandOut));
                 break;
             case BoosterMerge.LightBallWithBomb:
                 int explodedCount = HandleLightBallWithBomb();
-                StartCoroutine(WaitStartShift((explodedCount * 0.1f * 3) + TimeToTrailReach + TimeToTrailWait + 0.2f + TimeToExpandIn + TimeToExpandOut));
+                StartCoroutine(WaitStartShift((explodedCount * 0.1f * 2) + TimeToTrailReach + TimeToTrailWait + 0.2f));
                 break;
             case BoosterMerge.LightBallWithRocket:
                 explodedCount = HandleLightBallWithRocket();
-                StartCoroutine(WaitStartShift((explodedCount * 0.1f * 3) + TimeToTrailReach + TimeToTrailWait + 0.2f + TimeToExpandIn + TimeToExpandOut));
+                StartCoroutine(WaitStartShift((explodedCount * 0.1f * 2) + TimeToTrailReach + TimeToTrailWait + 0.2f));
                 break;
             case BoosterMerge.BigBomb:
                 HandleBigBomb();

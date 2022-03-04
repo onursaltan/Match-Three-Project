@@ -70,6 +70,8 @@ public class BoardManager : MonoBehaviour
 
     private void Start()
     {
+        Application.targetFrameRate = 60;
+
         _explodedRows = new List<int>();
         _distinctColumns = new Dictionary<int, int>();
         _shapeSpriteRenderer = shapePrefab.GetComponent<SpriteRenderer>();

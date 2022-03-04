@@ -52,7 +52,6 @@ public class Disco : Booster
     private void BigLightBall()
     {
         Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
-        BoardManager.Instance.FullFillDistinctColumns(1.5f);
 
         foreach (Shape shape in instantiatedShapes)
         {
@@ -94,15 +93,19 @@ public class Disco : Booster
         }
 
         yield return new WaitForSeconds(cubes.Count * 0.1f + 0.2f);
+        GameObject explosionInstance = Instantiate(Explosion, transform.position, transform.rotation, transform.parent);
+
+        _spriteRenderer.enabled = false;
+        GetComponent<BoxCollider2D>().enabled = false;
+
+        Shape[,] instantiatedShapess = BoardManager.Instance.GetInstantiatedShapes();
+        instantiatedShapess[_row, _col] = null;
 
         foreach (Bomb bomb in bombs)
         {
             yield return new WaitForSeconds(0.1f);
             bomb.Explode();
         }
-
-        Shape[,] instantiatedShapess = BoardManager.Instance.GetInstantiatedShapes();
-        instantiatedShapess[_row, _col] = null;
     }
 
     public IEnumerator WaitForLightBallWithRocket()
@@ -127,14 +130,19 @@ public class Disco : Booster
 
         yield return new WaitForSeconds(cubes.Count * 0.1f + 0.2f);
 
+        GameObject explosionInstance = Instantiate(Explosion, transform.position, transform.rotation, transform.parent);
+
+        _spriteRenderer.enabled = false;
+        GetComponent<BoxCollider2D>().enabled = false;
+
+        Shape[,] instantiatedShapess = BoardManager.Instance.GetInstantiatedShapes();
+        instantiatedShapess[_row, _col] = null;
+
         foreach (Rocket rocket in rockets)
         {
             yield return new WaitForSeconds(0.1f);
             rocket.Explode();
         }
-
-        Shape[,] instantiatedShapess = BoardManager.Instance.GetInstantiatedShapes();
-        instantiatedShapess[_row, _col] = null;
     }
 
     private IEnumerator DiscoExplode()
