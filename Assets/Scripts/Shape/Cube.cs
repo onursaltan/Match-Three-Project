@@ -272,7 +272,7 @@ public class Cube : Shape
         rocket.SetShapeData(BoardManager.Instance.GetShapeData(ShapeType.Rocket, ShapeColor.None), _row, _col);
         BoardManager.Instance.ReloadShapeToList(rocket, _row, _col);
         BoardManager.Instance.SetGameState(GameState.Ready);
-        Instantiate(BoardManager.Instance.RocketMergeEffect, transform.position, transform.rotation, transform.parent);
+        Instantiate(BoardManager.Instance.RocketMergeEffect, transform.position, transform.rotation, rocket.transform);
         Destroy(gameObject.GetComponent<Cube>());
     }
 
@@ -282,7 +282,7 @@ public class Cube : Shape
         Bomb bomb = gameObject.AddComponent<Bomb>();
         bomb.SetShapeData(BoardManager.Instance.GetShapeData(ShapeType.Bomb, ShapeColor.None), _row, _col);
         BoardManager.Instance.ReloadShapeToList(bomb, _row, _col);
-        Instantiate(BoardManager.Instance.BombMergeEffect, transform.position, transform.rotation, transform.parent);
+        Instantiate(BoardManager.Instance.BombMergeEffect, transform.position, transform.rotation, bomb.transform);
         BoardManager.Instance.SetGameState(GameState.Ready);
         Destroy(gameObject.GetComponent<Cube>());
     }
@@ -293,7 +293,7 @@ public class Cube : Shape
         Disco disco = gameObject.AddComponent<Disco>();
         disco.SetShapeData(BoardManager.Instance.GetShapeData(shapeType, shapeColor), _row, _col);
         BoardManager.Instance.ReloadShapeToList(disco, _row, _col);
-        Instantiate(BoardManager.Instance.DiscoMergeEffect, transform.position, transform.rotation, transform.parent);
+        Instantiate(BoardManager.Instance.DiscoMergeEffect, transform.position, transform.rotation, disco.transform);
         BoardManager.Instance.SetGameState(GameState.Ready);
         Destroy(gameObject.GetComponent<Cube>());
     }
