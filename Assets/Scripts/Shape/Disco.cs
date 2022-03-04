@@ -163,6 +163,7 @@ public class Disco : Booster
             if (shape != null)
                 shape.Explode();
 
+
         StartCoroutine(DiscoPopEffect(anticipationInstance));
         
         Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();

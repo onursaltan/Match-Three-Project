@@ -54,7 +54,7 @@ public abstract class Booster : Shape
                 break;
             case BoosterMerge.BombWithRocket:
                 HandleBombWithRocket();
-                StartCoroutine(WaitStartShift(0.7f));
+                StartCoroutine(WaitStartShift(1.7f));
                 break;
             case BoosterMerge.DoubleRocket:
                 HandleDoubleRocket();

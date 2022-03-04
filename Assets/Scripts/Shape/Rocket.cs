@@ -117,16 +117,25 @@ public class Rocket : Booster
     public IEnumerator WaitForExplodeRocketWithBomb()
     {
         yield return new WaitForSeconds(TimeToExpandIn + TimeToExpandOut);
-        ExplodeRocketWithBomb();
+        StartCoroutine(ExplodeRocketWithBomb());
     }
 
-    private void ExplodeRocketWithBomb()
+
+
+    public IEnumerator ExplodeRocketWithBomb()
     {
         Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
         BoardManager.Instance.SetGameState(GameState.RocketExplosion);
 
+
+        
+        
         _spriteRenderer.enabled = false;
         GetComponent<BoxCollider2D>().enabled = false;
+
+        GameObject RocketBombEffect = Instantiate(BoardManager.Instance.RocketBombMerge, transform.position, Quaternion.identity, transform);
+        yield return new WaitForSeconds(1f);
+        Destroy(RocketBombEffect);
 
         instantiatedShapes[_row, _col] = null;
 
@@ -136,6 +145,7 @@ public class Rocket : Booster
 
         for (int i = -1; i < 2; i++)
         {
+            print("a");
             if(_col + i >= 0 && _col + i < BoardManager.Instance.GetColumnCount())
             {
                 newPosVertical = transform.position;
@@ -177,18 +187,18 @@ public class Rocket : Booster
         {
             halfRocket1.transform.Rotate(0f, 0f, 180f);
             halfRocket2.transform.Rotate(0f, 0f, 0f);
-            point1.y += 6;
-            point2.y -= 6;
+            point1.y += 12;
+            point2.y -= 12;
         }
         else
         {
             halfRocket1.transform.Rotate(0f, 0f, 0f);
             halfRocket2.transform.Rotate(0f, 0f, 180f);
-            point1.x += 6;
-            point2.x -= 6;
+            point1.x += 12;
+            point2.x -= 12;
         }
 
-        s.transform.DOMove(point1, 1.1f);
-        s1.transform.DOMove(point2, 1.1f);
+        s.transform.DOMove(point1, 2.2f);
+        s1.transform.DOMove(point2, 2.2f);
     }
 }
