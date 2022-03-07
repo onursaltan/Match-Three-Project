@@ -26,6 +26,7 @@ public abstract class Booster : Shape
             BoardManager.Instance.GetGameState() == GameState.Ready &&
             _shapeState == ShapeState.Waiting)
         {
+            BoardManager.Instance.SetGameState(GameState.MergeExplosion);
             BoardManager.Instance.DecreaseRemainingMoves();
             _boosterMerge = GetBoosterMerge();
             HandleBoosterExplosion();
@@ -58,7 +59,7 @@ public abstract class Booster : Shape
                 break;
             case BoosterMerge.DoubleRocket:
                 HandleDoubleRocket();
-                StartCoroutine(WaitStartShift(0.5f));
+                StartCoroutine(WaitStartShift(0.7f));
                 break;
             case BoosterMerge.None:
                 Explode();

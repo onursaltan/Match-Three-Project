@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 public enum GameState
 {
-    Ready, Merging, RocketExplosion, DiscoExplosion, BombExplosion
+    Ready, Merging, RocketExplosion, DiscoExplosion, BombExplosion, MergeExplosion
 }
 
 public class BoardManager : MonoBehaviour

@@ -65,7 +65,6 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
 
     public virtual void SetMergeSprite(int count) { }
     
-
     public virtual void FindAdjacentShapes(bool isThisClickedShape, List<Shape> adjacentShapes)
     {
         int rows = BoardManager.Instance.GetRowCount();
@@ -97,6 +96,7 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
             }
         }
     }
+
     public void MoveToMergePoint(int row, int col)
     {
         Vector2 offset = _spriteRenderer.bounds.size;

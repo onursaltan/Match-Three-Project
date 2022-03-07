@@ -107,7 +107,6 @@ public class Rocket : Booster
 
         _spriteRenderer.enabled = false;
         GetComponent<BoxCollider2D>().enabled = false;
-
         instantiatedShapes[_row, _col] = null;
 
         ExplodeAllColumn(_col, transform.position);
