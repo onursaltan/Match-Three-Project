@@ -64,8 +64,8 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
     }
 
     public virtual void SetMergeSprite(int count) { }
-    
-    public virtual void FindAdjacentShapes(bool isThisClickedShape, List<Shape> adjacentShapes)
+
+    public virtual void FindAdjacentShapes(bool isThisClickedShape, List<Shape> adjacentShapes, List<Shape> adjacentGoals)
     {
         int rows = BoardManager.Instance.GetRowCount();
         int columns = BoardManager.Instance.GetColumnCount();
@@ -73,13 +73,13 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
         if (isThisClickedShape)
             adjacentShapes.Add(this);
 
-        _FindAdjacentShapes(_row, _col + 1, columns, false, adjacentShapes);
-        _FindAdjacentShapes(_row, _col - 1, columns, false, adjacentShapes);
-        _FindAdjacentShapes(_row + 1, _col, rows, true, adjacentShapes);
-        _FindAdjacentShapes(_row - 1, _col, rows, true, adjacentShapes);
+        _FindAdjacentShapes(_row, _col + 1, columns, false, adjacentShapes, adjacentGoals);
+        _FindAdjacentShapes(_row, _col - 1, columns, false, adjacentShapes, adjacentGoals);
+        _FindAdjacentShapes(_row + 1, _col, rows, true, adjacentShapes, adjacentGoals);
+        _FindAdjacentShapes(_row - 1, _col, rows, true, adjacentShapes, adjacentGoals);
     }
 
-    private void _FindAdjacentShapes(int row, int col, int constraint, bool isRowChanging, List<Shape> adjacentShapes)
+    private void _FindAdjacentShapes(int row, int col, int constraint, bool isRowChanging, List<Shape> adjacentShapes, List<Shape> adjacentGoals)
     {
         Shape[,] shapeMatrix = BoardManager.Instance.GetShapeMatrix();
 
@@ -88,11 +88,18 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
         if (temp < constraint && temp >= 0)
         {
             if (shapeMatrix[row, col] != null && !BoardManager.Instance.IsShapeCheckedBefore(adjacentShapes, shapeMatrix[row, col]) &&
-                shapeMatrix[row, col]._shapeData.ShapeType == _shapeData.ShapeType && 
+                shapeMatrix[row, col]._shapeData.ShapeType == _shapeData.ShapeType &&
                 shapeMatrix[row, col]._shapeData.ShapeColor == _shapeData.ShapeColor)
             {
                 adjacentShapes.Add(shapeMatrix[row, col]);
-                shapeMatrix[row, col].FindAdjacentShapes(false, adjacentShapes);
+                shapeMatrix[row, col].FindAdjacentShapes(false, adjacentShapes, adjacentGoals);
+            }
+            else if (shapeMatrix[row, col] != null &&
+                    adjacentGoals != null &&
+                    !BoardManager.Instance.IsShapeCheckedBefore(adjacentGoals, shapeMatrix[row, col]) &&
+                    shapeMatrix[row, col]._shapeData.IsGoalShape)
+            {
+                adjacentGoals.Add(shapeMatrix[row, col]);
             }
         }
     }
@@ -138,11 +145,14 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
 
     public void ShiftDown(bool isForRefill = false)
     {
+        if (_shapeData.IsShiftable)
+        {
             int rowToShift = isForRefill ?
                 FindEmptyRow(BoardManager.Instance.GetRowCount() - 1) :
                 FindEmptyRow(_row);
 
             HandleShiftDown(rowToShift, isForRefill);
+        }
     }
 
     private int FindEmptyRow(int rowIndex)
@@ -153,6 +163,8 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
         for (int i = rowIndex; i >= 0; i--)
             if (shapeMatrix[i, _col] == null)
                 rowToShift = i;
+            else if (shapeMatrix[i, _col]._shapeData.IsShiftable == false)
+                break;
 
         return rowToShift;
     }
@@ -186,7 +198,7 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
         }
 
         Vector2 offset = _spriteRenderer.bounds.size;
-       
+
         float posToShift = offset.y * rowToShift - (rowToShift * 0.08f);
 
         ShiftAnimation(posToShift, shiftDownTime, rowToShift);

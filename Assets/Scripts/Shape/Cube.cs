@@ -20,8 +20,9 @@ public class Cube : Shape
     private const float TimeToTurnIntoBooster = 0.33f;
 
     private Sequence DiscoExplosionSequence;
-
     protected bool _isCubeCheckedBefore = false;
+
+    private List<Shape> _adjacentGoals;
 
     private delegate void CubeOperationDelegate();
     private CubeOperationDelegate _cubeOperation;
@@ -31,6 +32,7 @@ public class Cube : Shape
         BoardManager.Instance.ReverseShapesSprite();
         Instantiate(_shapeData.ExplodeEffect, transform.position, transform.rotation, transform.parent);
         BoardManager.Instance.GetInstantiatedShapes()[_row, _col] = null;
+        GameManager.Instance.CheckGoal(_shapeData.ShapeType, _shapeData.ShapeColor);
         Destroy(gameObject);
     }
 
@@ -71,7 +73,8 @@ public class Cube : Shape
             _shapeState == ShapeState.Waiting)
         {
             _adjacentShapes = new List<Shape>();
-            FindAdjacentShapes(true, _adjacentShapes);
+            _adjacentGoals = new List<Shape>();
+            FindAdjacentShapes(true, _adjacentShapes, _adjacentGoals);
 
             if (IsAllShapesStateWaiting(_adjacentShapes))
             {
@@ -181,7 +184,14 @@ public class Cube : Shape
             shape.Explode();
         }
 
+        ExplodeGoalShapes();
         BoardManager.Instance.StartShiftDown();
+    }
+
+    private void ExplodeGoalShapes()
+    {
+        foreach (Shape shape in _adjacentGoals)
+            shape.Explode();
     }
 
     private void TurnIntoBooster<T>() where T : Shape

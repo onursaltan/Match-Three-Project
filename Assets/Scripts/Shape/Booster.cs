@@ -93,7 +93,7 @@ public abstract class Booster : Shape
         _adjacentBoosters = adjacentBoosters;
     }
 
-    public override void FindAdjacentShapes(bool isThisClickedShape, List<Shape> adjacentShapes)
+    public override void FindAdjacentShapes(bool isThisClickedShape, List<Shape> adjacentShapes, List<Shape> adjacentGoals = null)
     {
         int rows = BoardManager.Instance.GetRowCount();
         int columns = BoardManager.Instance.GetColumnCount();
@@ -115,11 +115,12 @@ public abstract class Booster : Shape
 
         if (temp < constraint && temp >= 0)
         {
-            if (shapeMatrix[row, col] != null && !BoardManager.Instance.IsShapeCheckedBefore(adjacentShapes, shapeMatrix[row, col]) &&
+            if (shapeMatrix[row, col] != null &&
+                !BoardManager.Instance.IsShapeCheckedBefore(adjacentShapes, shapeMatrix[row, col]) &&
                 shapeMatrix[row, col]._shapeData.ShapeType != ShapeType.Cube)
             {
                 adjacentShapes.Add(shapeMatrix[row, col]);
-                shapeMatrix[row, col].FindAdjacentShapes(false, adjacentShapes);
+                shapeMatrix[row, col].FindAdjacentShapes(false, adjacentShapes, null);
             }
         }
     }

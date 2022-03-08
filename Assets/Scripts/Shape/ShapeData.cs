@@ -31,6 +31,9 @@ public class ShapeData : ScriptableObject
     [SerializeField]
     private bool _isShiftable;
 
+    [SerializeField]
+    private bool _isGoalShape;
+
     public ShapeType ShapeType
     {
         get
@@ -62,11 +65,20 @@ public class ShapeData : ScriptableObject
             return _explodeEffect;
         }
     }
+
     public bool IsShiftable
     {
         get
         {
             return _isShiftable;
+        }
+    }
+    
+    public bool IsGoalShape
+    {
+        get
+        {
+            return _isGoalShape;
         }
     }
 }

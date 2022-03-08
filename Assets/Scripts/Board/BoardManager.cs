@@ -57,7 +57,7 @@ public class BoardManager : MonoBehaviour
         {
             if (_instance == null)
             {
-                Debug.Log("Not implemented.");
+                _instance = GameObject.FindObjectOfType<BoardManager>();
             }
 
             return _instance;
@@ -66,7 +66,14 @@ public class BoardManager : MonoBehaviour
 
     void Awake()
     {
-        _instance = this;
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            _instance = this;
+        }
     }
 
     private void Start()
@@ -76,7 +83,7 @@ public class BoardManager : MonoBehaviour
         _explodedRows = new List<int>();
         _distinctColumns = new Dictionary<int, int>();
         _shapeSpriteRenderer = shapePrefab.GetComponent<SpriteRenderer>();
-
+        
         SetShapeRect();
         CreateTiles();
         int.TryParse(moves.text, out remainingMoves);
@@ -260,7 +267,7 @@ public class BoardManager : MonoBehaviour
         {
             if (instantiatedShapes.ElementAt(i) != null)
             {
-                instantiatedShapes.ElementAt(i).FindAdjacentShapes(true, adjacentShapes);
+                instantiatedShapes.ElementAt(i).FindAdjacentShapes(true, adjacentShapes, null);
                 RemoveIntersections(instantiatedShapes, adjacentShapes);
                 SetMergesSprite(adjacentShapes);
                 adjacentShapes.Clear();
