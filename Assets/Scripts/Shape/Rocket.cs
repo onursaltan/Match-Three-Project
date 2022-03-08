@@ -32,9 +32,7 @@ public class Rocket : Booster
     public override void Merge()
     {
         foreach (Shape shape in _adjacentBoosters)
-        {
             shape.MoveToMergePoint(_row, _col);
-        }
     }
 
     public override void SetShapeData(ShapeData shapeData, int row, int col)
@@ -103,14 +101,13 @@ public class Rocket : Booster
     private void ExplodeDoubleRocket()
     {
         Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
-        BoardManager.Instance.SetGameState(GameState.RocketExplosion);
 
         _spriteRenderer.enabled = false;
         GetComponent<BoxCollider2D>().enabled = false;
         instantiatedShapes[_row, _col] = null;
 
         ExplodeAllColumn(_col, transform.position);
-        ExplodeAllRow(_row, transform.position);
+        ExplodeAllRow(_row, transform.position); 
     }
 
     public IEnumerator WaitForExplodeRocketWithBomb()
@@ -119,15 +116,9 @@ public class Rocket : Booster
         StartCoroutine(ExplodeRocketWithBomb());
     }
 
-
-
     public IEnumerator ExplodeRocketWithBomb()
     {
         Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
-        BoardManager.Instance.SetGameState(GameState.RocketExplosion);
-
-
-        
         
         _spriteRenderer.enabled = false;
         GetComponent<BoxCollider2D>().enabled = false;
@@ -144,7 +135,6 @@ public class Rocket : Booster
 
         for (int i = -1; i < 2; i++)
         {
-            print("a");
             if(_col + i >= 0 && _col + i < BoardManager.Instance.GetColumnCount())
             {
                 newPosVertical = transform.position;
@@ -165,11 +155,8 @@ public class Rocket : Booster
         yield return new WaitForSeconds(TimeBetweenExplosions * (float)index);
 
         if (shape != null)
-        {
             shape.Explode();
-        }
     }
-
 
     private void ExplosionAnimation(bool isDirectionVertical, Vector3 position)
     {

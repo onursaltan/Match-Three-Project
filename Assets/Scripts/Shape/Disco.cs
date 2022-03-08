@@ -14,6 +14,7 @@ public class Disco : Booster
     private GameObject Explosion;
     private GameObject Trail;
     private GameObject BigExplosion;
+
     private List<Shape> toBeExploded = new List<Shape>();
     private List<GameObject> trailsInstantiated = new List<GameObject>();
 
@@ -106,6 +107,8 @@ public class Disco : Booster
             yield return new WaitForSeconds(0.1f);
             bomb.Explode();
         }
+
+        StartCoroutine(WaitStartShift(0.2f));
     }
 
     public IEnumerator WaitForLightBallWithRocket()
@@ -143,6 +146,8 @@ public class Disco : Booster
             yield return new WaitForSeconds(0.1f);
             rocket.Explode();
         }
+
+        StartCoroutine(WaitStartShift(0.2f));
     }
 
     private IEnumerator DiscoExplode()
@@ -178,13 +183,14 @@ public class Disco : Booster
         _spriteRenderer.enabled = false;
         GetComponent<BoxCollider2D>().enabled = false;
         instantiatedShapes[_row, _col] = null;
+
+        StartCoroutine(WaitStartShift(0.1f, GameState.DiscoExplosion));
     }
 
     public List<Shape> GetToBeExploded()
     {
         return toBeExploded;
     }
-
 
     private IEnumerator DiscoPopEffect(GameObject antInstance)
     {

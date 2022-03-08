@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 public enum GameState
 {
-    Ready, Merging, RocketExplosion, DiscoExplosion, BombExplosion, MergeExplosion
+    Ready, Merging, RocketExplosion, DiscoExplosion, BombExplosion, BigDiscoExplosion, BigBombExplosion, DiscoRocketExplosion, DiscoBombExplosion, RocketBombExplosion, DoubleRocket
 }
 
 public class BoardManager : MonoBehaviour
@@ -88,7 +88,6 @@ public class BoardManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            Debug.Log("sea");
         }
     }
 
@@ -179,6 +178,12 @@ public class BoardManager : MonoBehaviour
     public void SetAdjacentShapes(List<Shape> adjacentShapes)
     {
         _adjacentShapes = adjacentShapes;
+    }
+
+    public IEnumerator StartShiftDownTrigger()
+    {
+        yield return new WaitUntil(() => _gameState == GameState.Ready);
+        StartShiftDown();
     }
 
     public void StartShiftDown()
@@ -297,6 +302,7 @@ public class BoardManager : MonoBehaviour
     }
 
     #endregion
+
     public void ReloadShapeToList(Shape shape, int row, int col)
     {
         _instantiatedShapes[row, col] = shape;
@@ -340,18 +346,19 @@ public class BoardManager : MonoBehaviour
         }
     }
 
-    public void SetGameState(GameState gs, bool isComeFromDisco = false)
+    public void SetGameState(GameState targetGameState, GameState sourceGameState = GameState.Ready)
     {
-        /* if (_gameState != GameState.DiscoExplosion)
-             _gameState = gs;
-         else
-         {
-             if (isComeFromDisco)
-             {
-                 _gameState = gs;
-             }
-         }*/
-        _gameState = gs;
+        if (_gameState != GameState.DiscoExplosion)
+            _gameState = targetGameState;
+        else
+        {
+            if (sourceGameState == GameState.DiscoExplosion)
+            {
+                _gameState = targetGameState;
+                StartShiftDown();
+            }
+        }
+
     }
 
     public GameState GetGameState()

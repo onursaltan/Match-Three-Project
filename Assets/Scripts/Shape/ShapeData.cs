@@ -4,7 +4,7 @@ using UnityEngine;
 
 public enum ShapeType
 {
-    Cube, Bomb, Rocket, Disco
+    Cube, Bomb, Rocket, Disco, Box
 }
 
 public enum ShapeColor
@@ -27,6 +27,9 @@ public class ShapeData : ScriptableObject
 
     [SerializeField] 
     private GameObject _explodeEffect;
+
+    [SerializeField]
+    private bool _isShiftable;
 
     public ShapeType ShapeType
     {
@@ -57,6 +60,13 @@ public class ShapeData : ScriptableObject
         get
         {
             return _explodeEffect;
+        }
+    }
+    public bool IsShiftable
+    {
+        get
+        {
+            return _isShiftable;
         }
     }
 }

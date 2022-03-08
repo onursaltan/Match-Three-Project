@@ -16,3 +16,4 @@ MonoBehaviour:
   _shapeColor: 0
   _sprite: {fileID: 4507649988818200580, guid: 5c262d6d56bec4700b3baa816e3f2e1c, type: 3}
   _explodeEffect: {fileID: 3854896780779119827, guid: 8c84d123a908abb4da3bf0248aa2fc59, type: 3}
+  _isShiftable: 1

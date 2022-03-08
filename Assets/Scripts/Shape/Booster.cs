@@ -14,8 +14,6 @@ public abstract class Booster : Shape
     private const float TimeToTrailWait = 1.0f;
     private const float TimeToTrailReach = 0.6f;
 
-    private const float TimeBetweenExplosions = 0.05f;
-
     protected BoosterMerge _boosterMerge = BoosterMerge.None;
     protected List<Shape> _adjacentBoosters;
 
@@ -26,10 +24,10 @@ public abstract class Booster : Shape
             BoardManager.Instance.GetGameState() == GameState.Ready &&
             _shapeState == ShapeState.Waiting)
         {
-            BoardManager.Instance.SetGameState(GameState.MergeExplosion);
             BoardManager.Instance.DecreaseRemainingMoves();
             _boosterMerge = GetBoosterMerge();
             HandleBoosterExplosion();
+            StartCoroutine(BoardManager.Instance.StartShiftDownTrigger());
         }
     }
 
@@ -38,26 +36,30 @@ public abstract class Booster : Shape
         switch (_boosterMerge)
         {
             case BoosterMerge.BigLightBall:
+                BoardManager.Instance.SetGameState(GameState.BigDiscoExplosion);
                 HandleBigLightBall();
-                StartCoroutine(WaitStartShift(0.7f + TimeToExpandIn + TimeToExpandOut));
+                StartCoroutine(WaitStartShift(0.5f + TimeToExpandIn + TimeToExpandOut));
                 break;
             case BoosterMerge.LightBallWithBomb:
-                int explodedCount = HandleLightBallWithBomb();
-                StartCoroutine(WaitStartShift((explodedCount * 0.1f * 2) + TimeToTrailReach + TimeToTrailWait + 0.2f));
+                BoardManager.Instance.SetGameState(GameState.DiscoBombExplosion);
+                HandleLightBallWithBomb();
                 break;
             case BoosterMerge.LightBallWithRocket:
-                explodedCount = HandleLightBallWithRocket();
-                StartCoroutine(WaitStartShift((explodedCount * 0.1f * 2) + TimeToTrailReach + TimeToTrailWait + 0.2f));
+                BoardManager.Instance.SetGameState(GameState.DiscoRocketExplosion);
+                HandleLightBallWithRocket();
                 break;
             case BoosterMerge.BigBomb:
+                BoardManager.Instance.SetGameState(GameState.BigBombExplosion);
                 HandleBigBomb();
-                StartCoroutine(WaitStartShift(0.8f));
+                StartCoroutine(WaitStartShift(0.6f));
                 break;
             case BoosterMerge.BombWithRocket:
-                HandleBombWithRocket();
-                StartCoroutine(WaitStartShift(1.7f));
+                BoardManager.Instance.SetGameState(GameState.RocketBombExplosion);
+                HandleBombWithRocket(); 
+                StartCoroutine(WaitStartShift(1.75f));
                 break;
             case BoosterMerge.DoubleRocket:
+                BoardManager.Instance.SetGameState(GameState.DoubleRocket);
                 HandleDoubleRocket();
                 StartCoroutine(WaitStartShift(0.7f));
                 break;
@@ -68,20 +70,21 @@ public abstract class Booster : Shape
                     StartCoroutine(WaitStartShift(0.4f));
                 else if(GetType() == typeof(Bomb))
                     StartCoroutine(WaitStartShift(0.5f));
-                else if (this is Disco disco)
+               /* else if (this is Disco disco)
                 {
                     int listCount = disco.GetToBeExploded().Count;
                     StartCoroutine(WaitStartShift((listCount * 0.1f) + TimeToTrailReach + TimeToTrailWait + 0.2f));
-                }
+                }*/
                 break;
         }
     }
 
-    protected IEnumerator WaitStartShift(float timeToShift)
+    protected IEnumerator WaitStartShift(float timeToShift, GameState source = GameState.Ready)
     {
         yield return new WaitForSeconds(timeToShift);
-        BoardManager.Instance.SetGameState(GameState.Ready);
-        BoardManager.Instance.StartShiftDown();
+        BoardManager.Instance.SetGameState(GameState.Ready, source);
+       // Debug.Log(BoardManager.Instance.GetGameState());
+      //  BoardManager.Instance.StartShiftDown();
         Destroy(gameObject, 0.75f);
     }
 
@@ -170,10 +173,9 @@ public abstract class Booster : Shape
         StartCoroutine(disco.WaitForBigLightBall());
     }
 
-    private int HandleLightBallWithBomb()
+    private void HandleLightBallWithBomb()
     {
         Disco disco;
-        int explodedCount;
 
         if (GetType() != typeof(Disco))
         {
@@ -185,16 +187,13 @@ public abstract class Booster : Shape
             disco = (Disco)this;
 
         disco.Merge();
-        StartCoroutine(disco.WaitForLightBallWithBomb());
-        explodedCount = disco.GetToBeExploded().Count;
         disco._shapeState = ShapeState.Explode;
-        return explodedCount;
+        StartCoroutine(disco.WaitForLightBallWithBomb());
     }
 
-    private int HandleLightBallWithRocket()
+    private void HandleLightBallWithRocket()
     {
         Disco disco;
-        int explodedCount;
 
         if (GetType() != typeof(Disco))
         {
@@ -208,10 +207,8 @@ public abstract class Booster : Shape
         }
 
         disco.Merge();
-        StartCoroutine(disco.WaitForLightBallWithRocket());
-        explodedCount = disco.GetToBeExploded().Count;
         disco._shapeState = ShapeState.Explode;
-        return explodedCount;
+        StartCoroutine(disco.WaitForLightBallWithRocket());
     }
 
     private void HandleBigBomb()

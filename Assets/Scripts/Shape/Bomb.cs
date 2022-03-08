@@ -80,12 +80,9 @@ public class Bomb : Booster
             }
         }
 
-        BoardManager.Instance.SetGameState(GameState.BombExplosion);
-
         _shapeState = ShapeState.Explode;
         _spriteRenderer.enabled = false;
         GetComponent<BoxCollider2D>().enabled = false;
-
 
         Instantiate(BoardManager.Instance.BigBombEffect, transform.position, transform.rotation, transform.parent);
 

@@ -78,6 +78,8 @@ public class Cube : Shape
                 BoardManager.Instance.SetAdjacentShapes(_adjacentShapes);
                 HandleCubeOperation();
             }
+
+            StartCoroutine(BoardManager.Instance.StartShiftDownTrigger());
         }
     }
 
@@ -197,19 +199,21 @@ public class Cube : Shape
         if (shape is Rocket)
         {
             shape.SetShapeData(BoardManager.Instance.GetShapeData(ShapeType.Rocket, ShapeColor.None), _row, _col);
+            Instantiate(BoardManager.Instance.RocketMergeEffect, transform.position, transform.rotation, transform);
         }
         else if (shape is Bomb)
         {
-            shape.SetShapeData(BoardManager.Instance.GetShapeData(ShapeType.Bomb, ShapeColor.None), _row, _col);
+            shape.SetShapeData(BoardManager.Instance.GetShapeData(ShapeType.Bomb, ShapeColor.None), _row, _col); 
+            Instantiate(BoardManager.Instance.BombMergeEffect, transform.position, transform.rotation, transform);
         }
         else if (shape is Disco)
         {
             shapeColor = FindDiscoColor();
             shape.SetShapeData(BoardManager.Instance.GetShapeData(ShapeType.Disco, shapeColor), _row, _col);
+            Instantiate(BoardManager.Instance.DiscoMergeEffect, transform.position, transform.rotation, transform);
         }
 
         BoardManager.Instance.ReloadShapeToList(shape, _row, _col);
-        BoardManager.Instance.SetGameState(GameState.Ready);
         Destroy(gameObject.GetComponent<Cube>());
     }
 
@@ -230,7 +234,7 @@ public class Cube : Shape
         yield return new WaitForSeconds(TimeToExpandIn + TimeToExpandOut);
         BoardManager.Instance.GetAdjacentShapes().Remove(this);
         BoardManager.Instance.SetGameState(GameState.Ready);
-        BoardManager.Instance.StartShiftDown();
+     //   BoardManager.Instance.StartShiftDown();
     }
 
     #region Disco Converts

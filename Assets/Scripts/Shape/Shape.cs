@@ -21,7 +21,7 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
     private const float TimeShiftDown = 0.07f;
     private const float TimeRefillShiftDown = 0.07f;
     private const float TimeBounce = 0.1f;
-    private const float BounceAmount = 0.02f;
+    private const float BounceAmount = 0.035f;
 
 
     public ShapeData _shapeData;
