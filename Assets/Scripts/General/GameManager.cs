@@ -46,12 +46,6 @@ public class GameManager : MonoBehaviour
         BoardManager.Instance.CreateBoard(myLevel.shapesArray);
 
         _goals = myLevel.goalsArray.ToList();
-
-       /* Goal denemeGoal = new Goal(ShapeType.Cube, ShapeColor.Red, 10);
-        Goal denemeGoal2 = new Goal(ShapeType.Cube, ShapeColor.Blue, 20);
-
-        _goals.Add(denemeGoal);
-        _goals.Add(denemeGoal2);*/
     }
 
     public void CheckGoal(ShapeType shapeType, ShapeColor shapeColor = ShapeColor.None)
@@ -80,13 +74,15 @@ public class GameManager : MonoBehaviour
                                         1, 3, 3, 3, 3, 2,
                                         2, 1, 1, 5, 2, 2,};
 
-                  Goal[] goalsArray = new Goal[2];
+                  Goal[] goalsArray = new Goal[3];
 
                   Goal denemeGoal = new Goal(ShapeType.Cube, ShapeColor.Red, 10); 
                   Goal denemeGoal2 = new Goal(ShapeType.Cube, ShapeColor.Blue, 20);
+                  Goal denemeGoal3 = new Goal(ShapeType.Box, ShapeColor.None, 5);
 
                   goalsArray[0] = denemeGoal;
                   goalsArray[1] = denemeGoal2;
+                  goalsArray[2] = denemeGoal3;
 
                   Level level = new Level
                   {

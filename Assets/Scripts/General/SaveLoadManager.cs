@@ -5,23 +5,25 @@ using UnityEngine;
 
 public class SaveLoadManager
 {
-    private string dataPath;
 
     public SaveLoadManager()
     {
-        dataPath = Application.persistentDataPath;
     }
 
     public Level LoadLevelData(string level)
     {
-        string fullLevelPath = dataPath + "/Level" + level + ".json";
-        string levelDataJson = File.ReadAllText(fullLevelPath);
+        string levelDataJson = Resources.Load("Levels" + "/Level" + level).ToString();
         return JsonUtility.FromJson<Level>(levelDataJson);
     }
 
     public void WriteLevelData(Level level)
     {
+        #if UNITY_EDITOR
+        string path = "Assets/Resources/Levels";
+ 
+
         string levelDataJson = JsonUtility.ToJson(level);
-        File.WriteAllText(Application.persistentDataPath + "/Level" + level.level + ".json", levelDataJson);
+        File.WriteAllText(path + "/Level" + level.level + ".json", levelDataJson);
+        #endif
     }
 }
