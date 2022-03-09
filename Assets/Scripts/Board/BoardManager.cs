@@ -25,6 +25,7 @@ public class BoardManager : MonoBehaviour
     public GameObject DiscoHighlight;
     public GameObject RocketBombMerge;
     //
+    [SerializeField] private ShapeData[] allShapeDatas;
 
     [SerializeField] private ShapeData[] shapeDatas;
     [SerializeField] private List<Sprite> mergeSprites;
@@ -73,27 +74,28 @@ public class BoardManager : MonoBehaviour
         else
         {
             _instance = this;
+
+            Application.targetFrameRate = 60;
+
+            _explodedRows = new List<int>();
+            _distinctColumns = new Dictionary<int, int>();
+            _shapeSpriteRenderer = shapePrefab.GetComponent<SpriteRenderer>();
+            
+            SetShapeRect();
         }
     }
 
     private void Start()
     {
-        Application.targetFrameRate = 60;
-
-        _explodedRows = new List<int>();
-        _distinctColumns = new Dictionary<int, int>();
-        _shapeSpriteRenderer = shapePrefab.GetComponent<SpriteRenderer>();
-        
-        SetShapeRect();
-        CreateTiles();
+      //  CreateBoard();
         int.TryParse(moves.text, out remainingMoves);
         _gameState = GameState.Ready;
-        FindMerges();
+     //   FindMerges();
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.P))
         {
         }
     }
@@ -103,7 +105,7 @@ public class BoardManager : MonoBehaviour
         SceneManager.LoadScene(0);
     }
 
-    public void CreateTiles()
+    public void CreateBoard()
     {
         _instantiatedShapes = new Shape[rows, columns];
 
@@ -122,6 +124,29 @@ public class BoardManager : MonoBehaviour
         }
 
         SetBoardPosition(offset.x);
+    }
+
+    public void CreateBoard(int[] shapesArray)
+    {
+        _instantiatedShapes = new Shape[rows, columns];
+        Vector2 offset = _shapeSpriteRenderer.bounds.size;
+
+        int index = 0;
+
+        for (int i = 0; i < rows; i++)
+        {
+            for (int j = 0; j < columns; j++)
+            {
+                Vector3 instantiatedTransform = new Vector3(j * offset.x,
+                                                            (offset.y - 0.08f) * i,
+                                                            0f);
+
+                _instantiatedShapes[i, j] = CreateSpecificShape(instantiatedTransform, i, j, shapesArray[index++]);
+            }
+        }
+
+        SetBoardPosition(offset.x);
+        FindMerges();
     }
 
     private void SetShapeRect()
@@ -166,6 +191,27 @@ public class BoardManager : MonoBehaviour
 
         return _shape;
     }
+    
+    private Shape CreateSpecificShape(Vector3 instantiateTransform, int i, int j, int shapeReference)
+    {
+        GameObject instantiatedShape = Instantiate(shapePrefab, instantiateTransform, shapePrefab.transform.rotation, transform);
+        Shape _shape = null;
+
+        if(allShapeDatas[shapeReference].ShapeType == ShapeType.Cube)
+            _shape = instantiatedShape.AddComponent<Cube>();
+        else if (allShapeDatas[shapeReference].ShapeType == ShapeType.Box)
+            _shape = instantiatedShape.AddComponent<Box>();
+        else if(allShapeDatas[shapeReference].ShapeType == ShapeType.Bomb)
+            _shape = instantiatedShape.AddComponent<Bomb>();
+        else if (allShapeDatas[shapeReference].ShapeType == ShapeType.Rocket)
+            _shape = instantiatedShape.AddComponent<Rocket>();
+        else if (allShapeDatas[shapeReference].ShapeType == ShapeType.Disco)
+            _shape = instantiatedShape.AddComponent<Disco>();
+
+        _shape.SetShapeData(allShapeDatas[shapeReference], i, j);
+
+        return _shape;
+    }
 
     private ShapeData RandomShape()
     {
@@ -206,6 +252,17 @@ public class BoardManager : MonoBehaviour
 
             RefillBoard();
         }
+    }
+
+    public void DelayedShiftDown(float delay)
+    {
+        StartCoroutine(WaitForShiftDown(delay));
+    }
+
+    private IEnumerator WaitForShiftDown(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        StartShiftDown();
     }
 
     private void FindEmptyCells()
@@ -284,11 +341,11 @@ public class BoardManager : MonoBehaviour
                 instantiatedShapes.Remove(shape);
     }
 
-    public List<Shape> Array2DToList(Shape[,] arr)
+    public List<T> Array2DToList<T>(T[,] arr)
     {
-        List<Shape> arrayList = new List<Shape>();
+        List<T> arrayList = new List<T>();
 
-        foreach (Shape shape in arr)
+        foreach (T shape in arr)
             arrayList.Add(shape);
 
         return arrayList;

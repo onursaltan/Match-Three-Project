@@ -7,7 +7,7 @@ public class Box : Shape
     public override void Explode()
     {
         GameManager.Instance.CheckGoal(_shapeData.ShapeType, _shapeData.ShapeColor);
-        Destroy(gameObject, .2f);
+        Destroy(gameObject);
     }
 
     public override void Merge()

@@ -185,7 +185,7 @@ public class Cube : Shape
         }
 
         ExplodeGoalShapes();
-        BoardManager.Instance.StartShiftDown();
+        BoardManager.Instance.DelayedShiftDown(0.1f);
     }
 
     private void ExplodeGoalShapes()

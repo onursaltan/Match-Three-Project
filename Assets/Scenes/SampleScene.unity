@@ -1388,6 +1388,16 @@ MonoBehaviour:
   GreatBombEffect: {fileID: 6174443465438293769, guid: 0517f0db0f61740e1b5d52cf965b0a2f, type: 3}
   DiscoHighlight: {fileID: 6712850630878149599, guid: ac2da03ab298d49149ade779fb6def58, type: 3}
   RocketBombMerge: {fileID: 6168986806487219659, guid: 779e4344dee3a451a9ca51083055590f, type: 3}
+  allShapeDatas:
+  - {fileID: 11400000, guid: 3780296dccda2364e9aa7be9788d44e7, type: 2}
+  - {fileID: 11400000, guid: e0b6948231aa51549a805f8b98588ff7, type: 2}
+  - {fileID: 11400000, guid: 37f6905e12235514ca27d86304398407, type: 2}
+  - {fileID: 11400000, guid: 3c4bb148ce0195e4289e6c75f0ad29a1, type: 2}
+  - {fileID: 11400000, guid: 90a62e9875c6eb241bd215fb7c9bed0b, type: 2}
+  - {fileID: 11400000, guid: 828bc56eb85d3454ea2605a856b44dc4, type: 2}
+  - {fileID: 11400000, guid: 7470f50457f19344aa408a397e24fb7c, type: 2}
+  - {fileID: 11400000, guid: 39c0eb89c75072646b356316d16c403f, type: 2}
+  - {fileID: 11400000, guid: 98ad03e0648f3774aaff915c82820e30, type: 2}
   shapeDatas:
   - {fileID: 11400000, guid: 828bc56eb85d3454ea2605a856b44dc4, type: 2}
   - {fileID: 11400000, guid: 90a62e9875c6eb241bd215fb7c9bed0b, type: 2}
