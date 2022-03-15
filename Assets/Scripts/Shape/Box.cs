@@ -6,6 +6,7 @@ public class Box : Shape
 {
     public override void Explode()
     {
+        Instantiate(_shapeData.ExplodeEffect, transform.position, transform.rotation, transform.parent);
         GameManager.Instance.CheckGoal(_shapeData.ShapeType);
         Destroy(gameObject);
     }

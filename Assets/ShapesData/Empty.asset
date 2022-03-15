@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fc9244f80a95c6349b64c11804b062fe, type: 3}
-  m_Name: Box
+  m_Name: Empty
   m_EditorClassIdentifier: 
-  _shapeType: 4
+  _shapeType: 5
   _shapeColor: 3
-  _sprite: {fileID: 21300000, guid: 26e20cde26c9c468cb30701a45ace001, type: 3}
-  _explodeEffect: {fileID: 6314450734431520952, guid: f946d935bbc8f401f96cee951716316b, type: 3}
+  _sprite: {fileID: 0}
+  _explodeEffect: {fileID: 0}
   _isShiftable: 0
-  _isGoalShape: 1
+  _isGoalShape: 0

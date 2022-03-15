@@ -33,7 +33,7 @@ public class BoardManager : MonoBehaviour
     [SerializeField] private GameObject shapePrefab;
     [SerializeField] private GameObject tint;
     [SerializeField] private GameObject noMovesLeft;
-    [SerializeField] private Text moves;
+    [SerializeField] public Text moves;
 
     [SerializeField] public int rows;
     [SerializeField] public int columns;
