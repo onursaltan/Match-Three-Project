@@ -13,6 +13,7 @@ public class Level
     public int level;
     public int row;
     public int col;
+    public int moves;
     public int[] shapesArray;
     public Goal[] goalsArray;
 }
