@@ -1661,6 +1661,7 @@ MonoBehaviour:
   DiscoHighlight: {fileID: 6712850630878149599, guid: ac2da03ab298d49149ade779fb6def58, type: 3}
   RocketBombMerge: {fileID: 6168986806487219659, guid: 779e4344dee3a451a9ca51083055590f, type: 3}
   DoubleDiscoMerge: {fileID: 6168986806487219659, guid: 13e2e1f4c11d44b3999163ccb27ca693, type: 3}
+  DoubleBombMerge: {fileID: 6168986806487219659, guid: 59fe01932232b45588d024d35a65d41b, type: 3}
   allShapeDatas:
   - {fileID: 11400000, guid: f3311b907ee5b4e1da054caa86d7e4d3, type: 2}
   - {fileID: 11400000, guid: 3780296dccda2364e9aa7be9788d44e7, type: 2}

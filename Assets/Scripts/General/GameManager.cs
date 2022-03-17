@@ -126,6 +126,7 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator _LevelPassed()
     {
+        Debug.Log("level passed");
         LevelManager.isCurrentLevelPassed = true;
         Debug.Log(LevelManager.isCurrentLevelPassed);
         yield return new WaitForSeconds(1f);
