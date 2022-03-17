@@ -80,17 +80,17 @@ public class BoardManager : MonoBehaviour
             _explodedRows = new List<int>();
             _distinctColumns = new Dictionary<int, int>();
             _shapeSpriteRenderer = shapePrefab.GetComponent<SpriteRenderer>();
-            
+
             SetShapeRect();
         }
     }
 
     private void Start()
     {
-      //  CreateBoard();
+        //  CreateBoard();
         int.TryParse(moves.text, out remainingMoves);
         _gameState = GameState.Ready;
-     //   FindMerges();
+        FindMerges();
     }
 
     private void Update()
@@ -191,17 +191,17 @@ public class BoardManager : MonoBehaviour
 
         return _shape;
     }
-    
+
     private Shape CreateSpecificShape(Vector3 instantiateTransform, int i, int j, int shapeReference)
     {
         GameObject instantiatedShape = Instantiate(shapePrefab, instantiateTransform, shapePrefab.transform.rotation, transform);
         Shape _shape = null;
 
-        if(allShapeDatas[shapeReference].ShapeType == ShapeType.Cube)
+        if (allShapeDatas[shapeReference].ShapeType == ShapeType.Cube)
             _shape = instantiatedShape.AddComponent<Cube>();
         else if (allShapeDatas[shapeReference].ShapeType == ShapeType.Box)
             _shape = instantiatedShape.AddComponent<Box>();
-        else if(allShapeDatas[shapeReference].ShapeType == ShapeType.Bomb)
+        else if (allShapeDatas[shapeReference].ShapeType == ShapeType.Bomb)
             _shape = instantiatedShape.AddComponent<Bomb>();
         else if (allShapeDatas[shapeReference].ShapeType == ShapeType.Rocket)
             _shape = instantiatedShape.AddComponent<Rocket>();
@@ -312,10 +312,10 @@ public class BoardManager : MonoBehaviour
     public void FindMerges()
     {
         if (!_isMergesFound)
-            StartCoroutine(WaitFindMerges());
+            StartCoroutine(FindMergesRoutine());
     }
 
-    private IEnumerator WaitFindMerges()
+    private IEnumerator FindMergesRoutine()
     {
         List<Shape> instantiatedShapes = Array2DToList(_instantiatedShapes);
         List<Shape> adjacentShapes = new List<Shape>();
@@ -353,9 +353,8 @@ public class BoardManager : MonoBehaviour
 
     private void SetMergesSprite(List<Shape> adjacentShapes)
     {
-        if (adjacentShapes.Count >= 5)
-            foreach (Shape shape in adjacentShapes)
-                shape.SetMergeSprite(adjacentShapes.Count);
+        foreach (Shape shape in adjacentShapes)
+            shape.SetMergeSprite(adjacentShapes.Count);
     }
 
     public void ReverseShapesSprite()
