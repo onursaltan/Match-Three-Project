@@ -20,9 +20,8 @@ public class SaveLoadManager
     {
         #if UNITY_EDITOR
         string path = "Assets/Resources/Levels";
- 
-
         string levelDataJson = JsonUtility.ToJson(level);
+
         File.WriteAllText(path + "/Level" + level.level + ".json", levelDataJson);
         #endif
     }

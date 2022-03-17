@@ -29,7 +29,6 @@ public class Cube : Shape
 
     public override void Explode()
     {
-        BoardManager.Instance.ReverseShapesSprite();
         Instantiate(_shapeData.ExplodeEffect, transform.position, transform.rotation, transform.parent);
         BoardManager.Instance.GetInstantiatedShapes()[_row, _col] = null;
         GameManager.Instance.CheckGoal(_shapeData.ShapeType, _shapeData.ShapeColor);
@@ -52,16 +51,24 @@ public class Cube : Shape
 
     public override void SetMergeSprite(int count)
     {
-        string color = "";
+        if (count > 4)
+        {
+            string color = "";
 
-        if (_shapeData.ShapeColor == ShapeColor.Blue)
-            color = "blue";
-        else if (_shapeData.ShapeColor == ShapeColor.Red)
-            color = "red";
-        else if (_shapeData.ShapeColor == ShapeColor.Green)
-            color = "green";
+            if (_shapeData.ShapeColor == ShapeColor.Blue)
+                color = "blue";
+            else if (_shapeData.ShapeColor == ShapeColor.Red)
+                color = "red";
+            else if (_shapeData.ShapeColor == ShapeColor.Green)
+                color = "green";
 
-        _spriteRenderer.sprite = BoardManager.Instance.GetMergeSprite(FindCubeOperation(count), color);
+            _spriteRenderer.sprite = BoardManager.Instance.GetMergeSprite(FindCubeOperation(count), color);
+        }
+        else
+        {
+            _spriteRenderer.sprite = _shapeData.Sprite;
+
+        }
     }
 
     public override void OnPointerDown(PointerEventData eventData)
@@ -185,13 +192,16 @@ public class Cube : Shape
         }
 
         ExplodeGoalShapes();
-        BoardManager.Instance.DelayedShiftDown(0.1f);
+        BoardManager.Instance.StartShiftDown();
     }
 
     private void ExplodeGoalShapes()
     {
         foreach (Shape shape in _adjacentGoals)
+        {
+            BoardManager.Instance.RemoveFromInstantiatedShapes(shape._row, shape._col);
             shape.Explode();
+        }
     }
 
     private void TurnIntoBooster<T>() where T : Shape
@@ -213,7 +223,7 @@ public class Cube : Shape
         }
         else if (shape is Bomb)
         {
-            shape.SetShapeData(BoardManager.Instance.GetShapeData(ShapeType.Bomb, ShapeColor.None), _row, _col); 
+            shape.SetShapeData(BoardManager.Instance.GetShapeData(ShapeType.Bomb, ShapeColor.None), _row, _col);
             Instantiate(BoardManager.Instance.BombMergeEffect, transform.position, transform.rotation, transform);
         }
         else if (shape is Disco)
@@ -244,7 +254,7 @@ public class Cube : Shape
         yield return new WaitForSeconds(TimeToExpandIn + TimeToExpandOut);
         BoardManager.Instance.GetAdjacentShapes().Remove(this);
         BoardManager.Instance.SetGameState(GameState.Ready);
-     //   BoardManager.Instance.StartShiftDown();
+        //   BoardManager.Instance.StartShiftDown();
     }
 
     #region Disco Converts

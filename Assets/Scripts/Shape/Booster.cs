@@ -11,8 +11,10 @@ public enum BoosterMerge
 
 public abstract class Booster : Shape
 {
-    private const float TimeToTrailWait = 1.0f;
-    private const float TimeToTrailReach = 0.6f;
+    private const float TimeToShiftAfterBombExplosion = 0.3f;
+    private const float TimeToShiftAfterRocketExplosion = 0.3f;
+    private const float TimeToShiftAfterBombRocketExplosion = 1.5f;
+    private const float TimeToShiftAfterDoubleRocketExplosion = 0.6f;
 
     protected BoosterMerge _boosterMerge = BoosterMerge.None;
     protected List<Shape> _adjacentBoosters;
@@ -56,25 +58,20 @@ public abstract class Booster : Shape
             case BoosterMerge.BombWithRocket:
                 BoardManager.Instance.SetGameState(GameState.RocketBombExplosion);
                 HandleBombWithRocket(); 
-                StartCoroutine(WaitStartShift(1.75f));
+                StartCoroutine(WaitStartShift(TimeToShiftAfterBombRocketExplosion));
                 break;
             case BoosterMerge.DoubleRocket:
                 BoardManager.Instance.SetGameState(GameState.DoubleRocket);
                 HandleDoubleRocket();
-                StartCoroutine(WaitStartShift(0.7f));
+                StartCoroutine(WaitStartShift(TimeToShiftAfterDoubleRocketExplosion));
                 break;
             case BoosterMerge.None:
                 Explode();
 
                 if(GetType() == typeof(Rocket))
-                    StartCoroutine(WaitStartShift(0.4f));
+                    StartCoroutine(WaitStartShift(TimeToShiftAfterRocketExplosion));
                 else if(GetType() == typeof(Bomb))
-                    StartCoroutine(WaitStartShift(0.5f));
-               /* else if (this is Disco disco)
-                {
-                    int listCount = disco.GetToBeExploded().Count;
-                    StartCoroutine(WaitStartShift((listCount * 0.1f) + TimeToTrailReach + TimeToTrailWait + 0.2f));
-                }*/
+                    StartCoroutine(WaitStartShift(TimeToShiftAfterBombExplosion));
                 break;
         }
     }
@@ -83,8 +80,6 @@ public abstract class Booster : Shape
     {
         yield return new WaitForSeconds(timeToShift);
         BoardManager.Instance.SetGameState(GameState.Ready, source);
-       // Debug.Log(BoardManager.Instance.GetGameState());
-      //  BoardManager.Instance.StartShiftDown();
         Destroy(gameObject, 0.75f);
     }
 
@@ -117,7 +112,8 @@ public abstract class Booster : Shape
         {
             if (shapeMatrix[row, col] != null &&
                 !BoardManager.Instance.IsShapeCheckedBefore(adjacentShapes, shapeMatrix[row, col]) &&
-                shapeMatrix[row, col]._shapeData.ShapeType != ShapeType.Cube)
+                shapeMatrix[row, col]._shapeData.ShapeType != ShapeType.Cube &&
+                shapeMatrix[row, col]._shapeData.ShapeType != ShapeType.Box)
             {
                 adjacentShapes.Add(shapeMatrix[row, col]);
                 shapeMatrix[row, col].FindAdjacentShapes(false, adjacentShapes, null);
