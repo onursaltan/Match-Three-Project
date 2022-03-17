@@ -35,9 +35,9 @@ public class Rocket : Booster
             shape.MoveToMergePoint(_row, _col);
     }
 
-    public override void SetShapeData(ShapeData shapeData, int row, int col)
+    public override void SetShapeData(ShapeData shapeData, int row, int col, bool isForBoosterMerge = false)
     {
-        base.SetShapeData(shapeData, row, col);
+        base.SetShapeData(shapeData, row, col, isForBoosterMerge);
         _isDirectionVertical = GetRandomBool();
 
         if (!_isDirectionVertical)

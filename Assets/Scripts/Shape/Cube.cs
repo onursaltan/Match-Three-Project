@@ -47,6 +47,8 @@ public class Cube : Shape
             if (!(cube._row == _row && cube._col == _col))
                 BoardManager.Instance.RemoveFromInstantiatedShapes(cube._row, cube._col);
         }
+
+        GameManager.Instance.CheckGoal(_shapeData.ShapeType, _shapeData.ShapeColor);
     }
 
     public override void SetMergeSprite(int count)
@@ -67,7 +69,6 @@ public class Cube : Shape
         else
         {
             _spriteRenderer.sprite = _shapeData.Sprite;
-
         }
     }
 
@@ -149,6 +150,7 @@ public class Cube : Shape
     {
         CubeOperation cubeOperation = FindCubeOperation(BoardManager.Instance.GetAdjacentShapes().Count);
         _cubeOperation += BoardManager.Instance.DecreaseRemainingMoves;
+        _cubeOperation += ExplodeGoalShapes;
 
         if (cubeOperation == CubeOperation.BasicExplosion)
         {
@@ -168,6 +170,7 @@ public class Cube : Shape
         }
         else
         {
+            _cubeOperation -= ExplodeGoalShapes;
             _cubeOperation += FailOperation;
             _cubeOperation -= BoardManager.Instance.DecreaseRemainingMoves;
         }
@@ -181,6 +184,7 @@ public class Cube : Shape
         _cubeOperation -= BoardManager.Instance.DecreaseRemainingMoves;
         _cubeOperation -= TurnIntoBooster<Shape>;
         _cubeOperation -= FailOperation;
+        _cubeOperation -= ExplodeGoalShapes;
     }
 
     private void BasicExplosionOperation()
@@ -191,7 +195,6 @@ public class Cube : Shape
             shape.Explode();
         }
 
-        ExplodeGoalShapes();
         BoardManager.Instance.StartShiftDown();
     }
 
@@ -254,7 +257,6 @@ public class Cube : Shape
         yield return new WaitForSeconds(TimeToExpandIn + TimeToExpandOut);
         BoardManager.Instance.GetAdjacentShapes().Remove(this);
         BoardManager.Instance.SetGameState(GameState.Ready);
-        //   BoardManager.Instance.StartShiftDown();
     }
 
     #region Disco Converts

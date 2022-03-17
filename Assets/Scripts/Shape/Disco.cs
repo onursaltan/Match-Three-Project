@@ -28,9 +28,9 @@ public class Disco : Booster
         }
     }
 
-    public override void SetShapeData(ShapeData shapeData, int row, int col)
+    public override void SetShapeData(ShapeData shapeData, int row, int col, bool isForBoosterMerge = false)
     {
-        base.SetShapeData(shapeData, row, col);
+        base.SetShapeData(shapeData, row, col, isForBoosterMerge);
         Anticipation = _shapeData.ExplodeEffect.transform.Find("Anticipation").gameObject;
         Explosion = _shapeData.ExplodeEffect.transform.Find("Main Explosion").gameObject;
         Trail = _shapeData.ExplodeEffect.transform.Find("Trails").gameObject;
@@ -88,6 +88,7 @@ public class Disco : Booster
         List<Shape> instantiatedShapes = BoardManager.Instance.Array2DToList(BoardManager.Instance.GetInstantiatedShapes());
         List<Shape> cubes = instantiatedShapes.FindAll(shape => shape != null && shape._shapeData.ShapeType == ShapeType.Cube && shape._shapeData.ShapeColor == _shapeData.ShapeColor);
         List<Bomb> bombs = new List<Bomb>();
+        GameObject explosionAnimation = Instantiate(BoardManager.Instance.DiscoExplosionAnim, transform.position, Quaternion.identity, transform.parent);
 
         foreach (Cube cube in cubes)
         {
@@ -97,6 +98,8 @@ public class Disco : Booster
         }
 
         yield return new WaitForSeconds(cubes.Count * 0.1f + 0.2f);
+
+        Destroy(explosionAnimation);
         GameObject explosionInstance = Instantiate(Explosion, transform.position, transform.rotation, transform.parent);
 
         _spriteRenderer.enabled = false;
@@ -126,6 +129,7 @@ public class Disco : Booster
         List<Shape> instantiatedShapes = BoardManager.Instance.Array2DToList(BoardManager.Instance.GetInstantiatedShapes());
         List<Shape> cubes = instantiatedShapes.FindAll(shape => shape != null && shape._shapeData.ShapeType == ShapeType.Cube && shape._shapeData.ShapeColor == _shapeData.ShapeColor);
         List<Rocket> rockets = new List<Rocket>();
+        GameObject explosionAnimation = Instantiate(BoardManager.Instance.DiscoExplosionAnim, transform.position, Quaternion.identity, transform.parent);
 
         foreach (Cube cube in cubes)
         {
@@ -136,6 +140,7 @@ public class Disco : Booster
 
         yield return new WaitForSeconds(cubes.Count * 0.1f + 0.2f);
 
+        Destroy(explosionAnimation);
         GameObject explosionInstance = Instantiate(Explosion, transform.position, transform.rotation, transform.parent);
 
         _spriteRenderer.enabled = false;
@@ -157,7 +162,11 @@ public class Disco : Booster
     {
         _spriteRenderer.sortingOrder = 99;
         FindSameColor(this._shapeData.ShapeColor);
-        GameObject anticipationInstance = Instantiate(Anticipation, transform.position, transform.rotation, transform.parent);
+
+        _spriteRenderer.enabled = false;
+        GetComponent<BoxCollider2D>().enabled = false;
+
+        GameObject explosionAnimation = Instantiate(BoardManager.Instance.DiscoExplosionAnim, transform.position, Quaternion.identity, transform.parent);
 
         //MOVING AND DESTROYING TRAILS
         foreach (Cube shape in toBeExploded)
@@ -175,16 +184,15 @@ public class Disco : Booster
 
         yield return new WaitForSeconds(TimeToTrailReach + TimeToTrailWait);
 
+        Destroy(explosionAnimation);
+
         foreach (Cube shape in toBeExploded)
             if (shape != null)
                 shape.Explode();
 
-
-        StartCoroutine(DiscoPopEffect(anticipationInstance));
+        StartCoroutine(DiscoPopEffect());
         
         Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
-        _spriteRenderer.enabled = false;
-        GetComponent<BoxCollider2D>().enabled = false;
         instantiatedShapes[_row, _col] = null;
 
         StartCoroutine(WaitStartShift(0.1f, GameState.DiscoExplosion));
@@ -195,9 +203,8 @@ public class Disco : Booster
         return toBeExploded;
     }
 
-    private IEnumerator DiscoPopEffect(GameObject antInstance)
+    private IEnumerator DiscoPopEffect()
     {
-        Destroy(antInstance);
         GameObject explosionInstance = Instantiate(Explosion, transform.position, transform.rotation, transform.parent);
         yield return new WaitForSeconds(1f);
         Destroy(explosionInstance);

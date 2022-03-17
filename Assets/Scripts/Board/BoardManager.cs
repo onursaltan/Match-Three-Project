@@ -24,6 +24,7 @@ public class BoardManager : MonoBehaviour
     public GameObject GreatBombEffect;
     public GameObject DiscoHighlight;
     public GameObject RocketBombMerge;
+    public GameObject DiscoExplosionAnim;
     public GameObject DoubleDiscoMerge;
     public GameObject DoubleBombMerge;
     //
@@ -76,9 +77,6 @@ public class BoardManager : MonoBehaviour
         else
         {
             _instance = this;
-
-            Application.targetFrameRate = 60;
-
             _explodedRows = new List<int>();
             _distinctColumns = new Dictionary<int, int>();
             _shapeSpriteRenderer = shapePrefab.GetComponent<SpriteRenderer>();
@@ -348,8 +346,9 @@ public class BoardManager : MonoBehaviour
     {
         List<T> arrayList = new List<T>();
 
-        foreach (T shape in arr)
-            arrayList.Add(shape);
+        if (arr != null)
+            foreach (T shape in arr)
+                arrayList.Add(shape);
 
         return arrayList;
     }
