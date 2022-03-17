@@ -50,6 +50,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            Application.targetFrameRate = 60;
             _instance = this;
         }
     }
@@ -119,7 +120,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void LevelPassed()
+    public void LevelPassed()
     {
         StartCoroutine(_LevelPassed());
     }

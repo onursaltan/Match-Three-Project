@@ -1564,65 +1564,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 713865342}
   m_CullTransparentMesh: 1
---- !u!1 &744354932
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 744354934}
-  - component: {fileID: 744354933}
-  m_Layer: 0
-  m_Name: GameManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &744354933
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 744354932}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71093732f2d188d4da9f3f03c5e3080f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  goalTexts:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  goalsUI:
-  - {fileID: 1494906492}
-  - {fileID: 238665826}
-  - {fileID: 10053826}
-  canvas: {fileID: 196300961}
-  shapeSprites:
-  - {fileID: -707637169389995234, guid: 5c262d6d56bec4700b3baa816e3f2e1c, type: 3}
-  - {fileID: 96401293040692870, guid: 5c262d6d56bec4700b3baa816e3f2e1c, type: 3}
-  - {fileID: 150123638449407257, guid: 5c262d6d56bec4700b3baa816e3f2e1c, type: 3}
-  - {fileID: 21300000, guid: 26e20cde26c9c468cb30701a45ace001, type: 3}
-  levelPassed: {fileID: 5868776037478136162, guid: e5a334a2d7562422a8e5569e46b964cd, type: 3}
-  tint: {fileID: 194408095}
---- !u!4 &744354934
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 744354932}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.68203914, y: -1.5063068, z: -0.6087347}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 7
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &785137479
 GameObject:
   m_ObjectHideFlags: 0
@@ -1660,6 +1601,7 @@ MonoBehaviour:
   GreatBombEffect: {fileID: 6174443465438293769, guid: 0517f0db0f61740e1b5d52cf965b0a2f, type: 3}
   DiscoHighlight: {fileID: 6712850630878149599, guid: ac2da03ab298d49149ade779fb6def58, type: 3}
   RocketBombMerge: {fileID: 6168986806487219659, guid: 779e4344dee3a451a9ca51083055590f, type: 3}
+  DiscoExplosionAnim: {fileID: 1245206841645783752, guid: 56056e66b24c77d40b2529aacaa73a0e, type: 3}
   DoubleDiscoMerge: {fileID: 6168986806487219659, guid: 13e2e1f4c11d44b3999163ccb27ca693, type: 3}
   allShapeDatas:
   - {fileID: 11400000, guid: f3311b907ee5b4e1da054caa86d7e4d3, type: 2}
@@ -2169,6 +2111,65 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1437069126
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1437069128}
+  - component: {fileID: 1437069127}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1437069127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1437069126}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71093732f2d188d4da9f3f03c5e3080f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  goalTexts:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  goalsUI:
+  - {fileID: 1494906492}
+  - {fileID: 238665826}
+  - {fileID: 10053826}
+  canvas: {fileID: 196300961}
+  shapeSprites:
+  - {fileID: -707637169389995234, guid: 5c262d6d56bec4700b3baa816e3f2e1c, type: 3}
+  - {fileID: 96401293040692870, guid: 5c262d6d56bec4700b3baa816e3f2e1c, type: 3}
+  - {fileID: 150123638449407257, guid: 5c262d6d56bec4700b3baa816e3f2e1c, type: 3}
+  - {fileID: 21300000, guid: 26e20cde26c9c468cb30701a45ace001, type: 3}
+  levelPassed: {fileID: 5868776037478136162, guid: e5a334a2d7562422a8e5569e46b964cd, type: 3}
+  tint: {fileID: 194408095}
+--- !u!4 &1437069128
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1437069126}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.68203914, y: -1.5063068, z: -0.6087347}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1494906492
 GameObject:

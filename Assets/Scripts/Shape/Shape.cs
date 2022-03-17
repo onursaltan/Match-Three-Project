@@ -49,12 +49,15 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
         BoardManager.Instance.SetIsMergesFound(false);
     }
 
-    public virtual void SetShapeData(ShapeData shapeData, int row, int col)
+    public virtual void SetShapeData(ShapeData shapeData, int row, int col, bool isForBoosterMerge = false)
     {
         this._row = row;
         this._col = col;
         _shapeData = shapeData;
-        _spriteRenderer.sprite = _shapeData.Sprite;
+
+        if(!isForBoosterMerge)
+            _spriteRenderer.sprite = _shapeData.Sprite;
+
         _spriteRenderer.sortingOrder = row + 2;
     }
 
@@ -87,19 +90,20 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
 
         if (temp < constraint && temp >= 0)
         {
-            if (shapeMatrix[row, col] != null && !BoardManager.Instance.IsShapeCheckedBefore(adjacentShapes, shapeMatrix[row, col]) &&
-                shapeMatrix[row, col]._shapeData.ShapeType == _shapeData.ShapeType &&
-                shapeMatrix[row, col]._shapeData.ShapeColor == _shapeData.ShapeColor)
+            if (shapeMatrix[row, col] != null &&
+                !BoardManager.Instance.IsShapeCheckedBefore(adjacentShapes, shapeMatrix[row, col]))
             {
-                adjacentShapes.Add(shapeMatrix[row, col]);
-                shapeMatrix[row, col].FindAdjacentShapes(false, adjacentShapes, adjacentGoals);
-            }
-            else if (shapeMatrix[row, col] != null &&
-                    adjacentGoals != null &&
-                    !BoardManager.Instance.IsShapeCheckedBefore(adjacentGoals, shapeMatrix[row, col]) &&
-                    shapeMatrix[row, col]._shapeData.IsGoalShape)
-            {
-                adjacentGoals.Add(shapeMatrix[row, col]);
+                if (shapeMatrix[row, col]._shapeData.IsGoalShape &&
+                    adjacentGoals != null)
+                {
+                    adjacentGoals.Add(shapeMatrix[row, col]);
+                }
+                else if (shapeMatrix[row, col]._shapeData.ShapeType == _shapeData.ShapeType &&
+                         shapeMatrix[row, col]._shapeData.ShapeColor == _shapeData.ShapeColor)
+                {
+                    adjacentShapes.Add(shapeMatrix[row, col]);
+                    shapeMatrix[row, col].FindAdjacentShapes(false, adjacentShapes, adjacentGoals);
+                }
             }
         }
     }
@@ -129,8 +133,10 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
                 transform.DOMove(new Vector3(posX, posY), TimeToExpandIn).OnComplete(() =>
                 {
                     if (!(row == _row && col == _col))  // Bura de?i?cek
+                    {
+                        GameManager.Instance.CheckGoal(_shapeData.ShapeType, _shapeData.ShapeColor);
                         BoardManager.Instance.DestroyShape(this);
-
+                    }
                     _shapeState = ShapeState.Waiting;
                 });
             });

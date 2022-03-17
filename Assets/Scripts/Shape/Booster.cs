@@ -161,7 +161,7 @@ public abstract class Booster : Shape
         {
             disco = gameObject.AddComponent<Disco>();
             disco.SetAdjacentBoosters(_adjacentBoosters);
-            disco.SetShapeData(BoardManager.Instance.GetShapeData(ShapeType.Disco, ShapeColor.Blue), _row, _col);
+            disco.SetShapeData(BoardManager.Instance.GetShapeData(ShapeType.Disco, ShapeColor.Blue), _row, _col, true);
         }
         else
             disco = (Disco)this;
@@ -178,11 +178,12 @@ public abstract class Booster : Shape
         {
             disco = gameObject.AddComponent<Disco>();
             disco.SetAdjacentBoosters(_adjacentBoosters);
-            disco.SetShapeData(BoardManager.Instance.GetShapeData(ShapeType.Disco, ShapeColor.Blue), _row, _col);
+            disco.SetShapeData(BoardManager.Instance.GetShapeData(ShapeType.Disco, ShapeColor.Blue), _row, _col, true);
         }
         else
             disco = (Disco)this;
 
+        disco._spriteRenderer.enabled = false;
         disco.Merge();
         disco._shapeState = ShapeState.Explode;
         StartCoroutine(disco.WaitForLightBallWithBomb());
@@ -196,13 +197,14 @@ public abstract class Booster : Shape
         {
             disco = gameObject.AddComponent<Disco>();
             disco.SetAdjacentBoosters(_adjacentBoosters);
-            disco.SetShapeData(BoardManager.Instance.GetShapeData(ShapeType.Disco, ShapeColor.Blue), _row, _col);
+            disco.SetShapeData(BoardManager.Instance.GetShapeData(ShapeType.Disco, ShapeColor.Blue), _row, _col, true);
         }
         else
         {
             disco = (Disco)this;
         }
 
+        disco._spriteRenderer.enabled = false;
         disco.Merge();
         disco._shapeState = ShapeState.Explode;
         StartCoroutine(disco.WaitForLightBallWithRocket());
@@ -215,7 +217,7 @@ public abstract class Booster : Shape
         {
             bomb = gameObject.AddComponent<Bomb>();
             bomb.SetAdjacentBoosters(_adjacentBoosters);
-            bomb.SetShapeData(BoardManager.Instance.GetShapeData(ShapeType.Bomb, ShapeColor.None), _row, _col);
+            bomb.SetShapeData(BoardManager.Instance.GetShapeData(ShapeType.Bomb, ShapeColor.None), _row, _col, true);
         }
         else
             bomb = (Bomb)this;
@@ -231,7 +233,7 @@ public abstract class Booster : Shape
         {
             rocket = gameObject.AddComponent<Rocket>();
             rocket.SetAdjacentBoosters(_adjacentBoosters);
-            rocket.SetShapeData(BoardManager.Instance.GetShapeData(ShapeType.Rocket, ShapeColor.None), _row, _col);
+            rocket.SetShapeData(BoardManager.Instance.GetShapeData(ShapeType.Rocket, ShapeColor.None), _row, _col, true);
         }
         else
             rocket = (Rocket)this;
