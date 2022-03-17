@@ -17,7 +17,7 @@ public class MainMenuController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        int totalLevelCount = 3;// Directory.GetFiles("/Users/onurs/Desktop/MatchTree-Project/Assets/Resources/Levels","*json").Length;
+        int totalLevelCount = Directory.GetFiles("/Users/onurs/Desktop/MatchTree-Project/Assets/Resources/Levels","*json").Length;
         LevelManager.totalLevels = totalLevelCount;
 
         for (int i = 0; i < LevelManager.totalLevels; i++)

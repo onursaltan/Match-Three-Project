@@ -41,7 +41,7 @@ public class BoardManager : MonoBehaviour
     [SerializeField] public int rows;
     [SerializeField] public int columns;
 
-    [SerializeField] private int remainingMoves;
+    [SerializeField] public int remainingMoves;
 
     [SerializeField] private float paddingHorizontal;
     [SerializeField] private float paddingBottom;
@@ -88,7 +88,7 @@ public class BoardManager : MonoBehaviour
     private void Start()
     {
         //  CreateBoard();
-        int.TryParse(moves.text, out remainingMoves);
+        //int.TryParse(moves.text, out remainingMoves);
         _gameState = GameState.Ready;
         FindMerges();
     }
@@ -238,6 +238,22 @@ public class BoardManager : MonoBehaviour
     {
         yield return new WaitUntil(() => _gameState == GameState.Ready);
         StartShiftDown();
+    }
+
+    public IEnumerator PopUpTrigger()
+    {
+        yield return new WaitUntil(() => _gameState == GameState.Ready);
+        CheckForPassed();
+    }
+
+    public void CheckForPassed()
+    {
+            if (!LevelManager.isCurrentLevelPassed)
+            {
+                Debug.Log("bitti");
+                noMovesLeft.SetActive(true);
+                tint.SetActive(true);
+            }
     }
 
     public void StartShiftDown()
@@ -403,11 +419,12 @@ public class BoardManager : MonoBehaviour
         {
             remainingMoves--;
             moves.text = remainingMoves.ToString();
+            Debug.Log(remainingMoves);
         }
 
         if (remainingMoves == 0)
         {
-            StartCoroutine(RestartButtonWithDelay(1.2f));
+            StartCoroutine(PopUpTrigger());
         }
     }
 
@@ -511,7 +528,7 @@ public class BoardManager : MonoBehaviour
             Destroy(shape);
     }
 
-    IEnumerator RestartButtonWithDelay(float time)
+    /*IEnumerator RestartButtonWithDelay(float time)
     {
         yield return new WaitForSeconds(time);
         Debug.Log("kontrol edildi");
@@ -521,7 +538,7 @@ public class BoardManager : MonoBehaviour
             tint.SetActive(true);
         }
         else yield break;
-    }
+    }*/
 
     public bool isMovesLeft()
     {
