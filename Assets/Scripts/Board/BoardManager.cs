@@ -26,6 +26,7 @@ public class BoardManager : MonoBehaviour
     public GameObject RocketBombMerge;
     public GameObject DiscoExplosionAnim;
     public GameObject DoubleDiscoMerge;
+    public GameObject DoubleBombMerge;
     //
     [SerializeField] private ShapeData[] allShapeDatas;
 
@@ -513,6 +514,7 @@ public class BoardManager : MonoBehaviour
     IEnumerator RestartButtonWithDelay(float time)
     {
         yield return new WaitForSeconds(time);
+        Debug.Log("kontrol edildi");
         if (!LevelManager.isCurrentLevelPassed)
         {
             noMovesLeft.SetActive(true);

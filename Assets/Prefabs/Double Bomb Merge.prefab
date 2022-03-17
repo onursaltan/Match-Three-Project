@@ -5034,7 +5034,7 @@ GameObject:
   - component: {fileID: 6168986806487219657}
   - component: {fileID: 6168986806487219658}
   m_Layer: 0
-  m_Name: Bomb Rocket Merge 1
+  m_Name: Double Bomb Merge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5048,7 +5048,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6168986806487219659}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.4237641, y: -1.3717712, z: -10.573791}
+  m_LocalPosition: {x: 0, y: 0, z: -10.573791}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6168986806900344503}
@@ -5067,7 +5067,7 @@ Animator:
   m_GameObject: {fileID: 6168986806487219659}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 0e85a43b705c3407ea108f22ba35b088, type: 2}
+  m_Controller: {fileID: 9100000, guid: 3dfe017f9482140018dd45e811c09af3, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -5101,7 +5101,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6168986806900344488}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.06, z: 10.573791}
+  m_LocalPosition: {x: 0, y: 0.085, z: 10.573791}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6168986806487219657}

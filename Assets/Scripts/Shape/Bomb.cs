@@ -59,11 +59,15 @@ public class Bomb : Booster
     public IEnumerator WaitForExplode5x5()
     {
         yield return new WaitForSeconds(TimeToExpandIn + TimeToExpandOut);
-        Explode5x5();
+        StartCoroutine(Explode5x5());
     }
 
-    private void Explode5x5()
+    private IEnumerator Explode5x5()
     {
+        GameObject DoubleDiscoEffect = Instantiate(BoardManager.Instance.DoubleBombMerge, transform.position, Quaternion.identity, transform);
+        yield return new WaitForSeconds(1f);
+        Destroy(DoubleDiscoEffect);
+
         Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
 
         for (int i = -2; i < 3; i++)

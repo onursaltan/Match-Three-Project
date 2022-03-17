@@ -53,7 +53,7 @@ public abstract class Booster : Shape
             case BoosterMerge.BigBomb:
                 BoardManager.Instance.SetGameState(GameState.BigBombExplosion);
                 HandleBigBomb();
-                StartCoroutine(WaitStartShift(0.6f));
+                StartCoroutine(WaitStartShift(2f));
                 break;
             case BoosterMerge.BombWithRocket:
                 BoardManager.Instance.SetGameState(GameState.RocketBombExplosion);
@@ -222,6 +222,7 @@ public abstract class Booster : Shape
         else
             bomb = (Bomb)this;
 
+        bomb._spriteRenderer.enabled = false;
         bomb.Merge();
         StartCoroutine(bomb.WaitForExplode5x5());
     }
