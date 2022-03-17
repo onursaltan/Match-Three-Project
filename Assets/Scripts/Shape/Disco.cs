@@ -47,11 +47,14 @@ public class Disco : Booster
     public IEnumerator WaitForBigLightBall()
     {
         yield return new WaitForSeconds(TimeToExpandIn + TimeToExpandOut);
-        BigLightBall();
+        StartCoroutine(BigLightBall());
     }
 
-    private void BigLightBall()
+    private IEnumerator BigLightBall()
     {
+        GameObject DoubleDiscoEffect = Instantiate(BoardManager.Instance.DoubleDiscoMerge, transform.position, Quaternion.identity, transform);
+        yield return new WaitForSeconds(0.5f);
+        Destroy(DoubleDiscoEffect);
         Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
 
         foreach (Shape shape in instantiatedShapes)

@@ -89,16 +89,16 @@ public class GameManager : MonoBehaviour
             //To Write
             int[] shapesArray = {       1, 1, 3, 1, 3, 2,
                                         4, 4, 1, 2, 4, 4,
-                                        1, 4, 1, 1, 4, 1,
+                                        1, 4, 2, 1, 4, 1,
                                         2, 4, 1, 1, 4, 1,
                                         4, 4, 3, 2, 4, 4,
                                         2, 1, 1, 5, 3, 2,};
 
                   Goal[] goalsArray = new Goal[3];
 
-                  Goal denemeGoal = new Goal(ShapeType.Cube, ShapeColor.Red, 5); 
+                  Goal denemeGoal = new Goal(ShapeType.Cube, ShapeColor.Green, 5); 
                   Goal denemeGoal2 = new Goal(ShapeType.Cube, ShapeColor.Blue, 5);
-                  Goal denemeGoal3 = new Goal(ShapeType.Box, ShapeColor.None, 12);
+                  Goal denemeGoal3 = new Goal(ShapeType.Box, ShapeColor.None, 10);
 
                   goalsArray[0] = denemeGoal;
                   goalsArray[1] = denemeGoal2;
@@ -106,10 +106,10 @@ public class GameManager : MonoBehaviour
 
                   Level level = new Level
                   {
-                      level = 3,
+                      level = 4,
                       row = 6,
                       col = 6,
-                      moves = 20,
+                      moves = 15,
                       shapesArray = shapesArray,
                       goalsArray = goalsArray
                   };
@@ -126,6 +126,8 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator _LevelPassed()
     {
+        LevelManager.isCurrentLevelPassed = true;
+        Debug.Log(LevelManager.isCurrentLevelPassed);
         yield return new WaitForSeconds(1f);
         tint.SetActive(true);
         Instantiate(levelPassed, canvas.transform);
@@ -148,6 +150,7 @@ public class GameManager : MonoBehaviour
 
     public void OpenLevel(int levelNum)
     {
+        LevelManager.isCurrentLevelPassed = false;
         GameObject successPopup = GameObject.FindGameObjectWithTag("successPopup");
         GameObject newTint = GameObject.FindGameObjectWithTag("tint");
         if (successPopup != null)
