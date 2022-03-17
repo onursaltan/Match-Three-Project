@@ -24,6 +24,7 @@ public class BoardManager : MonoBehaviour
     public GameObject GreatBombEffect;
     public GameObject DiscoHighlight;
     public GameObject RocketBombMerge;
+    public GameObject DoubleDiscoMerge;
     //
     [SerializeField] private ShapeData[] allShapeDatas;
 
@@ -195,6 +196,7 @@ public class BoardManager : MonoBehaviour
     private Shape CreateSpecificShape(Vector3 instantiateTransform, int i, int j, int shapeReference)
     {
         GameObject instantiatedShape = Instantiate(shapePrefab, instantiateTransform, shapePrefab.transform.rotation, transform);
+        instantiatedShape.transform.localPosition = instantiateTransform;
         Shape _shape = null;
 
         if (allShapeDatas[shapeReference].ShapeType == ShapeType.Cube)
@@ -512,8 +514,12 @@ public class BoardManager : MonoBehaviour
     IEnumerator RestartButtonWithDelay(float time)
     {
         yield return new WaitForSeconds(time);
-        noMovesLeft.SetActive(true);
-        tint.SetActive(true);
+        if (!LevelManager.isCurrentLevelPassed)
+        {
+            noMovesLeft.SetActive(true);
+            tint.SetActive(true);
+        }
+        else yield break;
     }
 
     public bool isMovesLeft()
