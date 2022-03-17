@@ -31,7 +31,7 @@ public class Cube : Shape
     {
         Instantiate(_shapeData.ExplodeEffect, transform.position, transform.rotation, transform.parent);
         BoardManager.Instance.GetInstantiatedShapes()[_row, _col] = null;
-        GameManager.Instance.CheckGoal(_shapeData.ShapeType, _shapeData.ShapeColor);
+        GameManager.Instance.CheckGoal(_shapeData.ShapeType, _shapeData.ShapeColor);   
         Destroy(gameObject);
     }
 

@@ -1601,7 +1601,9 @@ MonoBehaviour:
   GreatBombEffect: {fileID: 6174443465438293769, guid: 0517f0db0f61740e1b5d52cf965b0a2f, type: 3}
   DiscoHighlight: {fileID: 6712850630878149599, guid: ac2da03ab298d49149ade779fb6def58, type: 3}
   RocketBombMerge: {fileID: 6168986806487219659, guid: 779e4344dee3a451a9ca51083055590f, type: 3}
-  DiscoExplosionAnim: {fileID: 1245206841645783752, guid: 56056e66b24c77d40b2529aacaa73a0e, type: 3}
+  DiscoExplosionBlueAnim: {fileID: 1245206841645783752, guid: 30448e034035f16468b0dbb29857d7df, type: 3}
+  DiscoExplosionRedAnim: {fileID: 1245206841645783752, guid: f6efdb71c91c3e64dbc658119afff6f4, type: 3}
+  DiscoExplosionGreenAnim: {fileID: 1245206841645783752, guid: f46b7c924a78ca54a928bbef9427cf47, type: 3}
   DoubleDiscoMerge: {fileID: 6168986806487219659, guid: 13e2e1f4c11d44b3999163ccb27ca693, type: 3}
   DoubleBombMerge: {fileID: 6168986806487219659, guid: 59fe01932232b45588d024d35a65d41b, type: 3}
   allShapeDatas:

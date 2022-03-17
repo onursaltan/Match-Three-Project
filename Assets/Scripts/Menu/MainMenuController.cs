@@ -7,7 +7,6 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuController : MonoBehaviour
 {
-
     public GameObject levelButtons;
 
     public Button levelButton;

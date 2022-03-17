@@ -24,7 +24,9 @@ public class BoardManager : MonoBehaviour
     public GameObject GreatBombEffect;
     public GameObject DiscoHighlight;
     public GameObject RocketBombMerge;
-    public GameObject DiscoExplosionAnim;
+    public GameObject DiscoExplosionBlueAnim;
+    public GameObject DiscoExplosionRedAnim;
+    public GameObject DiscoExplosionGreenAnim;
     public GameObject DoubleDiscoMerge;
     public GameObject DoubleBombMerge;
     //
@@ -233,6 +235,15 @@ public class BoardManager : MonoBehaviour
     {
         _adjacentShapes = adjacentShapes;
     }
+
+    /*public void StartShiftDownColumn(int row, int col)
+    {
+        /*for (int i = row; i >= 0; i--)
+            if (_instantiatedShapes[i, col] == null)
+                IncreaseDistinctColumns(col);
+        
+        StartShiftDown();
+    }*/
 
     public IEnumerator StartShiftDownTrigger()
     {
