@@ -166,7 +166,6 @@ public class GameManager : MonoBehaviour
         myLevel = slm.LoadLevelData(levelNum.ToString());
         BoardManager.Instance.CreateBoard(myLevel.shapesArray);
 
-
         BoardManager.Instance.moves.text = myLevel.moves.ToString();
 
         _goals = myLevel.goalsArray.ToList();
