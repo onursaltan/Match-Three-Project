@@ -195,6 +195,7 @@ public class BoardManager : MonoBehaviour
     private Shape CreateSpecificShape(Vector3 instantiateTransform, int i, int j, int shapeReference)
     {
         GameObject instantiatedShape = Instantiate(shapePrefab, instantiateTransform, shapePrefab.transform.rotation, transform);
+        instantiatedShape.transform.localPosition = instantiateTransform;
         Shape _shape = null;
 
         if (allShapeDatas[shapeReference].ShapeType == ShapeType.Cube)

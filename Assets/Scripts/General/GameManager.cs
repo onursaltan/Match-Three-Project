@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Linq;
 
@@ -15,6 +16,8 @@ public class GameManager : MonoBehaviour
 
     public GameObject canvas;
 
+    private int currentLevel = 1;
+
     public Sprite[] shapeSprites;
 
     private List<Goal> _goals;
@@ -23,6 +26,8 @@ public class GameManager : MonoBehaviour
 
     public GameObject levelPassed;
     public GameObject tint;
+    SaveLoadManager slm = new SaveLoadManager();
+    Level myLevel;
 
     public static GameManager Instance
     {
@@ -49,20 +54,127 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void Start()
+    public void Start()
     {
-        SaveLoadManager slm = new SaveLoadManager();
+        OpenLevel(LevelManager.levelNumber);
+    }
 
-        Level myLevel = slm.LoadLevelData("1");
+    public void CheckGoal(ShapeType shapeType, ShapeColor shapeColor = ShapeColor.None)
+    {
+        for (int i = 0; i < _goals.Count; i++)
+        {
+            if (_goals[i].count > 0 && _goals[i].shapeType == shapeType && _goals[i].shapeColor == shapeColor)
+            {
+                _goals[i].count--;
+                goalsUI[i].transform.GetChild(1).GetComponent<Text>().text = _goals[i].count.ToString();
+                if (_goals[i].count == 0)
+                {
+                    remainingGoals--;
+                    CompleteGoal(goalsUI[i]);
+                }
+                if (remainingGoals == 0)
+                {
+                    LevelPassed();
+                }
+            }
+        }        
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            SaveLoadManager slm = new SaveLoadManager();
+
+            //To Write
+            int[] shapesArray = {       1, 1, 3, 1, 3, 2,
+                                        4, 4, 1, 2, 4, 4,
+                                        1, 4, 1, 1, 4, 1,
+                                        2, 4, 1, 1, 4, 1,
+                                        4, 4, 3, 2, 4, 4,
+                                        2, 1, 1, 5, 3, 2,};
+
+                  Goal[] goalsArray = new Goal[3];
+
+                  Goal denemeGoal = new Goal(ShapeType.Cube, ShapeColor.Red, 5); 
+                  Goal denemeGoal2 = new Goal(ShapeType.Cube, ShapeColor.Blue, 5);
+                  Goal denemeGoal3 = new Goal(ShapeType.Box, ShapeColor.None, 12);
+
+                  goalsArray[0] = denemeGoal;
+                  goalsArray[1] = denemeGoal2;
+                  goalsArray[2] = denemeGoal3;
+
+                  Level level = new Level
+                  {
+                      level = 3,
+                      row = 6,
+                      col = 6,
+                      moves = 20,
+                      shapesArray = shapesArray,
+                      goalsArray = goalsArray
+                  };
+
+            slm.WriteLevelData(level);
+            Debug.Log("Level " + level.level + " saved!");
+        }
+    }
+
+    private void LevelPassed()
+    {
+        StartCoroutine(_LevelPassed());
+    }
+
+    private IEnumerator _LevelPassed()
+    {
+        yield return new WaitForSeconds(1f);
+        tint.SetActive(true);
+        Instantiate(levelPassed, canvas.transform);
+        if (LevelManager.levelNumber < LevelManager.totalLevels)
+        {
+            LevelManager.levelNumber++;
+        }
+    }
+
+    private void CompleteGoal(GameObject goal)
+    {
+        goal.transform.GetChild(2).gameObject.SetActive(true);
+        goal.transform.GetChild(1).gameObject.SetActive(false);
+    }
+
+    public void RestartLevel()
+    {
+        SceneManager.LoadScene(1);
+    }
+
+    public void OpenLevel(int levelNum)
+    {
+        GameObject successPopup = GameObject.FindGameObjectWithTag("successPopup");
+        GameObject newTint = GameObject.FindGameObjectWithTag("tint");
+        if (successPopup != null)
+        {
+            Destroy(successPopup);
+        }
+        if (newTint != null)
+        {
+            newTint.SetActive(false);
+        }
+
+        myLevel = slm.LoadLevelData(levelNum.ToString());
         BoardManager.Instance.CreateBoard(myLevel.shapesArray);
+
 
         BoardManager.Instance.moves.text = myLevel.moves.ToString();
 
         _goals = myLevel.goalsArray.ToList();
         remainingGoals = _goals.Count;
 
+        Debug.Log(remainingGoals);
+
         for (int i = 0; i < _goals.Count; i++)
         {
+            goalsUI[i].transform.GetChild(1).gameObject.SetActive(true);
+            goalsUI[i].transform.GetChild(2).gameObject.SetActive(false);
+
             goalsUI[i].transform.GetChild(1).GetComponent<Text>().text = _goals[i].count.ToString();
 
             if (_goals[i].shapeType == ShapeType.Cube)
@@ -92,83 +204,6 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void CheckGoal(ShapeType shapeType, ShapeColor shapeColor = ShapeColor.None)
-    {
-        for (int i = 0; i < _goals.Count; i++)
-        {
-            if (_goals[i].count > 0 && _goals[i].shapeType == shapeType && _goals[i].shapeColor == shapeColor)
-            {
-                _goals[i].count--;
-                goalsUI[i].transform.GetChild(1).GetComponent<Text>().text = _goals[i].count.ToString();
-                if (_goals[i].count == 0)
-                {
-                    remainingGoals--;
-                    CompleteGoal(goalsUI[i]);
-                }
-                if (remainingGoals == 0)
-                {
-                    LevelPassed();
-                }
-            }
-        }
 
-        
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            SaveLoadManager slm = new SaveLoadManager();
-
-            //To Write
-            int[] shapesArray = {       1, 4, 3, 1, 4, 2,
-                                        2, 4, 1, 2, 4, 2,
-                                        1, 4, 1, 1, 4, 1,
-                                        2, 4, 1, 1, 4, 1,
-                                        1, 4, 3, 2, 4, 2,
-                                        2, 4, 1, 5, 4, 2,};
-
-                  Goal[] goalsArray = new Goal[3];
-
-                  Goal denemeGoal = new Goal(ShapeType.Cube, ShapeColor.Red, 10); 
-                  Goal denemeGoal2 = new Goal(ShapeType.Cube, ShapeColor.Blue, 20);
-                  Goal denemeGoal3 = new Goal(ShapeType.Box, ShapeColor.None, 5);
-
-                  goalsArray[0] = denemeGoal;
-                  goalsArray[1] = denemeGoal2;
-                  goalsArray[2] = denemeGoal3;
-
-                  Level level = new Level
-                  {
-                      level = 2,
-                      row = 6,
-                      col = 6,
-                      moves = 15,
-                      shapesArray = shapesArray,
-                      goalsArray = goalsArray
-                  };
-
-            slm.WriteLevelData(level);
-        }
-    }
-
-    private void LevelPassed()
-    {
-        StartCoroutine(_LevelPassed());
-    }
-
-    private IEnumerator _LevelPassed()
-    {
-        yield return new WaitForSeconds(1f);
-        tint.SetActive(true);
-        Instantiate(levelPassed, canvas.transform);
-    }
-
-    private void CompleteGoal(GameObject goal)
-    {
-        goal.transform.GetChild(2).gameObject.SetActive(true);
-        goal.transform.GetChild(1).gameObject.SetActive(false);
-    }
 
 }
