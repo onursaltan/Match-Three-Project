@@ -103,7 +103,7 @@ public class Disco : Booster
         GameObject explosionInstance = Instantiate(Explosion, transform.position, transform.rotation, transform.parent);
 
         _spriteRenderer.enabled = false;
-        GetComponent<BoxCollider2D>().enabled = false;
+        _boxCollider2D.enabled = false;
 
         Shape[,] instantiatedShapess = BoardManager.Instance.GetInstantiatedShapes();
         instantiatedShapess[_row, _col] = null;
@@ -144,7 +144,7 @@ public class Disco : Booster
         GameObject explosionInstance = Instantiate(Explosion, transform.position, transform.rotation, transform.parent);
 
         _spriteRenderer.enabled = false;
-        GetComponent<BoxCollider2D>().enabled = false;
+        _boxCollider2D.enabled = false;
 
         Shape[,] instantiatedShapess = BoardManager.Instance.GetInstantiatedShapes();
         instantiatedShapess[_row, _col] = null;
@@ -164,7 +164,7 @@ public class Disco : Booster
         FindSameColor(this._shapeData.ShapeColor);
 
         _spriteRenderer.enabled = false;
-        GetComponent<BoxCollider2D>().enabled = false;
+        _boxCollider2D.enabled = false;
 
         GameObject explosionAnimation = InstantiateProperExplosionAnim();
 
@@ -218,23 +218,6 @@ public class Disco : Booster
         GameObject explosionInstance = Instantiate(Explosion, transform.position, transform.rotation, transform.parent);
         yield return new WaitForSeconds(1f);
         Destroy(explosionInstance);
-    }
-
-    private IEnumerator MakeMoveTrails(List<Shape> trailTargets)
-    {
-        foreach (Cube shape in trailTargets)
-        {
-            yield return new WaitForSeconds(0.1f);
-
-            if (shape != null)
-            {
-                GameObject trailInstance = Instantiate(Trail, transform.position, transform.rotation, transform.parent);
-                trailsInstantiated.Add(trailInstance);
-                trailInstance.transform.DOMove(shape.transform.position, TimeToTrailReach);
-                shape.ConvertCubeToRocket(TimeToTrailReach, null);
-                DestroyGameobjectAfterSeconds(trailInstance, TimeToTrailReach + TimeToTrailWait);
-            }
-        }
     }
 
     private void MoveTrailToTarget(Cube shape)

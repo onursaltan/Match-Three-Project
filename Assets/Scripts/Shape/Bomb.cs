@@ -5,23 +5,21 @@ using UnityEngine.EventSystems;
 
 public class Bomb : Booster
 {
-
     public override void Explode()
     {
         if (_shapeState != ShapeState.Explode)
         {
-            Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
+            BoardManager.Instance.GetInstantiatedShapes()[_row, _col] = null;
             BoardManager.Instance.SetGameState(GameState.BombExplosion);
 
             _shapeState = ShapeState.Explode;
             _spriteRenderer.enabled = false;
-            GetComponent<BoxCollider2D>().enabled = false;
+            _boxCollider2D.enabled = false;
 
             Explode3x3();
 
             Instantiate(_shapeData.ExplodeEffect, transform.position, transform.rotation, transform.parent);
             CameraShake.Shake(0.5f, 5f);
-            instantiatedShapes[_row, _col] = null;
         }
     }
 
@@ -85,8 +83,8 @@ public class Bomb : Booster
         }
 
         _shapeState = ShapeState.Explode;
-        _spriteRenderer.enabled = false;
-        GetComponent<BoxCollider2D>().enabled = false;
+        _spriteRenderer.enabled = false; 
+        _boxCollider2D.enabled = false;
 
         Instantiate(BoardManager.Instance.BigBombEffect, transform.position, transform.rotation, transform.parent);
 

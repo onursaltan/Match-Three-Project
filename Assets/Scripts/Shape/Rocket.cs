@@ -18,7 +18,7 @@ public class Rocket : Booster
             BoardManager.Instance.SetGameState(GameState.RocketExplosion);
 
             _spriteRenderer.enabled = false;
-            GetComponent<BoxCollider2D>().enabled = false;
+            _boxCollider2D.enabled = false;
 
             if (_isDirectionVertical)
                 ExplodeAllColumn(_col, transform.position);
@@ -100,11 +100,10 @@ public class Rocket : Booster
 
     private void ExplodeDoubleRocket()
     {
-        Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
+        BoardManager.Instance.GetInstantiatedShapes()[_row, _col] = null;
 
         _spriteRenderer.enabled = false;
-        GetComponent<BoxCollider2D>().enabled = false;
-        instantiatedShapes[_row, _col] = null;
+        _boxCollider2D.enabled = false;
 
         ExplodeAllColumn(_col, transform.position);
         ExplodeAllRow(_row, transform.position); 
@@ -121,7 +120,7 @@ public class Rocket : Booster
         Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
         
         _spriteRenderer.enabled = false;
-        GetComponent<BoxCollider2D>().enabled = false;
+        _boxCollider2D.enabled = false;
 
         GameObject RocketBombEffect = Instantiate(BoardManager.Instance.RocketBombMerge, transform.position, Quaternion.identity, transform);
         yield return new WaitForSeconds(1f);
@@ -166,8 +165,8 @@ public class Rocket : Booster
         GameObject s = Instantiate(_shapeData.ExplodeEffect, position, transform.rotation, transform.parent);
         GameObject s1 = Instantiate(_shapeData.ExplodeEffect, position, transform.rotation, transform.parent);
 
-        GameObject halfRocket1 = s.gameObject.transform.Find("Half Rocket").gameObject;
-        GameObject halfRocket2 = s1.gameObject.transform.Find("Half Rocket").gameObject;
+        GameObject halfRocket1 = s.transform.Find("Half Rocket").gameObject;
+        GameObject halfRocket2 = s1.transform.Find("Half Rocket").gameObject;
 
         if (isDirectionVertical)
         {

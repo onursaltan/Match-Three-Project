@@ -236,15 +236,6 @@ public class BoardManager : MonoBehaviour
         _adjacentShapes = adjacentShapes;
     }
 
-    /*public void StartShiftDownColumn(int row, int col)
-    {
-        /*for (int i = row; i >= 0; i--)
-            if (_instantiatedShapes[i, col] == null)
-                IncreaseDistinctColumns(col);
-        
-        StartShiftDown();
-    }*/
-
     public IEnumerator StartShiftDownTrigger()
     {
         yield return new WaitUntil(() => _gameState == GameState.Ready);
@@ -262,8 +253,18 @@ public class BoardManager : MonoBehaviour
                     if (_instantiatedShapes[i, column] != null)
                         _instantiatedShapes[i, column].GetComponent<Shape>().ShiftDown();
 
-            RefillBoard();
+            RefillBoard(_distinctColumns);
         }
+    }
+
+    public void StartShiftDown(Dictionary<int, int> distinctColumns)
+    {
+        foreach (int column in distinctColumns.Keys)
+            for (int i = 0; i < rows; i++)
+                if (_instantiatedShapes[i, column] != null)
+                    _instantiatedShapes[i, column].GetComponent<Shape>().ShiftDown();
+
+        RefillBoard(distinctColumns);
     }
 
     public void DelayedShiftDown(float delay)
@@ -282,7 +283,7 @@ public class BoardManager : MonoBehaviour
         for (int i = 0; i < rows; i++)
             for (int j = 0; j < columns; j++)
                 if (_instantiatedShapes[i, j] == null)
-                    IncreaseDistinctColumns(j);
+                    IncreaseDistinctColumns(_distinctColumns, j);
     }
 
     private void FindDistinctColums()
@@ -296,18 +297,18 @@ public class BoardManager : MonoBehaviour
         }
     }
 
-    private void RefillBoard()
+    private void RefillBoard(Dictionary<int, int> distinctColumns)
     {
         Vector2 offset = _shapeSpriteRenderer.bounds.size;
 
-        foreach (int k in _distinctColumns.Keys)
+        foreach (int k in distinctColumns.Keys)
         {
             int counter = RefillStartPos;
             Vector3 instantiatedTransform = new Vector3(offset.x * k,
                                                         offset.y * rows,
                                                         0f);
 
-            for (int i = 0; i < _distinctColumns[k]; i++)
+            for (int i = 0; i < distinctColumns[k]; i++)
             {
                 Shape refillShape = CreateShape(instantiatedTransform, rows + counter, k);
                 refillShape.transform.localPosition = new Vector3(offset.x * k, offset.y * (rows + counter), 0f);
@@ -316,7 +317,7 @@ public class BoardManager : MonoBehaviour
             }
         }
 
-        _distinctColumns.Clear();
+        distinctColumns.Clear();
     }
 
     #region Find Merge
@@ -384,12 +385,12 @@ public class BoardManager : MonoBehaviour
         _instantiatedShapes[row, col] = shape;
     }
 
-    public void IncreaseDistinctColumns(int col)
+    public void IncreaseDistinctColumns(Dictionary<int, int> distinctColumns, int col)
     {
-        if (!_distinctColumns.ContainsKey(col))
-            _distinctColumns.Add(col, 1);
+        if (!distinctColumns.ContainsKey(col))
+            distinctColumns.Add(col, 1);
         else
-            _distinctColumns[col] += 1;
+            distinctColumns[col] += 1;
     }
 
     public void FullFillDistinctColumns(float waitFullFill)
@@ -431,7 +432,7 @@ public class BoardManager : MonoBehaviour
             if (sourceGameState == GameState.DiscoExplosion)
             {
                 _gameState = targetGameState;
-                StartShiftDown();
+                //StartShiftDown();
             }
         }
 

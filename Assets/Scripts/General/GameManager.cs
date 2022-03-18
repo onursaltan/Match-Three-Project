@@ -97,9 +97,9 @@ public class GameManager : MonoBehaviour
 
                   Goal[] goalsArray = new Goal[3];
 
-                  Goal denemeGoal = new Goal(ShapeType.Cube, ShapeColor.Green, 5); 
-                  Goal denemeGoal2 = new Goal(ShapeType.Cube, ShapeColor.Blue, 5);
-                  Goal denemeGoal3 = new Goal(ShapeType.Box, ShapeColor.None, 10);
+                  Goal denemeGoal = new Goal(ShapeType.Cube, ShapeColor.Green, 500); 
+                  Goal denemeGoal2 = new Goal(ShapeType.Cube, ShapeColor.Blue, 500);
+                  Goal denemeGoal3 = new Goal(ShapeType.Box, ShapeColor.None, 500);
 
                   goalsArray[0] = denemeGoal;
                   goalsArray[1] = denemeGoal2;
@@ -107,10 +107,10 @@ public class GameManager : MonoBehaviour
 
                   Level level = new Level
                   {
-                      level = 4,
+                      level = 5,
                       row = 6,
                       col = 6,
-                      moves = 15,
+                      moves = 100,
                       shapesArray = shapesArray,
                       goalsArray = goalsArray
                   };
@@ -172,8 +172,6 @@ public class GameManager : MonoBehaviour
         _goals = myLevel.goalsArray.ToList();
         remainingGoals = _goals.Count;
 
-        Debug.Log(remainingGoals);
-
         for (int i = 0; i < _goals.Count; i++)
         {
             goalsUI[i].transform.GetChild(1).gameObject.SetActive(true);
@@ -207,7 +205,4 @@ public class GameManager : MonoBehaviour
 
         }
     }
-
-
-
 }

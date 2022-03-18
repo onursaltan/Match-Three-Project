@@ -32,12 +32,14 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
 
     protected List<Shape> _adjacentShapes;
     protected SpriteRenderer _spriteRenderer;
+    protected BoxCollider2D _boxCollider2D;
 
     private Sequence _shiftDownSequence;
 
     void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
+        _boxCollider2D = GetComponent<BoxCollider2D>();
     }
 
     public abstract void Explode();

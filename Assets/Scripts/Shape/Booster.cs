@@ -40,7 +40,7 @@ public abstract class Booster : Shape
             case BoosterMerge.BigLightBall:
                 BoardManager.Instance.SetGameState(GameState.BigDiscoExplosion);
                 HandleBigLightBall();
-                StartCoroutine(WaitStartShift(0.5f + TimeToExpandIn + TimeToExpandOut));
+                StartCoroutine(WaitStartShift(0.7f + TimeToExpandIn + TimeToExpandOut));
                 break;
             case BoosterMerge.LightBallWithBomb:
                 BoardManager.Instance.SetGameState(GameState.DiscoBombExplosion);
