@@ -74,6 +74,13 @@ public class Rocket : Booster
 
         for (int i = _row - 1; i >= 0; i--)
             StartCoroutine(WaitExplodeShape(instantiatedShapes[i, col], index++));
+
+        List<int> columns = new List<int>
+        {
+            col
+        };
+
+        BoardManager.Instance.StartShiftDown(columns);
     }
 
     private void ExplodeAllRow(int row, Vector3 position)
@@ -81,15 +88,25 @@ public class Rocket : Booster
         Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
         ExplosionAnimation(false, position);
 
+        List<int> columns = new List<int>();
+
         int index = 0;
 
         for (int i = _col + 1; i < BoardManager.Instance.GetColumnCount(); i++)
+        {
             StartCoroutine(WaitExplodeShape(instantiatedShapes[row, i], index++));
+            columns.Add(i);
+        }
 
         index = 0;
 
         for (int i = _col - 1; i >= 0; i--)
+        {
             StartCoroutine(WaitExplodeShape(instantiatedShapes[row, i], index++));
+            columns.Add(i);
+        }
+
+        //BoardManager.Instance.StartShiftDown(columns);
     }
 
     public IEnumerator WaitForExplodeDoubleRocket()

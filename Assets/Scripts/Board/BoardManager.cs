@@ -257,14 +257,15 @@ public class BoardManager : MonoBehaviour
         }
     }
 
-    public void StartShiftDown(Dictionary<int, int> distinctColumns)
+    public void StartShiftDown(List<int> columns)
     {
-        foreach (int column in distinctColumns.Keys)
+        foreach (int column in columns)
             for (int i = 0; i < rows; i++)
                 if (_instantiatedShapes[i, column] != null)
                     _instantiatedShapes[i, column].GetComponent<Shape>().ShiftDown();
 
-        RefillBoard(distinctColumns);
+        FindEmptyCells();
+        RefillBoard(_distinctColumns);
     }
 
     public void DelayedShiftDown(float delay)
@@ -435,7 +436,6 @@ public class BoardManager : MonoBehaviour
                 //StartShiftDown();
             }
         }
-
     }
 
     public GameState GetGameState()

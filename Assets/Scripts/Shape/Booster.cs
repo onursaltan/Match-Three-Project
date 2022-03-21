@@ -29,7 +29,7 @@ public abstract class Booster : Shape
             BoardManager.Instance.DecreaseRemainingMoves();
             _boosterMerge = GetBoosterMerge();
             HandleBoosterExplosion();
-            StartCoroutine(BoardManager.Instance.StartShiftDownTrigger());
+            //StartCoroutine(BoardManager.Instance.StartShiftDownTrigger());
         }
     }
 
@@ -39,6 +39,8 @@ public abstract class Booster : Shape
         {
             case BoosterMerge.BigLightBall:
                 BoardManager.Instance.SetGameState(GameState.BigDiscoExplosion);
+                StartCoroutine(BoardManager.Instance.StartShiftDownTrigger());
+
                 HandleBigLightBall();
                 StartCoroutine(WaitStartShift(0.7f + TimeToExpandIn + TimeToExpandOut));
                 break;
@@ -57,18 +59,22 @@ public abstract class Booster : Shape
                 break;
             case BoosterMerge.BombWithRocket:
                 BoardManager.Instance.SetGameState(GameState.RocketBombExplosion);
+                StartCoroutine(BoardManager.Instance.StartShiftDownTrigger());
+
                 HandleBombWithRocket(); 
                 StartCoroutine(WaitStartShift(TimeToShiftAfterBombRocketExplosion));
                 break;
             case BoosterMerge.DoubleRocket:
-                BoardManager.Instance.SetGameState(GameState.DoubleRocket);
+                BoardManager.Instance.SetGameState(GameState.DoubleRocket); 
+                StartCoroutine(BoardManager.Instance.StartShiftDownTrigger());
                 HandleDoubleRocket();
                 StartCoroutine(WaitStartShift(TimeToShiftAfterDoubleRocketExplosion));
                 break;
             case BoosterMerge.None:
                 Explode();
+                StartCoroutine(BoardManager.Instance.StartShiftDownTrigger());
 
-                if(GetType() == typeof(Rocket))
+                if (GetType() == typeof(Rocket))
                     StartCoroutine(WaitStartShift(TimeToShiftAfterRocketExplosion));
                 else if(GetType() == typeof(Bomb))
                     StartCoroutine(WaitStartShift(TimeToShiftAfterBombExplosion));

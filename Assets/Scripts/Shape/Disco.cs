@@ -88,7 +88,7 @@ public class Disco : Booster
         List<Shape> instantiatedShapes = BoardManager.Instance.Array2DToList(BoardManager.Instance.GetInstantiatedShapes());
         List<Shape> cubes = instantiatedShapes.FindAll(shape => shape != null && shape._shapeData.ShapeType == ShapeType.Cube && shape._shapeData.ShapeColor == _shapeData.ShapeColor);
         List<Bomb> bombs = new List<Bomb>();
-        GameObject explosionAnimation = Instantiate(BoardManager.Instance.DiscoExplosionBlueAnim, transform.position, Quaternion.identity, transform.parent);
+        GameObject explosionAnimation = InstantiateProperExplosionAnim();
 
         foreach (Cube cube in cubes)
         {
@@ -129,7 +129,7 @@ public class Disco : Booster
         List<Shape> instantiatedShapes = BoardManager.Instance.Array2DToList(BoardManager.Instance.GetInstantiatedShapes());
         List<Shape> cubes = instantiatedShapes.FindAll(shape => shape != null && shape._shapeData.ShapeType == ShapeType.Cube && shape._shapeData.ShapeColor == _shapeData.ShapeColor);
         List<Rocket> rockets = new List<Rocket>();
-        GameObject explosionAnimation = Instantiate(BoardManager.Instance.DiscoExplosionBlueAnim, transform.position, Quaternion.identity, transform.parent);
+        GameObject explosionAnimation = InstantiateProperExplosionAnim();
 
         foreach (Cube cube in cubes)
         {
@@ -151,7 +151,7 @@ public class Disco : Booster
 
         foreach (Rocket rocket in rockets)
         {
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(0.5f);
             rocket.Explode();
         }
 

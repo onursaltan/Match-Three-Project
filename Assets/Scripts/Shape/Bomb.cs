@@ -34,10 +34,10 @@ public class Bomb : Booster
         base.SetShapeData(shapeData, row, col, isForBoosterMerge);
     }
 
- 
     private void Explode3x3()
     {
         Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
+        List<int> columns = new List<int>();
 
         for (int i = -1; i < 2; i++)
         {
@@ -48,10 +48,18 @@ public class Bomb : Booster
                     if (instantiatedShapes[_row + i, _col + j] != null)
                     {
                         instantiatedShapes[_row + i, _col + j].Explode();
+
+                        if (!columns.Contains(_col + j))
+                            columns.Add(_col + j);
                     }
                 }
             }
         }
+
+        if (!columns.Contains(_col))
+            columns.Add(_col);
+
+        BoardManager.Instance.StartShiftDown(columns);
     }
 
     public IEnumerator WaitForExplode5x5()
@@ -66,6 +74,7 @@ public class Bomb : Booster
         yield return new WaitForSeconds(1f);
         Destroy(DoubleDiscoEffect);
 
+        List<int> columns = new List<int>();
         Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
 
         for (int i = -2; i < 3; i++)
@@ -77,18 +86,26 @@ public class Bomb : Booster
                     if (instantiatedShapes[_row + i, _col + j] != null)
                     {
                         instantiatedShapes[_row + i, _col + j].Explode();
+
+                        if (!columns.Contains(_col + j))
+                            columns.Add(_col + j);
                     }
                 }
             }
         }
 
+        if (!columns.Contains(_col))
+            columns.Add(_col);
+
         _shapeState = ShapeState.Explode;
-        _spriteRenderer.enabled = false; 
+        _spriteRenderer.enabled = false;
         _boxCollider2D.enabled = false;
 
         Instantiate(BoardManager.Instance.BigBombEffect, transform.position, transform.rotation, transform.parent);
 
         CameraShake.Shake(1.25f, 6f);
         instantiatedShapes[_row, _col] = null;
+
+        BoardManager.Instance.StartShiftDown(columns);
     }
 }
