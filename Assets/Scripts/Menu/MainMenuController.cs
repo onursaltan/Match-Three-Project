@@ -7,18 +7,15 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuController : MonoBehaviour
 {
-
     public GameObject levelButtons;
 
     public Button levelButton;
 
     public List<Button> levelButtonList;
 
-    // Start is called before the first frame update
     void Start()
     {
         int totalLevelCount = Resources.LoadAll<TextAsset>("Levels").Length;
-
         LevelManager.totalLevels = totalLevelCount;
 
         for (int i = 0; i < LevelManager.totalLevels; i++)
@@ -34,12 +31,6 @@ public class MainMenuController : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void OpenLevel(int level)
     {
         if (level < LevelManager.totalLevels + 1)
@@ -48,9 +39,4 @@ public class MainMenuController : MonoBehaviour
             SceneManager.LoadScene(1);
         }
     }
-
-
-    
-
-
 }

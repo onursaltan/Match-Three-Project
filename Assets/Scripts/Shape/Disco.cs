@@ -88,7 +88,7 @@ public class Disco : Booster
         List<Shape> instantiatedShapes = BoardManager.Instance.Array2DToList(BoardManager.Instance.GetInstantiatedShapes());
         List<Shape> cubes = instantiatedShapes.FindAll(shape => shape != null && shape._shapeData.ShapeType == ShapeType.Cube && shape._shapeData.ShapeColor == _shapeData.ShapeColor);
         List<Bomb> bombs = new List<Bomb>();
-        GameObject explosionAnimation = Instantiate(BoardManager.Instance.DiscoExplosionAnim, transform.position, Quaternion.identity, transform.parent);
+        GameObject explosionAnimation = InstantiateProperExplosionAnim();
 
         foreach (Cube cube in cubes)
         {
@@ -103,7 +103,7 @@ public class Disco : Booster
         GameObject explosionInstance = Instantiate(Explosion, transform.position, transform.rotation, transform.parent);
 
         _spriteRenderer.enabled = false;
-        GetComponent<BoxCollider2D>().enabled = false;
+        _boxCollider2D.enabled = false;
 
         Shape[,] instantiatedShapess = BoardManager.Instance.GetInstantiatedShapes();
         instantiatedShapess[_row, _col] = null;
@@ -129,7 +129,7 @@ public class Disco : Booster
         List<Shape> instantiatedShapes = BoardManager.Instance.Array2DToList(BoardManager.Instance.GetInstantiatedShapes());
         List<Shape> cubes = instantiatedShapes.FindAll(shape => shape != null && shape._shapeData.ShapeType == ShapeType.Cube && shape._shapeData.ShapeColor == _shapeData.ShapeColor);
         List<Rocket> rockets = new List<Rocket>();
-        GameObject explosionAnimation = Instantiate(BoardManager.Instance.DiscoExplosionAnim, transform.position, Quaternion.identity, transform.parent);
+        GameObject explosionAnimation = InstantiateProperExplosionAnim();
 
         foreach (Cube cube in cubes)
         {
@@ -144,7 +144,7 @@ public class Disco : Booster
         GameObject explosionInstance = Instantiate(Explosion, transform.position, transform.rotation, transform.parent);
 
         _spriteRenderer.enabled = false;
-        GetComponent<BoxCollider2D>().enabled = false;
+        _boxCollider2D.enabled = false;
 
         Shape[,] instantiatedShapess = BoardManager.Instance.GetInstantiatedShapes();
         instantiatedShapess[_row, _col] = null;
@@ -164,9 +164,9 @@ public class Disco : Booster
         FindSameColor(this._shapeData.ShapeColor);
 
         _spriteRenderer.enabled = false;
-        GetComponent<BoxCollider2D>().enabled = false;
+        _boxCollider2D.enabled = false;
 
-        GameObject explosionAnimation = Instantiate(BoardManager.Instance.DiscoExplosionAnim, transform.position, Quaternion.identity, transform.parent);
+        GameObject explosionAnimation = InstantiateProperExplosionAnim();
 
         //MOVING AND DESTROYING TRAILS
         foreach (Cube shape in toBeExploded)
@@ -198,6 +198,16 @@ public class Disco : Booster
         StartCoroutine(WaitStartShift(0.1f, GameState.DiscoExplosion));
     }
 
+    private GameObject InstantiateProperExplosionAnim()
+    {
+        if (_shapeData.ShapeColor == ShapeColor.Blue)
+            return Instantiate(BoardManager.Instance.DiscoExplosionBlueAnim, transform.position, Quaternion.identity, transform.parent);
+        else if(_shapeData.ShapeColor == ShapeColor.Red)
+            return Instantiate(BoardManager.Instance.DiscoExplosionRedAnim, transform.position, Quaternion.identity, transform.parent);
+        else
+            return Instantiate(BoardManager.Instance.DiscoExplosionGreenAnim, transform.position, Quaternion.identity, transform.parent);
+    }
+
     public List<Shape> GetToBeExploded()
     {
         return toBeExploded;
@@ -208,23 +218,6 @@ public class Disco : Booster
         GameObject explosionInstance = Instantiate(Explosion, transform.position, transform.rotation, transform.parent);
         yield return new WaitForSeconds(1f);
         Destroy(explosionInstance);
-    }
-
-    private IEnumerator MakeMoveTrails(List<Shape> trailTargets)
-    {
-        foreach (Cube shape in trailTargets)
-        {
-            yield return new WaitForSeconds(0.1f);
-
-            if (shape != null)
-            {
-                GameObject trailInstance = Instantiate(Trail, transform.position, transform.rotation, transform.parent);
-                trailsInstantiated.Add(trailInstance);
-                trailInstance.transform.DOMove(shape.transform.position, TimeToTrailReach);
-                shape.ConvertCubeToRocket(TimeToTrailReach, null);
-                DestroyGameobjectAfterSeconds(trailInstance, TimeToTrailReach + TimeToTrailWait);
-            }
-        }
     }
 
     private void MoveTrailToTarget(Cube shape)

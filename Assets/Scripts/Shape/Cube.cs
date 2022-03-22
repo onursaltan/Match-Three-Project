@@ -29,8 +29,8 @@ public class Cube : Shape
 
     public override void Explode()
     {
-        Instantiate(_shapeData.ExplodeEffect, transform.position, transform.rotation, transform.parent);
         BoardManager.Instance.GetInstantiatedShapes()[_row, _col] = null;
+        Instantiate(_shapeData.ExplodeEffect, transform.position, transform.rotation, transform.parent);
         GameManager.Instance.CheckGoal(_shapeData.ShapeType, _shapeData.ShapeColor);
         Destroy(gameObject);
     }
@@ -89,8 +89,6 @@ public class Cube : Shape
                 BoardManager.Instance.SetAdjacentShapes(_adjacentShapes);
                 HandleCubeOperation();
             }
-
-            StartCoroutine(BoardManager.Instance.StartShiftDownTrigger());
         }
     }
 
@@ -237,6 +235,7 @@ public class Cube : Shape
         }
 
         BoardManager.Instance.ReloadShapeToList(shape, _row, _col);
+        BoardManager.Instance.DelayedShiftDown(0.01f);
         Destroy(gameObject.GetComponent<Cube>());
     }
 
