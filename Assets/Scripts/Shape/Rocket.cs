@@ -14,7 +14,9 @@ public class Rocket : Booster
     {
         if (_shapeState != ShapeState.Explode)
         {
-            Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
+            BoardManager.Instance.GetInstantiatedShapes()[_row, _col] = null;
+            _shapeState = ShapeState.Explode;
+            Debug.Log(_row + " " + _col);
             BoardManager.Instance.SetGameState(GameState.RocketExplosion);
 
             _spriteRenderer.enabled = false;
@@ -24,8 +26,6 @@ public class Rocket : Booster
                 ExplodeAllColumn(_col, transform.position);
             else
                 ExplodeAllRow(_row, transform.position);
-
-            instantiatedShapes[_row, _col] = null;
         }
     }
 
@@ -80,6 +80,13 @@ public class Rocket : Booster
             col
         };
 
+        StartCoroutine(deneme(0.55f, columns));
+    }
+
+    private IEnumerator deneme(float time, List<int> columns)
+    {
+        yield return new WaitForSeconds(time);
+
         BoardManager.Instance.StartShiftDown(columns);
     }
 
@@ -93,20 +100,17 @@ public class Rocket : Booster
         int index = 0;
 
         for (int i = _col + 1; i < BoardManager.Instance.GetColumnCount(); i++)
-        {
             StartCoroutine(WaitExplodeShape(instantiatedShapes[row, i], index++));
-            columns.Add(i);
-        }
 
         index = 0;
 
         for (int i = _col - 1; i >= 0; i--)
-        {
             StartCoroutine(WaitExplodeShape(instantiatedShapes[row, i], index++));
-            columns.Add(i);
-        }
 
-        //BoardManager.Instance.StartShiftDown(columns);
+        for (int i = 0; i < BoardManager.Instance.GetColumnCount(); i++)
+            columns.Add(i);
+
+        StartCoroutine(deneme(0.55f, columns));
     }
 
     public IEnumerator WaitForExplodeDoubleRocket()

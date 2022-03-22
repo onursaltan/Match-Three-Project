@@ -151,7 +151,7 @@ public class Disco : Booster
 
         foreach (Rocket rocket in rockets)
         {
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.1f);
             rocket.Explode();
         }
 

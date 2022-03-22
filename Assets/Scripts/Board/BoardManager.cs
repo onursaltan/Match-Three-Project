@@ -259,13 +259,51 @@ public class BoardManager : MonoBehaviour
 
     public void StartShiftDown(List<int> columns)
     {
+        int counter;
+
         foreach (int column in columns)
+        {
+            counter = 0;
+
             for (int i = 0; i < rows; i++)
+            {
                 if (_instantiatedShapes[i, column] != null)
                     _instantiatedShapes[i, column].GetComponent<Shape>().ShiftDown();
+                else
+                    counter++;
+            }
+                
 
-        FindEmptyCells();
-        RefillBoard(_distinctColumns);
+            RefillColumn(counter, column);
+        }
+
+        //FindEmptyCells();
+        //RefillBoard(_distinctColumns);
+    }
+
+    private int FindEmptyRowsOfColumn(int col)
+    {
+        int count = 0;
+
+        for (int i = 0; i < rows; i++)
+            if (_instantiatedShapes[i, col] == null)
+                count++;
+
+        return count;
+    }
+
+    private void RefillColumn(int emptyCount, int column)
+    {
+        Vector2 offset = _shapeSpriteRenderer.bounds.size;
+        int counter = 3;
+        //Debug.Log("empty count: " + emptyCount + " column number: " + column);
+        for (int i = 0; i < emptyCount; i++)
+        {
+            Shape refillShape = CreateShape(Vector3.zero, rows + counter, column);
+            refillShape.transform.localPosition = new Vector3(offset.x * column, offset.y * (rows + counter), 0f);
+            refillShape.GetComponent<Shape>().ShiftDown(true);
+            counter++;
+        }
     }
 
     public void DelayedShiftDown(float delay)
