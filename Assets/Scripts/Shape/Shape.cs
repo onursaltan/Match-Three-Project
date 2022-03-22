@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using DG.Tweening;
+using UnityEngine.UI;
 
 public enum ShapeState
 {
@@ -128,6 +129,14 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
         float localScaleX = transform.localScale.x;
         float localScaleY = transform.localScale.y;
 
+
+        GameObject bgGlow = transform.GetChild(0).gameObject;
+        if (_shapeData.ShapeType == ShapeType.Cube)
+        {
+            bgGlow.SetActive(true);
+            bgGlow.GetComponent<SpriteRenderer>().sortingOrder = _spriteRenderer.sortingOrder - 1;
+        }
+
         transform.DOMove(new Vector3(expandX, expandY), TimeToExpandOut).
             SetEase(Ease.OutSine).
             OnComplete(() =>
@@ -141,12 +150,14 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
                     }
                     _shapeState = ShapeState.Waiting;
                 });
+                bgGlow.SetActive(false);
             });
 
         transform.DOScale(new Vector3(transform.localScale.x * ExpandRateScale, transform.localScale.y * ExpandRateScale), TimeToExpandOut).SetEase(Ease.OutSine).OnComplete(() =>
         {
             transform.DOScale(new Vector3(localScaleX, localScaleY), TimeToExpandIn);
         });
+        
     }
 
     #region Shift Down

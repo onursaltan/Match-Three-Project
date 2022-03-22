@@ -125,7 +125,7 @@ public class GameManager : MonoBehaviour
         StartCoroutine(_LevelPassed());
     }
 
-    private IEnumerator _LevelPassed()
+    public IEnumerator _LevelPassed()
     {
         Debug.Log("level passed");
         LevelManager.isCurrentLevelPassed = true;
@@ -168,6 +168,7 @@ public class GameManager : MonoBehaviour
         BoardManager.Instance.CreateBoard(myLevel.shapesArray);
 
         BoardManager.Instance.moves.text = myLevel.moves.ToString();
+        BoardManager.Instance.remainingMoves = myLevel.moves;
 
         _goals = myLevel.goalsArray.ToList();
         remainingGoals = _goals.Count;
