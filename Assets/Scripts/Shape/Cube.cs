@@ -187,13 +187,18 @@ public class Cube : Shape
 
     private void BasicExplosionOperation()
     {
+        List<int> columns = new List<int>();
+
         foreach (Shape shape in BoardManager.Instance.GetAdjacentShapes())
         {
             BoardManager.Instance.RemoveFromInstantiatedShapes(shape._row, shape._col);
             shape.Explode();
+
+            if (!columns.Contains(shape._col))
+                columns.Add(shape._col);
         }
 
-        BoardManager.Instance.StartShiftDown();
+        BoardManager.Instance.StartShiftDown(columns);
     }
 
     private void ExplodeGoalShapes()
@@ -235,8 +240,20 @@ public class Cube : Shape
         }
 
         BoardManager.Instance.ReloadShapeToList(shape, _row, _col);
-        BoardManager.Instance.DelayedShiftDown(0.01f);
+        BoardManager.Instance.DelayedShiftDown(FindMergeShapesColumns(), 0.01f);
         Destroy(gameObject.GetComponent<Cube>());
+    }
+
+    private List<int> FindMergeShapesColumns()
+    {
+        List<int> columns = new List<int>();
+        List<Shape> adjacentShapes = BoardManager.Instance.GetAdjacentShapes();
+
+        foreach(Shape shape in adjacentShapes)
+            if (!columns.Contains(shape._col))
+                columns.Add(shape._col);
+
+        return columns;
     }
 
     private ShapeColor FindDiscoColor()

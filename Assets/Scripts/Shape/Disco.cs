@@ -53,9 +53,13 @@ public class Disco : Booster
     private IEnumerator BigLightBall()
     {
         GameObject DoubleDiscoEffect = Instantiate(BoardManager.Instance.DoubleDiscoMerge, transform.position, Quaternion.identity, transform);
+
         yield return new WaitForSeconds(0.5f);
+
         Destroy(DoubleDiscoEffect);
+
         Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
+        instantiatedShapes[_row, _col] = null;
 
         foreach (Shape shape in instantiatedShapes)
         {
@@ -69,11 +73,10 @@ public class Disco : Booster
             }
         }
 
-        GameObject BigBombInstance = Instantiate(BoardManager.Instance.GreatBombEffect, new Vector3(-0.0146000003f, -0.950800002f, 0f), transform.rotation, transform.parent);
+        Instantiate(BoardManager.Instance.GreatBombEffect, new Vector3(-0.0146000003f, -0.950800002f, 0f), transform.rotation, transform.parent);
 
         CameraShake.Shake();
         _spriteRenderer.enabled = false;
-        instantiatedShapes[_row, _col] = null;
     }
 
     public IEnumerator WaitForLightBallWithBomb()
@@ -88,6 +91,7 @@ public class Disco : Booster
         List<Shape> instantiatedShapes = BoardManager.Instance.Array2DToList(BoardManager.Instance.GetInstantiatedShapes());
         List<Shape> cubes = instantiatedShapes.FindAll(shape => shape != null && shape._shapeData.ShapeType == ShapeType.Cube && shape._shapeData.ShapeColor == _shapeData.ShapeColor);
         List<Bomb> bombs = new List<Bomb>();
+
         GameObject explosionAnimation = InstantiateProperExplosionAnim();
 
         foreach (Cube cube in cubes)
@@ -191,7 +195,7 @@ public class Disco : Booster
                 shape.Explode();
 
         StartCoroutine(DiscoPopEffect());
-        
+
         Shape[,] instantiatedShapes = BoardManager.Instance.GetInstantiatedShapes();
         instantiatedShapes[_row, _col] = null;
 
@@ -202,7 +206,7 @@ public class Disco : Booster
     {
         if (_shapeData.ShapeColor == ShapeColor.Blue)
             return Instantiate(BoardManager.Instance.DiscoExplosionBlueAnim, transform.position, Quaternion.identity, transform.parent);
-        else if(_shapeData.ShapeColor == ShapeColor.Red)
+        else if (_shapeData.ShapeColor == ShapeColor.Red)
             return Instantiate(BoardManager.Instance.DiscoExplosionRedAnim, transform.position, Quaternion.identity, transform.parent);
         else
             return Instantiate(BoardManager.Instance.DiscoExplosionGreenAnim, transform.position, Quaternion.identity, transform.parent);
