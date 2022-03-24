@@ -6,8 +6,9 @@ public class Box2 : Shape
 {
     public override void Explode()
     {
-        SetShapeData(BoardManager.Instance.GetShapeData(ShapeType.Box2), _row, _col);
-        gameObject.AddComponent<Box1>();
+        Shape shape = gameObject.AddComponent<Box1>();
+        shape.SetShapeData(BoardManager.Instance.GetShapeData(ShapeType.Box2), _row, _col);
+        BoardManager.Instance.ReloadShapeToList(shape, _row, _col);
         Destroy(GetComponent<Box2>());
     }
 

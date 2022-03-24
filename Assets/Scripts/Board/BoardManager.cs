@@ -241,12 +241,6 @@ public class BoardManager : MonoBehaviour
         _adjacentShapes = adjacentShapes;
     }
 
-    public IEnumerator StartShiftDownTrigger()
-    {
-        yield return new WaitUntil(() => _gameState == GameState.Ready);
-        StartShiftDown();
-    }
-
     public IEnumerator PopUpTrigger()
     {
         yield return new WaitUntil(() => _gameState == GameState.Ready);
@@ -255,27 +249,35 @@ public class BoardManager : MonoBehaviour
 
     public void CheckForPassed()
     {
-            if (!LevelManager.isCurrentLevelPassed)
-            {
-                Debug.Log("bitti");
-                noMovesLeft.SetActive(true);
-                tint.SetActive(true);
-            }
+        if (!LevelManager.isCurrentLevelPassed)
+        {
+            Debug.Log("bitti");
+            noMovesLeft.SetActive(true);
+            tint.SetActive(true);
+        }
+    }
+
+    #region Shift Down
+    public IEnumerator StartShiftDownTrigger()
+    {
+        yield return new WaitUntil(() => _gameState == GameState.Ready);
+        StartShiftDown();
     }
 
     public void StartShiftDown()
     {
-        FindEmptyCells();
+        /*  FindEmptyCells();
 
-        if (_gameState == GameState.Ready)
-        {
-            foreach (int column in _distinctColumns.Keys)
-                for (int i = 0; i < rows; i++)
-                    if (_instantiatedShapes[i, column] != null)
-                        _instantiatedShapes[i, column].GetComponent<Shape>().ShiftDown();
+          if (_gameState == GameState.Ready)
+          {
+              foreach (int column in _distinctColumns.Keys)
+                  for (int i = 0; i < rows; i++)
+                      if (_instantiatedShapes[i, column] != null)
+                          _instantiatedShapes[i, column].GetComponent<Shape>().ShiftDown();
 
-            RefillBoard(_distinctColumns);
-        }
+
+              RefillBoard(_distinctColumns);
+          }*/
     }
 
     public void StartShiftDown(List<int> columns)
@@ -289,17 +291,21 @@ public class BoardManager : MonoBehaviour
             for (int i = 0; i < rows; i++)
             {
                 if (_instantiatedShapes[i, column] != null)
-                    _instantiatedShapes[i, column].GetComponent<Shape>().ShiftDown();
+
+                    if (_instantiatedShapes[i, column].GetType() == typeof(Box))
+                        counter = 0;
+                    else if (_instantiatedShapes[i, column].GetType() == typeof(Box1))
+                        counter = 0;
+                    else if (_instantiatedShapes[i, column].GetType() == typeof(Box2))
+                        counter = 0;
+                    else
+                        _instantiatedShapes[i, column].GetComponent<Shape>().ShiftDown();
                 else
                     counter++;
             }
-                
 
             RefillColumn(counter, column);
         }
-
-        //FindEmptyCells();
-        //RefillBoard(_distinctColumns);
     }
 
     private int FindEmptyRowsOfColumn(int col)
@@ -317,7 +323,7 @@ public class BoardManager : MonoBehaviour
     {
         Vector2 offset = _shapeSpriteRenderer.bounds.size;
         int counter = 3;
-        //Debug.Log("empty count: " + emptyCount + " column number: " + column);
+
         for (int i = 0; i < emptyCount; i++)
         {
             Shape refillShape = CreateShape(Vector3.zero, rows + counter, column);
@@ -327,15 +333,15 @@ public class BoardManager : MonoBehaviour
         }
     }
 
-    public void DelayedShiftDown(float delay)
+    public void DelayedShiftDown(List<int> columns, float delay)
     {
-        StartCoroutine(WaitForShiftDown(delay));
+        StartCoroutine(WaitForShiftDown(columns, delay));
     }
 
-    private IEnumerator WaitForShiftDown(float delay)
+    private IEnumerator WaitForShiftDown(List<int> columns, float delay)
     {
         yield return new WaitForSeconds(delay);
-        StartShiftDown();
+        StartShiftDown(columns);
     }
 
     private void FindEmptyCells()
@@ -379,6 +385,7 @@ public class BoardManager : MonoBehaviour
 
         distinctColumns.Clear();
     }
+    #endregion
 
     #region Find Merge
 
@@ -475,7 +482,6 @@ public class BoardManager : MonoBehaviour
         {
             remainingMoves--;
             moves.text = remainingMoves.ToString();
-            Debug.Log(remainingMoves);
         }
 
         if (remainingMoves == 0)
