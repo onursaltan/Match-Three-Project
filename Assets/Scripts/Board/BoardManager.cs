@@ -261,18 +261,18 @@ public class BoardManager : MonoBehaviour
 
     public void StartShiftDown()
     {
-      /*  FindEmptyCells();
+        /*  FindEmptyCells();
 
-        if (_gameState == GameState.Ready)
-        {
-            foreach (int column in _distinctColumns.Keys)
-                for (int i = 0; i < rows; i++)
-                    if (_instantiatedShapes[i, column] != null)
-                        _instantiatedShapes[i, column].GetComponent<Shape>().ShiftDown();
+          if (_gameState == GameState.Ready)
+          {
+              foreach (int column in _distinctColumns.Keys)
+                  for (int i = 0; i < rows; i++)
+                      if (_instantiatedShapes[i, column] != null)
+                          _instantiatedShapes[i, column].GetComponent<Shape>().ShiftDown();
 
 
-            RefillBoard(_distinctColumns);
-        }*/
+              RefillBoard(_distinctColumns);
+          }*/
     }
 
     public void StartShiftDown(List<int> columns)
@@ -288,6 +288,10 @@ public class BoardManager : MonoBehaviour
                 if (_instantiatedShapes[i, column] != null)
 
                     if (_instantiatedShapes[i, column].GetType() == typeof(Box))
+                        counter = 0;
+                    else if (_instantiatedShapes[i, column].GetType() == typeof(Box))
+                        counter = 0;
+                    else if (_instantiatedShapes[i, column].GetType() == typeof(Box))
                         counter = 0;
                     else
                         _instantiatedShapes[i, column].GetComponent<Shape>().ShiftDown();

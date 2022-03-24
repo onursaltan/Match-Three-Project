@@ -79,7 +79,7 @@ public class Rocket : Booster
             col
         };
 
-        StartCoroutine(WaitToShiftRoutine(0.55f, columns));
+        StartCoroutine(WaitToShiftRoutine(0.5f, columns));
     }
 
     private IEnumerator WaitToShiftRoutine(float time, List<int> columns)
@@ -109,7 +109,7 @@ public class Rocket : Booster
         for (int i = 0; i < BoardManager.Instance.GetColumnCount(); i++)
             columns.Add(i);
 
-        StartCoroutine(WaitToShiftRoutine(0.55f, columns));
+        StartCoroutine(WaitToShiftRoutine(0.5f, columns));
     }
 
     public IEnumerator WaitForExplodeDoubleRocket()

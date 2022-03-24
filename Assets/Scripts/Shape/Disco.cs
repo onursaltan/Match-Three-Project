@@ -94,6 +94,7 @@ public class Disco : Booster
 
         GameObject explosionAnimation = InstantiateProperExplosionAnim();
 
+        cubes.Reverse();
         foreach (Cube cube in cubes)
         {
             yield return new WaitForSeconds(0.1f);
@@ -135,6 +136,7 @@ public class Disco : Booster
         List<Rocket> rockets = new List<Rocket>();
         GameObject explosionAnimation = InstantiateProperExplosionAnim();
 
+        cubes.Reverse();
         foreach (Cube cube in cubes)
         {
             yield return new WaitForSeconds(0.1f);
