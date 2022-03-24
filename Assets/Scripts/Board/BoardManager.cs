@@ -210,6 +210,11 @@ public class BoardManager : MonoBehaviour
             _shape = instantiatedShape.AddComponent<Rocket>();
         else if (allShapeDatas[shapeReference].ShapeType == ShapeType.Disco)
             _shape = instantiatedShape.AddComponent<Disco>();
+        else if (allShapeDatas[shapeReference].ShapeType == ShapeType.Box2)
+            _shape = instantiatedShape.AddComponent<Box1>();
+        else if (allShapeDatas[shapeReference].ShapeType == ShapeType.Box3)
+            _shape = instantiatedShape.AddComponent<Box2>();
+
 
         _shape.SetShapeData(allShapeDatas[shapeReference], i, j);
 
@@ -289,9 +294,9 @@ public class BoardManager : MonoBehaviour
 
                     if (_instantiatedShapes[i, column].GetType() == typeof(Box))
                         counter = 0;
-                    else if (_instantiatedShapes[i, column].GetType() == typeof(Box))
+                    else if (_instantiatedShapes[i, column].GetType() == typeof(Box1))
                         counter = 0;
-                    else if (_instantiatedShapes[i, column].GetType() == typeof(Box))
+                    else if (_instantiatedShapes[i, column].GetType() == typeof(Box2))
                         counter = 0;
                     else
                         _instantiatedShapes[i, column].GetComponent<Shape>().ShiftDown();
