@@ -9,6 +9,7 @@ TagManager:
   - levelButton
   - editorTile
   - highlight
+  - Goals
   layers:
   - Default
   - TransparentFX

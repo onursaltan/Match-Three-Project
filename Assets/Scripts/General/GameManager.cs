@@ -16,6 +16,8 @@ public class GameManager : MonoBehaviour
 
     public GameObject canvas;
 
+    public GameObject GoalAnim;
+
     private int currentLevel = 1;
 
     public Sprite[] shapeSprites;
@@ -60,13 +62,19 @@ public class GameManager : MonoBehaviour
         OpenLevel(LevelManager.levelNumber);
     }
 
-    public void CheckGoal(ShapeType shapeType, ShapeColor shapeColor = ShapeColor.None)
+    public void CheckGoal(ShapeType shapeType, int row, int col, bool isCubeExplosion, ShapeColor shapeColor = ShapeColor.None, Transform animPose = null)
     {
         for (int i = 0; i < _goals.Count; i++)
         {
             if (_goals[i].count > 0 && _goals[i].shapeType == shapeType && _goals[i].shapeColor == shapeColor)
             {
                 _goals[i].count--;
+                if (isCubeExplosion)
+                {
+                    GameObject AnimInstance = Instantiate(GoalAnim, animPose.position, animPose.rotation);
+                    AnimInstance.GetComponent<MoveToGoals>().Init(shapeColor);
+                    AnimInstance.GetComponent<MoveToGoals>().target = goalsUI[i];
+                }
                 goalsUI[i].transform.GetChild(1).GetComponent<Text>().text = _goals[i].count.ToString();
                 if (_goals[i].count == 0)
                 {

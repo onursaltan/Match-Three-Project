@@ -8,7 +8,7 @@ public class Box : Shape
     {
         BoardManager.Instance.GetShapeMatrix()[_row, _col] = null;
         Instantiate(_shapeData.ExplodeEffect, transform.position, transform.rotation, transform.parent);
-        GameManager.Instance.CheckGoal(_shapeData.ShapeType);
+        GameManager.Instance.CheckGoal(_shapeData.ShapeType, _row, _col, false);
         BoardManager.Instance.StartShiftDown(new List<int> { _col });
         Destroy(gameObject);
     }

@@ -145,7 +145,7 @@ public abstract class Shape : MonoBehaviour, IPointerDownHandler
                 {
                     if (!(row == _row && col == _col))  // Bura de?i?cek
                     {
-                        GameManager.Instance.CheckGoal(_shapeData.ShapeType, _shapeData.ShapeColor);
+                        GameManager.Instance.CheckGoal(_shapeData.ShapeType, _row, _col, false, _shapeData.ShapeColor);
                         BoardManager.Instance.DestroyShape(this);
                     }
                     _shapeState = ShapeState.Waiting;

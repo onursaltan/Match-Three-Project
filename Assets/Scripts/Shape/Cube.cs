@@ -31,7 +31,7 @@ public class Cube : Shape
     {
         BoardManager.Instance.GetInstantiatedShapes()[_row, _col] = null;
         Instantiate(_shapeData.ExplodeEffect, transform.position, transform.rotation, transform.parent);
-        GameManager.Instance.CheckGoal(_shapeData.ShapeType, _shapeData.ShapeColor);
+        GameManager.Instance.CheckGoal(_shapeData.ShapeType, _row, _col, true, _shapeData.ShapeColor, transform);
         Destroy(gameObject);
     }
 
@@ -48,7 +48,7 @@ public class Cube : Shape
                 BoardManager.Instance.RemoveFromInstantiatedShapes(cube._row, cube._col);
         }
 
-        GameManager.Instance.CheckGoal(_shapeData.ShapeType, _shapeData.ShapeColor);
+        GameManager.Instance.CheckGoal(_shapeData.ShapeType, _row, _col, false, _shapeData.ShapeColor);
     }
 
     public override void SetMergeSprite(int count)
