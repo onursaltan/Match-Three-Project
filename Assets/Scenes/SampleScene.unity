@@ -1619,6 +1619,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 98ad03e0648f3774aaff915c82820e30, type: 2}
   - {fileID: 11400000, guid: 71eb90058bdca45fb8480f29c6389a1d, type: 2}
   - {fileID: 11400000, guid: 5addc45036e3649f29f398f73ed3a598, type: 2}
+  - {fileID: 11400000, guid: 84f72df95a8244652962ee00f14a1558, type: 2}
   shapeDatas:
   - {fileID: 11400000, guid: 828bc56eb85d3454ea2605a856b44dc4, type: 2}
   - {fileID: 11400000, guid: 90a62e9875c6eb241bd215fb7c9bed0b, type: 2}
@@ -1628,6 +1629,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3c4bb148ce0195e4289e6c75f0ad29a1, type: 2}
   - {fileID: 11400000, guid: 71eb90058bdca45fb8480f29c6389a1d, type: 2}
   - {fileID: 11400000, guid: 5addc45036e3649f29f398f73ed3a598, type: 2}
+  - {fileID: 11400000, guid: 84f72df95a8244652962ee00f14a1558, type: 2}
   mergeSprites:
   - {fileID: 7641651158198303906, guid: 5c262d6d56bec4700b3baa816e3f2e1c, type: 3}
   - {fileID: -5805099448801533850, guid: 5c262d6d56bec4700b3baa816e3f2e1c, type: 3}

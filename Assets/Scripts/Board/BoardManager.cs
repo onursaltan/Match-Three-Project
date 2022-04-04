@@ -214,6 +214,8 @@ public class BoardManager : MonoBehaviour
             _shape = instantiatedShape.AddComponent<Box1>();
         else if (allShapeDatas[shapeReference].ShapeType == ShapeType.Box3)
             _shape = instantiatedShape.AddComponent<Box2>();
+        else if (allShapeDatas[shapeReference].ShapeType == ShapeType.Blank)
+            _shape = instantiatedShape.AddComponent<Blank>();
 
 
         _shape.SetShapeData(allShapeDatas[shapeReference], i, j);
