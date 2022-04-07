@@ -48,6 +48,8 @@ public class BoardManager : MonoBehaviour
     [SerializeField] private float paddingHorizontal;
     [SerializeField] private float paddingBottom;
 
+    [SerializeField] public Sprite blankSprite;
+
     private GameState _gameState;
 
     private SpriteRenderer _shapeSpriteRenderer;

@@ -6,18 +6,20 @@ public class Blank : Shape
 {
     public override void Explode()
     {
-        throw new System.NotImplementedException();
     }
 
     public override void Merge()
     {
-        throw new System.NotImplementedException();
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        GetComponent<SpriteRenderer>().sortingOrder = 2;
+        GetComponent<SpriteRenderer>().enabled = false;
+        SpriteMask spriteMask = gameObject.AddComponent<SpriteMask>();
+        spriteMask.sprite = BoardManager.Instance.blankSprite;
+
     }
 
     // Update is called once per frame

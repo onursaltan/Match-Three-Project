@@ -227,6 +227,10 @@ public class SelectTile : MonoBehaviour, IPointerClickHandler
             for (int j = 0; j < 6; j++)
             {
                 saveArray[index] = tempArray[i,j];
+                if (saveArray[index] == 0)
+                {
+                    saveArray[index] = 12;
+                }
                 index++;
             }
         }
@@ -378,6 +382,15 @@ public class SelectTile : MonoBehaviour, IPointerClickHandler
         {
             selectedTile.GetComponent<Image>().sprite = sprites[19];
             tilesDict[tiles.IndexOf(selectedTile)] = 11;
+        }
+    }
+
+    public void PlaceBlank()
+    {
+        if (selectedTile != null)
+        {
+            selectedTile.GetComponent<Image>().sprite = sprites[20];
+            tilesDict[tiles.IndexOf(selectedTile)] = 12;
         }
     }
 }
